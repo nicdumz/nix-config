@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 let
   btrfsMountOptions = [
     "defaults"
@@ -8,6 +8,10 @@ let
   ];
 in
 {
+  imports = with inputs; [
+    impermanence.nixosModules.impermanence
+    disko.nixosModules.disko
+  ];
 
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.enable = false;

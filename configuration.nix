@@ -6,6 +6,8 @@
   config,
   lib,
   pkgs,
+  self,
+  inputs,
   ...
 }:
 
@@ -26,6 +28,10 @@ let
   ];
 in
 {
+  imports = with inputs; [
+    agenix.nixosModules.default
+  ];
+
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
@@ -75,6 +81,19 @@ in
     pulse.enable = true;
   };
 
+  # https://nixos.wiki/wiki/Automatic_system_upgrades
+  system.autoUpgrade = {
+    enable = true;
+    flake = self.outPath;
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "-L" # print build logs
+    ];
+    dates = "02:00";
+    randomizedDelaySec = "45min";
+  };
+
   users = {
     defaultUserShell = pkgs.fish;
     mutableUsers = false;
@@ -93,7 +112,23 @@ in
   };
 
   programs.fish.enable = true;
-  programs.git.enable = true;
+  programs.git = {
+    enable = true;
+    config = {
+      user = {
+        email = "nicdumz.commits@gmail.com";
+        name = "Nicolas Dumazet";
+      };
+      aliases = {
+        st = "status";
+        ci = "commit";
+      };
+      # TODO fix this later
+      safe = {
+        directory = "/media/host";
+      };
+    };
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

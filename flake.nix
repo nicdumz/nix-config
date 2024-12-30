@@ -34,48 +34,27 @@
     {
       self,
       nixpkgs,
-
-      agenix,
-      agenix-rekey,
-      disko,
-      impermanence,
-
       ...
-    }:
+    }@inputs:
     {
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
 
-      # https://nixos.wiki/wiki/Automatic_system_upgrades
-      system.autoUpgrade = {
-        enable = true;
-        flake = self.outPath;
-        flags = [
-          "--update-input"
-          "nixpkgs"
-          "-L" # print build logs
-        ];
-        dates = "02:00";
-        randomizedDelaySec = "45min";
-      };
-
       # Expose the necessary information in your flake so agenix-rekey
       # knows where it has too look for secrets and paths.
-      agenix-rekey = agenix-rekey.configure {
+      agenix-rekey = inputs.agenix-rekey.configure {
         userFlake = self;
         nixosConfigurations = self.nixosConfigurations;
       };
 
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         modules = [
-          impermanence.nixosModules.impermanence
           ./disk.nix
           ./qemu-guest.nix
           ./configuration.nix
-          disko.nixosModules.disko
-          agenix.nixosModules.default
-          agenix-rekey.nixosModules.default
+          inputs.agenix-rekey.nixosModules.default
         ];
+        specialArgs = { inherit inputs self; };
       };
     };
 }
