@@ -43,6 +43,11 @@ in
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.grub.enable = false;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+
   environment.sessionVariables = rec {
     XDG_CACHE_HOME = "$HOME/.cache";
     XDG_CONFIG_HOME = "$HOME/.config";
