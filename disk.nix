@@ -13,10 +13,6 @@ in
     disko.nixosModules.disko
   ];
 
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.grub.enable = false;
-  boot.loader.systemd-boot.enable = true;
-
   environment.persistence."/persist" = {
     hideMounts = true;
     directories = [

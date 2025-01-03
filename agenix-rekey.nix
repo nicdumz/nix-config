@@ -14,6 +14,7 @@ let
     # `nix-shell -p age-plugin-yubikey usbutils` and hack away.
     ./identities/yubikey-v4-nano-identity.pub
   ];
+  # Relative to flake directory.
   publicKeyRelPath = "identities/host/${config.networking.hostName}.pub";
   publicKeyAbsPath = self.outPath + "/" + publicKeyRelPath;
 in
@@ -24,14 +25,14 @@ in
   ];
 
   options = {
-    me.foundPublicKeyForSystem = lib.mkOption {
+    me.foundPublicKey = lib.mkOption {
       type = lib.types.bool;
       default = builtins.pathExists publicKeyAbsPath;
     };
   };
 
   config.warnings = [
-    (lib.mkIf (!config.me.foundPublicKeyForSystem) ''
+    (lib.mkIf (!config.me.foundPublicKey) ''
       [ndumazet]: no public key configured for target system.
 
       This means that some features (e.g. Tailscale) are not enabled.
@@ -51,7 +52,7 @@ in
       storageMode = "local";
     }
     # Only set the pubkey if we find it.
-    // lib.optionalAttrs config.me.foundPublicKeyForSystem {
+    // lib.optionalAttrs config.me.foundPublicKey {
       # TODO: put this into the correct file
       # hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAcy5s114N7IL5WJIeMh2R7AZE+Gi9f4gVY6u4ZELFWX root@nixos";
       hostPubKey = builtins.readFile config.me.publicKeyPath;

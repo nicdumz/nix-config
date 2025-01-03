@@ -167,7 +167,7 @@ in
   services.pcscd.enable = true;
 
   age = {
-    secrets = lib.mkIf config.me.foundPublicKeyForSystem {
+    secrets = lib.mkIf config.me.foundPublicKey {
       # This is an OAuth Client (key) authorized to create auth_keys.
       tailscaleAuthKey.rekeyFile = ./secrets/tailscale_oauth.age;
       # TODO I cant use this because this is an encrypted (clear) passwd
@@ -175,7 +175,7 @@ in
     };
   };
 
-  services.tailscale = lib.optionalAttrs config.me.foundPublicKeyForSystem {
+  services.tailscale = lib.optionalAttrs config.me.foundPublicKey {
     enable = true;
     openFirewall = true;
     # TODO: "server" or "both" for an exit node
