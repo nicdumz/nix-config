@@ -100,6 +100,7 @@ in
           isNormalUser = true;
           extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
           createHome = true;
+          uid = 1000; # Copy debian defaults so backups have same ids.
         }
       );
       root = commonUserConfig;
