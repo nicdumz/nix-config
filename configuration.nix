@@ -20,21 +20,11 @@ let
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOcwoGu0XU3mowLSe+OwsiRwTEXGYtzOD52hRiGNznJe ndumazet@bistanclaque.local"
     ];
   };
-  # TODO: should eventually be a bunch of FIDO2 fprints.
-  ageMasterIdentities = [
-    # https://github.com/str4d/age-plugin-yubikey helps generating those, e.g.
-    # `nix-shell -p age-plugin-yubikey usbutils` and hack away.
-    ./identities/yubikey-v4-nano-identity.pub
-  ];
 in
 {
-  imports = with inputs; [
-    agenix.nixosModules.default
-  ];
-
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
+  imports = [
+    ./agenix-rekey.nix
+    ./nix.nix
   ];
 
   # not very intuitively, this is actually _merged_ with the modules enabled in qemu-guest
@@ -172,15 +162,7 @@ in
   services.pcscd.enable = true;
 
   age = {
-    rekey = {
-      # TODO: should be pulled up into some flake variable.
-      hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAcy5s114N7IL5WJIeMh2R7AZE+Gi9f4gVY6u4ZELFWX root@nixos";
-      # Should set something
-      masterIdentities = ageMasterIdentities;
-      localStorageDir = ./. + "/secrets/rekeyed/${config.networking.hostName}";
-      storageMode = "local";
-    };
-    secrets = {
+    secrets = lib.mkIf config.me.foundPublicKeyForSystem {
       # This is an OAuth Client (key) authorized to create auth_keys.
       tailscaleAuthKey.rekeyFile = ./secrets/tailscale_oauth.age;
       # TODO I cant use this because this is an encrypted (clear) passwd
@@ -188,7 +170,7 @@ in
     };
   };
 
-  services.tailscale = {
+  services.tailscale = lib.optionalAttrs config.me.foundPublicKeyForSystem {
     enable = true;
     openFirewall = true;
     # TODO: "server" or "both" for an exit node
