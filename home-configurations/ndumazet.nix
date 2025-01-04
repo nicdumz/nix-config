@@ -19,6 +19,9 @@
       "editor.fontSize" = 16;
       "nix.serverPath" = "nixd";
       "nix.enableLanguageServer" = true;
+      "extensions.experimental.affinity" = {
+        "asvetliakov.vscode-neovim" = 1;
+      };
     };
   };
 
