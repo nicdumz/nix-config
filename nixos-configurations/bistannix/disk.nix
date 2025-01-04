@@ -65,8 +65,6 @@ in
                   # (sudo systemd-cryptenroll /dev/nvme0n1p2 --fido2-device=/dev/hidraw1 --fido2-with-client-pin=no --fido2-credential-algorithm=eddsa)
                   crypttabExtraOpts = [
                     "fido2-device=auto"
-                    # there's only the token
-                    # "token-timeout=10"
                   ];
                   allowDiscards = true;
                   bypassWorkqueues = true;
