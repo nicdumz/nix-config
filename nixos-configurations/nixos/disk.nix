@@ -9,33 +9,8 @@ let
 in
 {
   imports = with inputs; [
-    impermanence.nixosModules.impermanence
     disko.nixosModules.disko
   ];
-
-  environment.persistence."/persist" = {
-    hideMounts = true;
-    directories = [
-      # TODO: find some location for configs. With flake I have no reason to
-      # have configs there.
-      # "/etc/nixos"
-      "/etc/ssh"
-      # I originally only preserved the fish_history file in this directory but
-      # this created noise due to
-      # https://github.com/fish-shell/fish-shell/issues/10730
-      "/root/.local/share/fish"
-      "/var/db/sudo/lectured"
-      "/var/lib/fprint"
-      "/var/lib/nixos" # for users etc
-      "/var/lib/tailscale"
-      "/var/log"
-    ];
-    files = [
-      "/etc/machine-id"
-      "/etc/nix/id_rsa"
-      "/var/lib/logrotate.status"
-    ];
-  };
 
   disko.devices = {
     nodev = {

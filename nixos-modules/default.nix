@@ -25,15 +25,22 @@ in
   imports = [
     ./agenix-rekey.nix
     ./nix.nix
+    inputs.impermanence.nixosModules.impermanence
   ];
 
-  # not very intuitively, this is actually _merged_ with the modules enabled in qemu-guest
-  boot.initrd.availableKernelModules = [
-    "ata_piix"
-    "floppy"
-    "sd_mod"
-    "sr_mod"
-  ];
+  system.stateVersion = "24.11";
+
+  boot.initrd = {
+    # not very intuitively, this is actually _merged_ with the modules enabled in qemu-guest
+    availableKernelModules = [
+      "ata_piix"
+      "floppy"
+      "sd_mod"
+      "sr_mod"
+    ];
+
+    systemd.enable = true;
+  };
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
@@ -41,12 +48,32 @@ in
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
+
+  environment.persistence."/persist" = {
+    hideMounts = true;
+    directories = [
+      # TODO: find some location for configs. With flake I have no reason to
+      # have configs there.
+      # "/etc/nixos"
+      "/etc/ssh"
+      # I originally only preserved the fish_history file in this directory but
+      # this created noise due to
+      # https://github.com/fish-shell/fish-shell/issues/10730
+      "/root/.local/share/fish"
+      "/var/cache"
+      "/var/db/sudo"
+      "/var/lib"
+      "/var/log"
+    ];
+    files = [
+      "/etc/machine-id"
+      "/etc/nix/id_rsa"
+    ];
+  };
 
   environment.sessionVariables = rec {
     XDG_CACHE_HOME = "$HOME/.cache";
@@ -76,6 +103,10 @@ in
     pulse.enable = true;
   };
 
+  services.openssh.enable = true;
+  # services.openssh.openFirewall is true by default.
+
+  nixpkgs.hostPlatform = "x86_64-linux";
   # https://nixos.wiki/wiki/Automatic_system_upgrades
   system.autoUpgrade = {
     enable = true;
@@ -87,6 +118,15 @@ in
     ];
     dates = "02:00";
     randomizedDelaySec = "45min";
+  };
+
+  # I spent too much time on this but those are settings for the system integration of
+  # home-manager, thus belong in nixconfiguration.
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    # Before overwriting a non-managed file, move it to .backup
+    backupFileExtension = "backup";
   };
 
   users = {
@@ -106,64 +146,26 @@ in
       root = commonUserConfig;
     };
   };
-
+  # This is technically needed to not have assertions failing due to defaultUserShell.
+  # But actual configuration happens in home-manager below.
   programs.fish.enable = true;
-  programs.git = {
-    enable = true;
-    config = {
-      user = {
-        email = "nicdumz.commits@gmail.com";
-        name = "Nicolas Dumazet";
-      };
-      aliases = {
-        st = "status";
-        ci = "commit";
-      };
-      # TODO fix this later
-      safe = {
-        directory = "/media/host";
-      };
-    };
-  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    wget
-    tree
-    kitty
-    librewolf
-    vscodium
+    efibootmgr
+    eza
+    git
+    libfido2 # provides fido2-token utility
+    nixd
     nixfmt-rfc-style
-    vimPlugins.none-ls-nvim
-    vimPlugins.nvim-treesitter
+    tree
+    wget
   ];
-  programs.neovim = {
-    enable = true;
-    # option doesnt exist
-    # extraPackages = with pkgs; [
-    #   nixfmt-rfc-style
-    #   vimPlugins.none-ls-nvim
-    #   vimPlugins.nvim-treesitter
-    # ];
-    defaultEditor = true;
-    vimAlias = true;
-    configure = {
-      packages.all.start = with pkgs.vimPlugins; [
-        (nvim-treesitter.withPlugins (ps: [ ps.nix ]))
-        none-ls-nvim
-      ];
-      # TODO: I still have no idea on how to trigger this.
-      customRC = ''
-        local null_ls = require("null-ls")
-        null_ls.setup({
-            sources = {
-                null_ls.builtins.formatting.nixfmt,
-            },
-        })
-      '';
-    };
-  };
+  fonts.packages = [
+    pkgs.cascadia-code
+  ];
+  fonts.fontconfig.enable = true;
 
   services.pcscd.enable = true;
 
@@ -191,24 +193,4 @@ in
       preauthorized = true;
     };
   };
-
-  # This option defines the first version of NixOS you have installed on this particular machine,
-  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
-  #
-  # Most users should NEVER change this value after the initial install, for any reason,
-  # even if you've upgraded your system to a new NixOS release.
-  #
-  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
-  # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
-  # to actually do that.
-  #
-  # This value being lower than the current NixOS release does NOT mean your system is
-  # out of date, out of support, or vulnerable.
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "24.11"; # Did you read the comment?
-
 }

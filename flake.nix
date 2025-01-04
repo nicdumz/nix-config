@@ -10,11 +10,23 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
 
+    ez-configs = {
+      url = "github:ehllie/ez-configs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
+    };
+
+    home-manager.url = "github:nix-community/home-manager?ref=release-24.11";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
     agenix.url = "github:ryantm/agenix";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
+    agenix.inputs.home-manager.follows = "home-manager";
 
     agenix-rekey.url = "github:oddlama/agenix-rekey";
     # Make sure to override the nixpkgs version to follow your flake,
@@ -26,15 +38,33 @@
   outputs =
     {
       self,
-      nixpkgs,
+      ez-configs,
       flake-parts,
       ...
     }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" ];
+
       imports = [
+        ez-configs.flakeModule
         inputs.agenix-rekey.flakeModule
       ];
+
+      # see https://github.com/ehllie/ez-configs/blob/main/README.md
+      ezConfigs = {
+        root = ./.;
+        globalArgs = { inherit inputs self; };
+        # TODO: ideally this should not be needed?
+        nixos.hosts.bistannix.userHomeModules = [
+          "ndumazet"
+          "root"
+        ];
+        nixos.hosts.nixos.userHomeModules = [
+          "ndumazet"
+          "root"
+        ];
+      };
+
       perSystem =
         {
           config,
@@ -54,19 +84,45 @@
           devShells.default = pkgs.mkShell {
             nativeBuildInputs = [ config.agenix-rekey.package ];
           };
+
+          # This is the default
+          #agenix-rekey.nixosConfigurations = inputs.self.nixosConfigurations;
         };
-      # This is the non-per-system variant.
-      flake = {
-        nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-          modules = [
-            ./disk.nix
-            ./qemu-guest.nix
-            ./configuration.nix
-          ];
-          specialArgs = { inherit inputs self nixpkgs; };
-        };
-        # This is the default
-        #agenix-rekey.nixosConfigurations = inputs.self.nixosConfigurations;
-      };
+      /*
+        Here I'm missing the iso, it's OK.
+           # This is the non-per-system variant.
+           flake = {
+             nixosConfigurations =
+               let
+                 mkSystem =
+                   hostname:
+                   {
+                     system ? "x86_64-linux",
+                     modules,
+                   }:
+
+                   nixpkgs.lib.nixosSystem {
+                     system = system;
+                     specialArgs = { inherit inputs self nixpkgs; };
+                     modules = modules ++ [
+                       inputs.home-manager.nixosModules.home-manager
+                       {
+                         networking.hostName = hostname;
+                         # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
+                         system.stateVersion = "24.11"; # Did you read the comment?
+                       }
+                     ];
+                   };
+               in
+               nixpkgs.lib.mapAttrs mkSystem {
+                 iso = {
+                   modules = [
+                     ./nix.nix
+                     "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix"
+                   ];
+                 };
+               };
+           };
+      */
     };
 }

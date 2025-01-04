@@ -23,6 +23,4 @@
   };
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true; # enable copy and paste between host and guest
-  services.openssh.enable = true;
-  # services.openssh.openFirewall is true by default.
 }
