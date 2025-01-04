@@ -12,6 +12,7 @@
     "org/gnome/desktop/interface" = {
       scaling-factor = lib.hm.gvariant.mkUint32 2;
       text-scaling-factor = lib.hm.gvariant.mkDouble 2.0;
+      cursor-size = 36;
     };
   };
 
