@@ -1,5 +1,10 @@
 # Module common to all homes / users.
-{ pkgs, lib, inputs, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 {
   programs.home-manager.enable = true;
   home.stateVersion = "24.11";
@@ -13,6 +18,13 @@
       scaling-factor = lib.hm.gvariant.mkUint32 2;
       text-scaling-factor = lib.hm.gvariant.mkDouble 2.0;
       cursor-size = 36;
+      color-scheme = "prefer-dark";
+    };
+    "org/gnome/desktop/background" = {
+      picture-uri-dark = "file://" + ./nixos-wallpaper.png;
+    };
+    "org/gnome/desktop/screensaver" = {
+      picture-uri = "file://" + ./nixos-wallpaper.png;
     };
   };
 
