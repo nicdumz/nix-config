@@ -148,7 +148,6 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     efibootmgr
-    eza
     git
     libfido2 # provides fido2-token utility
     nixd

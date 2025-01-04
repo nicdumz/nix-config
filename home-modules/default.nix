@@ -30,25 +30,23 @@
 
   programs.fish = {
     enable = true;
-    shellAbbrs = {
-      # ls = lib.mkIf eza ...
-    };
+    # eza below will setup abbrevations
+    preferAbbrs = true;
   };
-
+  programs.eza = {
+    enable = true;
+    icons = "auto";
+    colors = "auto";
+  };
   programs.git = {
     enable = true;
     aliases = {
       st = "status";
       ci = "commit";
     };
-    # config = {
-    #   # TODO fix this later
-    #   safe = {
-    #     directory = "/media/host";
-    #   };
-    # };
   };
 
+  home.sessionVariables.EDITOR = "nvim";
   programs.neovim = {
     enable = true;
     extraPackages = with pkgs; [
