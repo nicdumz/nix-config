@@ -49,9 +49,18 @@ in
   networking.useDHCP = lib.mkDefault true;
 
   boot.loader.efi.canTouchEfiVariables = true;
+  # TODO: I would technically prefer refind (for prettiness), but no
+  # declarative way to expose generations for now.
   boot.loader.grub.enable = false;
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.systemd-boot = {
+    enable = true;
+    configurationLimit = 10;
+    editor = false;
+  };
+  # highlight last booted
+  boot.loader.systemd-boot.extraInstallCommands = ''
+    ${pkgs.gnused}/bin/sed -i 's/default nixos-generation-[0-9][0-9].conf/default @saved/g' /boot/loader/loader.conf
+  '';
 
   environment.persistence."/persist" = {
     hideMounts = true;
