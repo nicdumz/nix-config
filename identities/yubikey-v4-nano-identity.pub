@@ -1,7 +1,0 @@
-#       Serial: 7203229, Slot: 1
-#         Name: nixos age identity
-#      Created: Mon, 30 Dec 2024 17:10:45 +0000
-#   PIN policy: Never  (A PIN is NOT required to decrypt)
-# Touch policy: Cached (A physical touch is required for decryption, and is cached for 15 seconds)
-#    Recipient: age1yubikey1qfz75fslrfqnk3s8hvryz02l6j28mzcm8z4hp2tm48e7sfm7nay55fma2wh
-AGE-PLUGIN-YUBIKEY-1NH5K6QYZUFUTCMCE2F0FR

@@ -3,19 +3,20 @@
   lib,
   self,
   inputs,
+  pkgs,
   ...
 }:
 let
-  # TODO: should eventually be a bunch of FIDO2 fprints.
   # (Security keys need to be accessible from the machine creating / rewkeying
   # configs)
   ageMasterIdentities = [
-    # https://github.com/str4d/age-plugin-yubikey helps generating those, e.g.
-    # `nix-shell -p age-plugin-yubikey usbutils` and hack away.
-    ./identities/yubikey-v4-nano-identity.pub
+    # `nix-shell -p age-plugin-fido2-hmac` helps generating those.
+    ./identities/yubikey-v5-nano.pub
+    ./identities/yubikey-v5.pub
+    ./identities/yubikey-v5-backup.pub
   ];
   # Relative to flake directory.
-  publicKeyRelPath = "identities/host/${config.networking.hostName}.pub";
+  publicKeyRelPath = "nixos-configurations/${config.networking.hostName}/host.pub";
   publicKeyAbsPath = self.outPath + "/" + publicKeyRelPath;
 in
 {
@@ -50,11 +51,12 @@ in
       masterIdentities = ageMasterIdentities;
       localStorageDir = self.outPath + "/secrets/rekeyed/${config.networking.hostName}";
       storageMode = "local";
+      agePlugins = [ pkgs.age-plugin-fido2-hmac ];
     }
     # Only set the pubkey if we find it.
     // lib.optionalAttrs config.me.foundPublicKey {
       # TODO: put this into the correct file
       # hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAcy5s114N7IL5WJIeMh2R7AZE+Gi9f4gVY6u4ZELFWX root@nixos";
-      hostPubKey = builtins.readFile config.me.publicKeyPath;
+      hostPubkey = builtins.readFile publicKeyAbsPath;
     };
 }

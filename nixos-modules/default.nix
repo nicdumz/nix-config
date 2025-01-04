@@ -172,7 +172,7 @@ in
   age = {
     secrets = lib.mkIf config.me.foundPublicKey {
       # This is an OAuth Client (key) authorized to create auth_keys.
-      tailscaleAuthKey.rekeyFile = ./secrets/tailscale_oauth.age;
+      tailscaleAuthKey.rekeyFile = self.outPath + "/secrets/tailscale_oauth.age";
       # TODO I cant use this because this is an encrypted (clear) passwd
       # passwd.rekeyFile = ./secrets/linux_passwd.age;
     };

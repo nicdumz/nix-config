@@ -28,7 +28,8 @@
     agenix.inputs.nixpkgs.follows = "nixpkgs";
     agenix.inputs.home-manager.follows = "home-manager";
 
-    agenix-rekey.url = "github:oddlama/agenix-rekey";
+    #agenix-rekey.url = "github:oddlama/agenix-rekey";
+    agenix-rekey.url = "path:///home/ndumazet/code/agenix-rekey";
     # Make sure to override the nixpkgs version to follow your flake,
     # otherwise derivation paths can mismatch (when using storageMode = "derivation"),
     # resulting in the rekeyed secrets not being found!
