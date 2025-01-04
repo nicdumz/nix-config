@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, self, ... }:
 {
   home.username = "ndumazet";
   home.homeDirectory = "/home/ndumazet";
@@ -22,6 +22,21 @@
       "extensions.experimental.affinity" = {
         "asvetliakov.vscode-neovim" = 1;
       };
+      "nix.serverSettings" = {
+        nixd = {
+          options = {
+            #default = {
+            #  expr = "import <nixpkgs> { }";
+            #};
+            nixos = {
+              expr = "(builtins.getFlake \"\${workspaceFolder}\").nixosConfigurations.bistannix.options";
+            };
+            home-manager = {
+              expr = "(builtins.getFlake \"\${workspaceFolder}\").homeConfigurations.\"ndumazet@bistannix\".options";
+            };
+          };
+        };
+      };
     };
   };
 
@@ -29,7 +44,7 @@
     enable = true;
     font = {
       # TODO: this actually depends on display scaling ..
-      size = 12;
+      size = 20;
       name = "Cascadia Code NF";
     };
     # https://sw.kovidgoyal.net/kitty/shell-integration/

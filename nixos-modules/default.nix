@@ -24,7 +24,7 @@ in
 {
   imports = [
     ./agenix-rekey.nix
-    ./graphical.nix  # TODO: remove for headless
+    ./graphical.nix # TODO: remove for headless
     ./nix.nix
     inputs.impermanence.nixosModules.impermanence
   ];
@@ -42,6 +42,8 @@ in
 
     systemd.enable = true;
   };
+
+  security.sudo.extraConfig = "Defaults insults,timestamp_timeout=30";
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
@@ -94,7 +96,6 @@ in
 
   time.timeZone = "Europe/Zurich";
   i18n.defaultLocale = "en_GB.UTF-8";
-
 
   services.openssh.enable = true;
   # services.openssh.openFirewall is true by default.

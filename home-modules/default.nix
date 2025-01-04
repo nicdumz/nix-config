@@ -1,10 +1,19 @@
 # Module common to all homes / users.
-{ pkgs, ... }:
+{ pkgs, lib, inputs, ... }:
 {
   programs.home-manager.enable = true;
   home.stateVersion = "24.11";
+  # For nixd
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
   programs.htop.enable = true;
+
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      scaling-factor = lib.hm.gvariant.mkUint32 2;
+      text-scaling-factor = lib.hm.gvariant.mkDouble 2.0;
+    };
+  };
 
   programs.fish = {
     enable = true;
@@ -44,7 +53,7 @@
     vimAlias = true;
     vimdiffAlias = true;
     extraLuaConfig = ''
-      local cmp = require'cmp'
+      local cmp = require('cmp')
 
       cmp.setup({
         mapping = cmp.mapping.preset.insert({
@@ -62,9 +71,22 @@
       })
 
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      require'lspconfig'.nixd.setup{
-        capabilities = capabilities
-      }
+      -- note that ./. below works because nixd starts in root_dir() (where .git or flake.nix is)
+      require('lspconfig').nixd.setup({
+        capabilities = capabilities,
+        settings = {
+          nixd = {
+            options = {
+              nixos = {
+                expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.bistannix.options',
+              },
+              home_manager = {
+                expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."ndumazet@bistannix".options',
+              },
+            },
+          },
+        },
+      })
     '';
   };
 }

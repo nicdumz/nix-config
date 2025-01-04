@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   services.xserver = {
     enable = true;
@@ -47,8 +47,7 @@
     gedit
     gnomeExtensions.appindicator
     # clipboard support
-    (lib.mkIf config.services.xserver.enable xsel)
-    (lib.mkIf (!config.services.xserver.enable) wl-copy)
+    wl-clipboard
   ];
 
   fonts.packages = [
