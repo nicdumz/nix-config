@@ -24,6 +24,7 @@ in
 {
   imports = [
     ./agenix-rekey.nix
+    ./graphical.nix  # TODO: remove for headless
     ./nix.nix
     inputs.impermanence.nixosModules.impermanence
   ];
@@ -94,23 +95,6 @@ in
   time.timeZone = "Europe/Zurich";
   i18n.defaultLocale = "en_GB.UTF-8";
 
-  services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-
-    # Configure keymap in X11
-    xkb.layout = "us";
-    # xkb.options = "eurosign:e,caps:escape";
-  };
-
-  # Enable sound.
-  # hardware.pulseaudio.enable = true;
-  # OR
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-  };
 
   services.openssh.enable = true;
   # services.openssh.openFirewall is true by default.
@@ -170,14 +154,7 @@ in
     nixfmt-rfc-style
     tree
     wget
-    # to make clipboard contents grabbable from neovim (on X. wl-copy should be
-    # preferred if wayland)
-    xsel
   ];
-  fonts.packages = [
-    pkgs.cascadia-code
-  ];
-  fonts.fontconfig.enable = true;
 
   services.pcscd.enable = true;
 
