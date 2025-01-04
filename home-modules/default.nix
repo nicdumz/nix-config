@@ -30,23 +30,19 @@
   programs.neovim = {
     enable = true;
     extraPackages = with pkgs; [
+      # both already in system packages, but just in case...
+      nixd
       nixfmt-rfc-style
-      vimPlugins.none-ls-nvim
-      vimPlugins.nvim-treesitter
     ];
-    plugins = [
-      (pkgs.vimPlugins.nvim-treesitter.withPlugins (ps: [ ps.nix ]))
+    plugins = with pkgs.vimPlugins; [
+      (nvim-treesitter.withPlugins (ps: [ ps.nix ]))
+      nvim-lspconfig
     ];
     defaultEditor = true;
     vimAlias = true;
     vimdiffAlias = true;
     extraLuaConfig = ''
-      local null_ls = require("null-ls")
-      null_ls.setup({
-          sources = {
-              null_ls.builtins.formatting.nixfmt,
-          },
-      })
+      require'lspconfig'.nixd.setup{}
     '';
   };
 }

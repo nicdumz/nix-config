@@ -13,6 +13,8 @@
   # Make `nix repl '<nixpkgs>'` use the same nixpkgs as the one used by this flake.
   environment.etc."nix/inputs/nixpkgs".source = "${inputs.nixpkgs}";
   nix = {
+    # this helps nixd find the right completions etc.
+    nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
     # make `nix run nixpkgs#nixpkgs` use the same nixpkgs as the one used by this flake.
     registry.nixpkgs.flake = inputs.nixpkgs;

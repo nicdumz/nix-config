@@ -49,6 +49,7 @@
       include $XDG_CONFIG_HOME/kitty/nova-colors.conf
     '';
   };
+
   programs.librewolf = {
     enable = true;
     settings =

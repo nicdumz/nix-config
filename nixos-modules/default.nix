@@ -146,8 +146,8 @@ in
       root = commonUserConfig;
     };
   };
-  # This is technically needed to not have assertions failing due to defaultUserShell.
-  # But actual configuration happens in home-manager below.
+  # This is technically needed to not have assertions failing due to
+  # defaultUserShell. But actual configuration happens in home-manager below.
   programs.fish.enable = true;
 
   # List packages installed in system profile. To search, run:
@@ -161,6 +161,9 @@ in
     nixfmt-rfc-style
     tree
     wget
+    # to make clipboard contents grabbable from neovim (on X. wl-copy should be
+    # preferred if wayland)
+    xsel
   ];
   fonts.packages = [
     pkgs.cascadia-code
