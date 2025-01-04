@@ -69,10 +69,10 @@
       perSystem =
         {
           config,
-          self',
-          inputs',
+          # self',
+          # inputs',
           pkgs,
-          system,
+          # system,
           ...
         }:
         {
