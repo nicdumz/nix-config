@@ -49,9 +49,4 @@
     # clipboard support
     wl-clipboard
   ];
-
-  fonts.packages = [
-    pkgs.cascadia-code
-  ];
-  fonts.fontconfig.enable = true;
 }

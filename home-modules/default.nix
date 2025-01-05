@@ -28,6 +28,12 @@
     };
   };
 
+
+  home.packages = [
+    pkgs.cascadia-code
+  ];
+  fonts.fontconfig.enable = true;
+
   xdg.enable = true;
 
   programs.fish = {
@@ -49,6 +55,16 @@
         description = "override user completion for systems with lots of net users -- only use local users";
       };
     };
+    shellAbbrs = {
+      kittydiff = "kitty +kitten diff";
+      # NOTE: I used to have a weird alias downgrading TERMINFO before SSH (
+      # https://sw.kovidgoyal.net/kitty/faq/#i-get-errors-about-the-terminal-being-unknown-or-opening-the-terminal-failing-or-functional-keys-like-arrow-keys-don-t-work)
+      # but this sounds silly -- dropping it.
+      #
+      # TODO: maybe a chezmoi-google equivalent
+      # TODO: maybe work specific abbrvs
+    };
+    # TODO: maybe work specific extensions
   };
   programs.eza = {
     enable = true;
