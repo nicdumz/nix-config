@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   home.username = "ndumazet";
-  home.homeDirectory = "/home/ndumazet";
 
   programs.git = {
     userEmail = "nicdumz.commits@gmail.com";

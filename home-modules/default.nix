@@ -3,10 +3,12 @@
   pkgs,
   lib,
   inputs,
+  config,
   ...
 }:
 {
   programs.home-manager.enable = true;
+  home.homeDirectory = lib.mkDefault "/home/${config.home.username}";
   home.stateVersion = "24.11";
   # For nixd
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
@@ -27,7 +29,6 @@
       picture-uri = "file://" + ./nixos-wallpaper.png;
     };
   };
-
 
   home.packages = [
     pkgs.cascadia-code
