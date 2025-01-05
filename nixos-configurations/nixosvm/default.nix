@@ -3,5 +3,5 @@
     ./disk.nix
     ./qemu-guest.nix
   ];
-  networking.hostName = "nixos";
+  networking.hostName = "nixosvm";
 }

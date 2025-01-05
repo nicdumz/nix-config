@@ -60,7 +60,7 @@
           "ndumazet"
           "root"
         ];
-        nixos.hosts.nixos.userHomeModules = [
+        nixos.hosts.nixosvm.userHomeModules = [
           "ndumazet"
           "root"
         ];
