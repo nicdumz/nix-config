@@ -28,10 +28,27 @@
     };
   };
 
+  xdg.enable = true;
+
   programs.fish = {
     enable = true;
     # eza below will setup abbrevations
     preferAbbrs = true;
+    interactiveShellInit = ''
+      set fish_greeting
+    '';
+    functions = {
+      __fish_complete_users = {
+        body = ''
+          if test -r /etc/passwd
+            string match -v -r '^\s*#' </etc/passwd | while read -l line
+              string split -f 1,5 : -- $line | string join \t | string replace -r ',.*' ""
+            end
+          end
+        '';
+        description = "override user completion for systems with lots of net users -- only use local users";
+      };
+    };
   };
   programs.eza = {
     enable = true;
