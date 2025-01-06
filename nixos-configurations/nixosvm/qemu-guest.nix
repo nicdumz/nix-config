@@ -1,8 +1,6 @@
 # Those are settings which mostly only make sense in the context of running
 # NixOS as part of a Guest VM.
 {
-  lib,
-  pkgs,
   modulesPath,
   ...
 }:

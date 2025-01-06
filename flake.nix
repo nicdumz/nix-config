@@ -34,6 +34,13 @@
     # otherwise derivation paths can mismatch (when using storageMode = "derivation"),
     # resulting in the rekeyed secrets not being found!
     agenix-rekey.inputs.nixpkgs.follows = "nixpkgs";
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    git-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
+    git-hooks-nix.url = "github:cachix/git-hooks.nix";
   };
 
   outputs =
@@ -49,6 +56,8 @@
       imports = [
         ez-configs.flakeModule
         inputs.agenix-rekey.flakeModule
+        inputs.treefmt-nix.flakeModule
+        inputs.git-hooks-nix.flakeModule
       ];
 
       # see https://github.com/ehllie/ez-configs/blob/main/README.md
@@ -76,18 +85,26 @@
           ...
         }:
         {
-          # Per-system attributes can be defined here. The self' and inputs'
-          # module parameters provide easy access to attributes of the same
-          # system.
-          formatter = pkgs.nixfmt-rfc-style;
           # Add `config.agenix-rekey.package` to your devshell to
           # easily access the `agenix` command wrapper.
           devShells.default = pkgs.mkShell {
             nativeBuildInputs = [ config.agenix-rekey.package ];
           };
-
           # This is the default
           #agenix-rekey.nixosConfigurations = inputs.self.nixosConfigurations;
+
+          pre-commit.settings.hooks.treefmt.enable = true;
+
+          # `nix fmt` now does magic in this directory.
+          treefmt = {
+            projectRootFile = "flake.nix";
+            programs = {
+              deadnix.enable = true;
+              fish_indent.enable = true;
+              nixfmt.enable = true;
+              statix.enable = true;
+            };
+          };
         };
       /*
         Here I'm missing the iso, it's OK.

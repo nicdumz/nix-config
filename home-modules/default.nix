@@ -7,7 +7,7 @@
   ...
 }:
 {
-  imports = [./fonts.nix];
+  imports = [ ./fonts.nix ];
 
   programs.home-manager.enable = true;
   home.homeDirectory = lib.mkDefault "/home/${config.home.username}";
@@ -48,30 +48,33 @@
       # Merge history when pressing up
       up-or-search = lib.readFile ./up-or-search.fish;
       # Check stuff in PATH
-      nix-inspect = /* fish */ ''
-        set -s PATH | grep "PATH\[.*/nix/store" | cut -d '|' -f2 |  grep -v -e "-man" -e "-terminfo" | perl -pe 's:^/nix/store/\w{32}-([^/]*)/bin$:\1:' | sort | uniq
-      '';
-      __fish_complete_users = {
-        body = /* fish */ ''
-          if test -r /etc/passwd
-            string match -v -r '^\s*#' </etc/passwd | while read -l line
-              string split -f 1,5 : -- $line | string join \t | string replace -r ',.*' ""
-            end
-          end
+      nix-inspect = # fish
+        ''
+          set -s PATH | grep "PATH\[.*/nix/store" | cut -d '|' -f2 |  grep -v -e "-man" -e "-terminfo" | perl -pe 's:^/nix/store/\w{32}-([^/]*)/bin$:\1:' | sort | uniq
         '';
+      __fish_complete_users = {
+        body = # fish
+          ''
+            if test -r /etc/passwd
+              string match -v -r '^\s*#' </etc/passwd | while read -l line
+                string split -f 1,5 : -- $line | string join \t | string replace -r ',.*' ""
+              end
+            end
+          '';
         description = "override user completion for systems with lots of net users -- only use local users";
       };
       # Improved nix shell (define a prompt item that I can use in e.g. tide_right_prompt_items)
-      _tide_item_nix3_shell = /* fish */ ''
-        set packages (nix-inspect)
-        if test -n "$IN_NIX_SHELL"
-          set -q name; or set name nix-shell
-          set -p packages $name
-        end
-        if set -q packages[1] &>/dev/null
-          _tide_print_item nix3_shell $tide_nix3_shell_icon' ' " $(string shorten -m 40 "$packages")"
-        end
-      '';
+      _tide_item_nix3_shell = # fish
+        ''
+          set packages (nix-inspect)
+          if test -n "$IN_NIX_SHELL"
+            set -q name; or set name nix-shell
+            set -p packages $name
+          end
+          if set -q packages[1] &>/dev/null
+            _tide_print_item nix3_shell $tide_nix3_shell_icon' ' " $(string shorten -m 40 "$packages")"
+          end
+        '';
     };
     shellAbbrs = {
       kittydiff = "kitty +kitten diff";
