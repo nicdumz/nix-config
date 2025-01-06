@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   home.username = "ndumazet";
 
@@ -18,6 +18,7 @@
     userSettings = {
       "editor.fontSize" = 16;
       "editor.rulers" = [80 100];
+      "editor.fontFamily" = config.fontProfiles.monospace.name + ", 'Droid Sans Mono', 'monospace', monospace";
       "rewrap.autoWrap.enabled" = true;
       "rewrap.wrappingColumn" = 100;
       "nix.serverPath" = "nixd";
@@ -48,8 +49,7 @@
     font = {
       # TODO: this actually depends on display scaling ..
       size = 20;
-      name = "Cascadia Code NF";
-      package = pkgs.cascadia-code;
+      name = config.fontProfiles.monospace.name;
     };
     # https://sw.kovidgoyal.net/kitty/shell-integration/
     # wut wut
