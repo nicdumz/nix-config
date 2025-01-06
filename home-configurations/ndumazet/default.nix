@@ -1,7 +1,8 @@
-{ ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./kitty.nix
+    ./tmux.nix
     ./vscode.nix
   ];
   home.username = "ndumazet";
@@ -10,6 +11,11 @@
     userEmail = "nicdumz.commits@gmail.com";
     userName = "Nicolas Dumazet";
   };
+
+  home.packages = [
+    # useful for (shell) color diagnosis.
+    pkgs.neofetch
+  ];
 
   programs.librewolf = {
     enable = true;
