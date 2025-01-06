@@ -100,9 +100,15 @@
           # `nix fmt` now does magic in this directory.
           treefmt = {
             projectRootFile = "flake.nix";
+            settings.global.excludes = [
+              "*.age"
+              "*.png"
+              "*.pub"
+            ];
             programs = {
               deadnix.enable = true;
               fish_indent.enable = true;
+              mdformat.enable = true;
               nixfmt.enable = true;
               statix.enable = true;
             };
