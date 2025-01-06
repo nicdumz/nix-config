@@ -25,12 +25,12 @@ let
         example = "pkgs.fira-code";
       };
       # TODO: find a way to scale this depending on scaling factors.
-      # size = lib.mkOption {
-      #   type = lib.types.int;
-      #   default = 12;
-      #   description = "Size in pixels for ${kind} font profile";
-      #   example = "14";
-      # };
+      size = lib.mkOption {
+        type = lib.types.int;
+        default = 12;
+        description = "Size in pixels for ${kind} font profile";
+        example = "14";
+      };
     };
   cfg = config.fontProfiles;
 in
@@ -41,15 +41,19 @@ in
       name = "Cascadia Code NF";
       pkg = pkgs.cascadia-code;
     };
-    # regular = mkFontOption "regular";
+    regular = mkFontOption {
+      kind = "regular";
+      name = "Cantarell";
+      pkg = pkgs.cantarell-fonts;
+    };
   };
 
   config = {
     fonts.fontconfig.enable = true;
     home.packages = [
-      # nit: this could iterate above cfg somehow
+      # nit: this could iterate on above cfg somehow
       cfg.monospace.package
-      # cfg.regular.package
+      cfg.regular.package
     ];
   };
 }

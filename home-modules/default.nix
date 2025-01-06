@@ -20,20 +20,33 @@
 
   programs.htop.enable = true;
 
-  dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      scaling-factor = lib.hm.gvariant.mkUint32 2;
-      text-scaling-factor = lib.hm.gvariant.mkDouble 2.0;
-      cursor-size = 36;
-      color-scheme = "prefer-dark";
+  dconf.settings =
+    let
+      r = config.fontProfiles.regular;
+      m = config.fontProfiles.monospace;
+      rf = "${r.name} ${toString r.size}";
+      mf = "${m.name} ${toString m.size}";
+    in
+    {
+      "org/gnome/desktop/interface" = {
+        scaling-factor = lib.hm.gvariant.mkUint32 2;
+        text-scaling-factor = lib.hm.gvariant.mkDouble 2.0;
+        cursor-size = 36;
+        color-scheme = "prefer-dark";
+        document-font-name = rf;
+        font-name = rf;
+        monospace-font-name = mf;
+      };
+      "org/gnome/desktop/wm/preferences" = {
+        titlebar-font = rf;
+      };
+      "org/gnome/desktop/background" = {
+        picture-uri-dark = "file://" + ./nixos-wallpaper.png;
+      };
+      "org/gnome/desktop/screensaver" = {
+        picture-uri = "file://" + ./nixos-wallpaper.png;
+      };
     };
-    "org/gnome/desktop/background" = {
-      picture-uri-dark = "file://" + ./nixos-wallpaper.png;
-    };
-    "org/gnome/desktop/screensaver" = {
-      picture-uri = "file://" + ./nixos-wallpaper.png;
-    };
-  };
 
   xdg.enable = true;
 
