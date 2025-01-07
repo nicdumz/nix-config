@@ -1,4 +1,12 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
+let
+  mkNvimPlugin =
+    src: pname:
+    pkgs.vimUtils.buildVimPlugin {
+      inherit pname src;
+      version = src.lastModifiedDate;
+    };
+in
 {
   programs.neovim = {
     enable = true;
@@ -9,13 +17,54 @@
     ];
     plugins = with pkgs.vimPlugins; [
       (nvim-treesitter.withPlugins (ps: [ ps.nix ]))
-      nvim-lspconfig
       cmp-nvim-lsp
       nvim-cmp
+      nvim-lspconfig
+      {
+        plugin = vim-airline;
+        config = ''
+          let g:airline_powerline_fonts = 1
+          let g:airline_section_y = '''
+        '';
+      }
+      vim-airline-themes
+      vim-sensible
+      {
+        plugin = (mkNvimPlugin inputs.nova-vim "nova-vim");
+        config = "colorscheme nova";
+      }
     ];
     defaultEditor = true;
     vimAlias = true;
     vimdiffAlias = true;
+    # Keeping things quite basic compared to the sea of settings I used to have.
+    extraConfig = ''
+      set nomodeline " vulns
+      set noswapfile
+
+      set cmdheight=2
+      set shortmess=atToOcCF
+
+      set wildmode=longest,list,full
+      set wildignore=*.swp,*.bak,*.pyc,*.class
+
+      set fillchars=vert:┃,fold:- " Nicer vertical split
+      set formatoptions+=rj " Remove comment characters and others on J
+
+      set expandtab
+      set tabstop=4
+      set shiftwidth=4
+
+      set number " Show line numbers
+
+      " space to PageDown, similar to vimperator
+      map <space> <C-f>
+
+      " easier keyboard, when I accidentally hit F1 instead of Esc.
+      map <F1> <Esc>
+      imap <F1> <Esc>
+      imap <M-Space> <Esc>
+    '';
     extraLuaConfig = ''
       local cmp = require('cmp')
 

@@ -342,6 +342,22 @@
         "type": "github"
       }
     },
+    "nova-vim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1572599470,
+        "narHash": "sha256-x6dYtnyz+GmVbMRAHPDyZudN2pp753QDePyHfX/avvs=",
+        "owner": "nicdumz",
+        "repo": "nova-vim",
+        "rev": "c51aa73777c8983c244cefdbb690d50e7403b007",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nicdumz",
+        "repo": "nova-vim",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -377,6 +393,7 @@
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "nixpkgs": "nixpkgs",
+        "nova-vim": "nova-vim",
         "treefmt-nix": "treefmt-nix_2"
       }
     },
