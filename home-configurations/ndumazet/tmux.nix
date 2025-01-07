@@ -24,11 +24,15 @@
       bind-key -n F4 next-window
       bind-key -n F7 copy-mode
 
+      # Use clipboard from kitty
+      set -s set-clipboard on
+
       setw -g automatic-rename on
       setw -g xterm-keys on
       # automatically renumber window numbers on closing a pane (needs tmux >= 1.7)
       set -g renumber-windows on
-      set  -g focus-events on
+      set -g focus-events on
+      set -g mouse on
 
       # light blue
       set -g @tmux_power_theme 'color12'
