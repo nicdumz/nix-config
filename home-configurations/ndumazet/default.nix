@@ -1,10 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   imports = [
     ./kitty.nix
     ./tmux.nix
     ./vscode.nix
   ];
+
   home.username = "ndumazet";
 
   programs.git = {
@@ -16,6 +17,22 @@
     # useful for (shell) color diagnosis.
     pkgs.neofetch
   ];
+
+  programs.mercurial = {
+    enable = true;
+    userEmail = config.programs.git.userEmail;
+    userName = config.programs.git.userName;
+    extraConfig = {
+      ui.editor = "nvim -c 'set ft=hgs'";
+      color = {
+        # bold green current CL in graph
+        "desc.here" = "green bold";
+      };
+      google-change-tags = {
+        "default.markdown" = true;
+      };
+    };
+  };
 
   programs.librewolf = {
     enable = true;
