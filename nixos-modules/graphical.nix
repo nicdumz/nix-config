@@ -1,5 +1,7 @@
 { pkgs, ... }:
 {
+  # NOTE: this actually is using wayland.
+  # NOTE: Remember to add gammastep, redshift or similar if moving away from gnome.
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;

@@ -26,6 +26,7 @@ in
     ./agenix-rekey.nix
     ./graphical.nix # TODO: remove for headless
     ./nix.nix
+    ./options.nix
     inputs.impermanence.nixosModules.impermanence
   ];
 
@@ -41,6 +42,13 @@ in
     ];
 
     systemd.enable = true;
+  };
+
+  # A strange one: embed the flake entire directory onto the produced system. This allows having
+  # access to the input .nix files, and is convenient when building an .iso which then can be used
+  # for deployment.
+  environment.etc.nixos-sources = lib.mkIf config.nicdumz.embedFlake {
+    source = self.outPath;
   };
 
   security.sudo.extraConfig = "Defaults insults,timestamp_timeout=30";
@@ -137,6 +145,7 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    colordiff
     efibootmgr
     git
     libfido2 # provides fido2-token utility

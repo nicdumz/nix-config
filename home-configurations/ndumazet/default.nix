@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 {
   imports = [
     ./kitty.nix
@@ -27,8 +32,8 @@
 
   programs.mercurial = {
     enable = true;
-    userEmail = config.programs.git.userEmail;
-    userName = config.programs.git.userName;
+    inherit (config.programs.git) userEmail;
+    inherit (config.programs.git) userName;
     extraConfig = {
       ui.editor = "nvim -c 'set ft=hgs'";
       color = {

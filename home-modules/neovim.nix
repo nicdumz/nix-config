@@ -30,7 +30,7 @@ in
       vim-airline-themes
       vim-sensible
       {
-        plugin = (mkNvimPlugin inputs.nova-vim "nova-vim");
+        plugin = mkNvimPlugin inputs.nova-vim "nova-vim";
         config = "colorscheme nova";
       }
     ];

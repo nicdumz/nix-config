@@ -67,14 +67,21 @@
         root = ./.;
         globalArgs = { inherit inputs self; };
         # TODO: ideally this should not be needed?
-        nixos.hosts.bistannix.userHomeModules = [
-          "ndumazet"
-          "root"
-        ];
-        nixos.hosts.nixosvm.userHomeModules = [
-          "ndumazet"
-          "root"
-        ];
+        nixos.hosts =
+          let
+            allUsers = [
+              "ndumazet"
+              "root"
+            ];
+          in
+          {
+            bistannix.userHomeModules = allUsers;
+            nixosvm.userHomeModules = allUsers;
+            # `nix build .#nixosConfigurations.liveusb.config.system.build.isoImage`
+            # Builds an .iso in /result/ which conveniently will contain this flake in
+            # /etc/nixos-sources, allowing for a liveusb installation.
+            liveusb.userHomeModules = allUsers;
+          };
       };
 
       perSystem =
@@ -117,41 +124,5 @@
             };
           };
         };
-      /*
-        Here I'm missing the iso, it's OK.
-           # This is the non-per-system variant.
-           flake = {
-             nixosConfigurations =
-               let
-                 mkSystem =
-                   hostname:
-                   {
-                     system ? "x86_64-linux",
-                     modules,
-                   }:
-
-                   nixpkgs.lib.nixosSystem {
-                     system = system;
-                     specialArgs = { inherit inputs self nixpkgs; };
-                     modules = modules ++ [
-                       inputs.home-manager.nixosModules.home-manager
-                       {
-                         networking.hostName = hostname;
-                         # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-                         system.stateVersion = "24.11"; # Did you read the comment?
-                       }
-                     ];
-                   };
-               in
-               nixpkgs.lib.mapAttrs mkSystem {
-                 iso = {
-                   modules = [
-                     ./nix.nix
-                     "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-gnome.nix"
-                   ];
-                 };
-               };
-           };
-      */
     };
 }
