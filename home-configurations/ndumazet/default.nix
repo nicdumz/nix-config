@@ -11,6 +11,9 @@
   programs.git = {
     userEmail = "nicdumz.commits@gmail.com";
     userName = "Nicolas Dumazet";
+    extraConfig = {
+      github.user = "nicdumz";
+    };
   };
 
   home.packages = [
