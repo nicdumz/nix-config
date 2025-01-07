@@ -16,6 +16,10 @@
     };
   };
 
+  # TODO: lacks configuration
+  programs.irssi.enable = true;
+  programs.hexchat.enable = true;
+
   home.packages = [
     # useful for (shell) color diagnosis.
     pkgs.neofetch

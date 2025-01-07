@@ -3,6 +3,7 @@
   lib,
   inputs,
   config,
+  pkgs,
   ...
 }:
 {
@@ -15,6 +16,7 @@
   programs.home-manager.enable = true;
   home.homeDirectory = lib.mkDefault "/home/${config.home.username}";
   home.stateVersion = "24.11";
+  home.packages = [ pkgs.colordiff ];
   # For nixd
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 

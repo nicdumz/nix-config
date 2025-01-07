@@ -121,13 +121,12 @@ in
     mutableUsers = false;
 
     users = {
-      ndumazet = commonUserConfig
-        // {
-          isNormalUser = true;
-          extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-          createHome = true;
-          uid = 1000; # Copy debian defaults so backups have same ids.
-        };
+      ndumazet = commonUserConfig // {
+        isNormalUser = true;
+        extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+        createHome = true;
+        uid = 1000; # Copy debian defaults so backups have same ids.
+      };
       root = commonUserConfig;
     };
   };
@@ -143,7 +142,7 @@ in
     libfido2 # provides fido2-token utility
     nixd
     nixfmt-rfc-style
-    tree
+    unzip
     wget
   ];
 
