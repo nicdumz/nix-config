@@ -8,6 +8,14 @@
       jnoortheen.nix-ide
       stkb.rewrap
     ];
+    #++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+    #  {
+    #    name = "vscode-markdown-alert";
+    #    publisher = "yahyabatulu";
+    #    version = "0.0.4";
+    #    sha256 = "sha256-dCaSMPSntYo0QLr2pcs9GfJxOshfyeXbs8IMCwd+lqw=";
+    #  }
+    #];
     userSettings = {
       "editor.fontSize" = 16;
       "editor.rulers" = [
@@ -34,9 +42,6 @@
       "nix.serverSettings" = {
         nixd = {
           options = {
-            #default = {
-            #  expr = "import <nixpkgs> { }";
-            #};
             nixos = {
               expr = "(builtins.getFlake \"\${workspaceFolder}\").nixosConfigurations.bistannix.options";
             };
