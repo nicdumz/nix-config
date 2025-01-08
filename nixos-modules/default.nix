@@ -11,13 +11,6 @@
   ...
 }:
 
-let
-  commonUserConfig = {
-    # via mkpasswd
-    # TODO this could use hashedPasswordFile
-    hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
-  };
-in
 {
   imports = [
     ./agenix-rekey.nix
@@ -127,13 +120,19 @@ in
     mutableUsers = false;
 
     users = {
-      ndumazet = commonUserConfig // {
+      ndumazet = {
         isNormalUser = true;
         extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
         createHome = true;
-        uid = 1000; # Copy debian defaults so backups have same ids.
+        uid = 1000; # Debian defaults.
+        # via mkpasswd, this is a trivial / dummy PW for installs. We'll do better.
+        # TODO this should use hashedPasswordFile when available.
+        hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
       };
-      root = commonUserConfig;
+      root = {
+        # NOTE: no passwd, no need for direct login.
+        uid = 0;
+      };
     };
   };
   # This is technically needed to not have assertions failing due to
