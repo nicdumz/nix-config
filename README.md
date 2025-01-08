@@ -1,0 +1,70 @@
+# Nix configurations
+
+This is a replacement of my previous [dotfiles](https://github.com/nicdumz/dotfiles) setup, except
+that on top of user configuration intent this repo also encodes machine configuration intent.
+
+- Nix + Home Manager manage the "dotfiles" home user configuration intent.
+- Where I can control the OS, I run NixOS.
+
+## Structure
+
+```
+├── home-configurations
+│   │── $user               home-manager config for $user
+│   └── ...
+│── home-modules            home-manager modules
+│   └── default.nix         Included for all users
+│── nixos-configurations    NixOs per-host configurations
+│   └── $host              Configuration for $host
+│       └── default.nix     Host entrypoint.
+│   └── $host2.nix          Simple single-file config for $host2
+│── nixos-modules           NixOs optional modules
+│   └── default.nix         Included for all hosts
+│── secrets                 agenix encrypted secrets
+├── .envrc                  direnv directive
+├── README.md               Github Repo landing page
+├── flake.nix               Core flake
+├── flake.lock              Lockfile
+└── LICENSE                 Project License
+```
+
+I found [ez-configs](https://flake.parts/options/ez-configs) as a way to organize modules and I
+quite liked it. It is setup in such a way that `nixos-rebuild build --flake .#bistannix` includes:
+
+- `nixos-configurations/bistannix`
+- `nixos-modules/default`
+- `home-configurations/{root,ndumazet}`
+- `home-configurations/default`
+
+> \[!TIP\]
+> `foo/default.nix` and `foo.nix` are interchangeable and both produce a `foo` submodule, I use both depending on complexity.
+
+## Features
+
+- Secret management: integration with `agenix`/`agenix-rekey` lets me check-in encrypted secrets. My FIDO2 keys allow for decryption/rewrapping for a new host's pubkey. After deployment to a new host, the host can decrypt its secrets, exposing them via `/run/...` to the correct application.
+- Multi-machine, multi-user by design.
+- `disko` handles partition layout for new installs.
+- Development on this repo:
+  - `direnv` integration: if you `cd` into the repo you should get a useable development environment.
+  - `nix fmt` in this repo just does the right thing.
+
+## Usage examples
+
+Everyday usage:
+
+```sh
+nixos-rebuild build --flake .#bistannix # build
+sudo nixos-rebuild switch --flake .#bistannix # deploy
+```
+
+Building an iso for a liveusb purpose (containing this repo in `/etc/nixos-sources`):
+
+```sh
+nix build .#nixosConfigurations.liveusb.config.system.build.isoImage
+```
+
+Deploying a new machine (with disk partitioning):
+
+```sh
+sudo nix run 'github:nix-community/disko/latest#disko-install' -- --write-efi-boot-entries --flake '.#myvm' --disk main /dev/sda
+```

@@ -125,6 +125,12 @@
               deadnix.enable = true;
               fish_indent.enable = true;
               mdformat.enable = true;
+              mdformat.package = pkgs.mdformat.withPlugins (
+                p: with p; [
+                  mdformat-gfm
+                  mdformat-gfm-alerts
+                ]
+              );
               nixfmt.enable = true;
               statix.enable = true;
             };
