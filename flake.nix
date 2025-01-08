@@ -97,12 +97,14 @@
           ...
         }:
         {
-          # Add `config.agenix-rekey.package` to your devshell to
-          # easily access the `agenix` command wrapper.
+          # The 'default' devShell can be invoked manually with `nix develop` in this directory, but
+          # direnv integration means that cd'ing into this dev directory (after allow-listing)
+          # automatically loads the relevant development shell + helpful tools.
           devShells.default = pkgs.mkShell {
+            # Run treefmt checks on git commits.
             inputsFrom = [ config.pre-commit.devShell ];
             nativeBuildInputs = [
-              config.agenix-rekey.package
+              config.agenix-rekey.package # `agenix` CLI
               pkgs.age-plugin-fido2-hmac
             ];
           };

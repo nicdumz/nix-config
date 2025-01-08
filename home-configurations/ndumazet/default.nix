@@ -20,6 +20,14 @@
     };
   };
 
+  # NOTE: enabled for me but consider (?) if useful for root. I initially assume that developing as
+  # root is a bad habit [...].
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    silent = true;
+  };
+
   # TODO: lacks configuration
   programs.irssi.enable = true;
   programs.hexchat.enable = true;
