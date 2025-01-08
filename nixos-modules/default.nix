@@ -16,9 +16,6 @@ let
     # via mkpasswd
     # TODO this could use hashedPasswordFile
     hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOcwoGu0XU3mowLSe+OwsiRwTEXGYtzOD52hRiGNznJe ndumazet@bistanclaque.local"
-    ];
   };
 in
 {
