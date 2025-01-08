@@ -59,6 +59,7 @@
         "browser.policies.runOncePerModification.setDefaultSearchEngine" = "DuckDuckGo";
         "browser.policies.runOncePerModification.extensionsInstall" =
           "[${(ext "ublock-origin")}, ${(ext "bitwarden-password-manager")}]";
+        "font.name.monospace.x-western" = config.fontProfiles.monospace.name;
       };
   };
 }
