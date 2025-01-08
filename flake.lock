@@ -209,6 +209,27 @@
         "type": "github"
       }
     },
+    "flake-programs-sqlite": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "utils": "utils"
+      },
+      "locked": {
+        "lastModified": 1736328896,
+        "narHash": "sha256-vzpzrNvHdTeHN7nufEaReYdFDM4OLct/bwTAkL5+fUA=",
+        "owner": "wamserma",
+        "repo": "flake-programs-sqlite",
+        "rev": "1ce442bddc81c27d0a38dc1e0752af3158db4181",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wamserma",
+        "repo": "flake-programs-sqlite",
+        "type": "github"
+      }
+    },
     "git-hooks-nix": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -312,11 +333,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1736061677,
-        "narHash": "sha256-DjkQPnkAfd7eB522PwnkGhOMuT9QVCZspDpJJYyOj60=",
+        "lastModified": 1736200483,
+        "narHash": "sha256-JO+lFN2HsCwSLMUWXHeOad6QUxOuwe9UOAF/iSl1J4I=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "cbd8ec4de4469333c82ff40d057350c30e9f7d36",
+        "rev": "3f0a8ac25fb674611b98089ca3a5dd6480175751",
         "type": "github"
       },
       "original": {
@@ -389,6 +410,7 @@
         "disko": "disko",
         "ez-configs": "ez-configs",
         "flake-parts": "flake-parts_2",
+        "flake-programs-sqlite": "flake-programs-sqlite",
         "git-hooks-nix": "git-hooks-nix",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
@@ -450,6 +472,21 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "utils": {
+      "locked": {
+        "lastModified": 1678901627,
+        "narHash": "sha256-U02riOqrKKzwjsxc/400XnElV+UtPUQWpANPlyazjH0=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "93a2b84fc4b70d9e089d029deacc3583435c2ed6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
         "type": "github"
       }
     }

@@ -27,6 +27,7 @@ in
     ./graphical.nix # TODO: remove for headless
     ./nix.nix
     ./options.nix
+    inputs.flake-programs-sqlite.nixosModules.programs-sqlite
     inputs.impermanence.nixosModules.impermanence
   ];
 

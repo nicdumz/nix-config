@@ -21,6 +21,9 @@
     home-manager.url = "github:nix-community/home-manager?ref=release-24.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    flake-programs-sqlite.url = "github:wamserma/flake-programs-sqlite";
+    flake-programs-sqlite.inputs.nixpkgs.follows = "nixpkgs";
+
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -58,8 +61,8 @@
       imports = [
         ez-configs.flakeModule
         inputs.agenix-rekey.flakeModule
-        inputs.treefmt-nix.flakeModule
         inputs.git-hooks-nix.flakeModule
+        inputs.treefmt-nix.flakeModule
       ];
 
       # see https://github.com/ehllie/ez-configs/blob/main/README.md
