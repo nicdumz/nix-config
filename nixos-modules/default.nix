@@ -24,12 +24,9 @@
   system.stateVersion = "24.11";
 
   boot.initrd = {
-    # not very intuitively, this is actually _merged_ with the modules enabled in qemu-guest
     availableKernelModules = [
       "ata_piix"
-      "floppy"
       "sd_mod"
-      "sr_mod"
     ];
 
     systemd.enable = true;
@@ -157,7 +154,13 @@
   age = {
     secrets = lib.mkIf config.me.foundPublicKey {
       # This is an OAuth Client (key) authorized to create auth_keys.
-      tailscaleAuthKey.rekeyFile = self.outPath + "/secrets/tailscale_oauth.age";
+      tailscaleAuthKey = {
+        rekeyFile = self.outPath + "/secrets/tailscale_oauth.age";
+        # Note: defaults are nicely restricted:
+        # mode = "0400";
+        # owner = "root";
+        # group = "root";
+      };
       # TODO I cant use this because this is an encrypted (clear) passwd
       # passwd.rekeyFile = ./secrets/linux_passwd.age;
     };
