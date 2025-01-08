@@ -3,7 +3,6 @@
   lib,
   inputs,
   config,
-  pkgs,
   ...
 }:
 {
@@ -68,6 +67,7 @@
     extraConfig = {
       github.user = "nicdumz";
       "url \"git@github.com:\"".pushInsteadOf = "https://github.com/";
+      core.editor = "nvim";
     };
   };
 }

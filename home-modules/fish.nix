@@ -60,14 +60,14 @@
             set -p packages $name
           end
           if set -q packages[1] &>/dev/null
-            _tide_print_item nix3_shell $tide_nix3_shell_icon' ' " $(string shorten -m 40 "$packages")"
+            _tide_print_item nix3_shell $tide_nix3_shell_icon' ' " $(string shorten -m 60 "$packages")"
           end
         '';
     };
     plugins = [
       {
         name = "tide";
-        src = pkgs.fishPlugins.tide.src;
+        inherit (pkgs.fishPlugins.tide) src;
       }
     ];
     shellAbbrs = {

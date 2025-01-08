@@ -64,6 +64,9 @@ in
       map <F1> <Esc>
       imap <F1> <Esc>
       imap <M-Space> <Esc>
+
+      " Show Git diff in window split when commiting
+      autocmd FileType gitcommit DiffGitCached | wincmd L | wincmd p
     '';
     extraLuaConfig = ''
       local cmp = require('cmp')

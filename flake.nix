@@ -100,6 +100,7 @@
           # Add `config.agenix-rekey.package` to your devshell to
           # easily access the `agenix` command wrapper.
           devShells.default = pkgs.mkShell {
+            inputsFrom = [ config.pre-commit.devShell ];
             nativeBuildInputs = [
               config.agenix-rekey.package
               pkgs.age-plugin-fido2-hmac
