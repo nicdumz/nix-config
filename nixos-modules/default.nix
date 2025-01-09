@@ -87,7 +87,6 @@
   i18n.defaultLocale = "en_GB.UTF-8";
 
   services.openssh.enable = true;
-  # services.openssh.openFirewall is true by default.
 
   nixpkgs.hostPlatform = "x86_64-linux";
   # https://nixos.wiki/wiki/Automatic_system_upgrades
@@ -134,6 +133,10 @@
           extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
           createHome = true;
           uid = 1000; # Debian defaults.
+          openssh.authorizedKeys.keys = [
+            # TODO: formalize this.
+            "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIIU3bA3q9/SlrUXzsApLaVkUDAlQY1c5PMmnoC+XnmjOAAAABHNzaDo= ndumazet@bistannix nano"
+          ];
         }
         // actual;
       root = {
