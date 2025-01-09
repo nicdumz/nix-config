@@ -117,15 +117,25 @@
     mutableUsers = false;
 
     users = {
-      ndumazet = {
-        isNormalUser = true;
-        extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-        createHome = true;
-        uid = 1000; # Debian defaults.
-        # via mkpasswd, this is a trivial / dummy PW for installs. We'll do better.
-        # TODO this should use hashedPasswordFile when available.
-        hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
-      };
+      ndumazet =
+        let
+          initialAuth = {
+            # via mkpasswd, this is a trivial / dummy PW for installs, since no key is available to
+            # decrypt passwords then (using hashedPasswordFile is not feasible).
+            hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
+          };
+          finalAuth = {
+            hashedPasswordFile = config.age.secrets.ndumazetHashedPassword.path;
+          };
+          actual = if config.me.foundPublicKey then finalAuth else initialAuth;
+        in
+        {
+          isNormalUser = true;
+          extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+          createHome = true;
+          uid = 1000; # Debian defaults.
+        }
+        // actual;
       root = {
         # NOTE: no passwd, no need for direct login.
         uid = 0;
@@ -155,12 +165,13 @@
     secrets = lib.mkIf config.me.foundPublicKey {
       # This is an OAuth Client (key) authorized to create auth_keys.
       tailscaleAuthKey = {
-        rekeyFile = self.outPath + "/secrets/tailscale_oauth.age";
+        rekeyFile = self.outPath + "/secrets/tailscale-oauth.age";
         # Note: defaults are nicely restricted:
         # mode = "0400";
         # owner = "root";
         # group = "root";
       };
+      ndumazetHashedPassword.rekeyFile = self.outPath + "/secrets/ndumazet-hashed-password.age";
       # TODO I cant use this because this is an encrypted (clear) passwd
       # passwd.rekeyFile = ./secrets/linux_passwd.age;
     };
