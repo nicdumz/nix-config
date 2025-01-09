@@ -1,10 +1,9 @@
-{ modulesPath, pkgs, ... }:
+{ modulesPath, ... }:
 {
   imports = [
-    "${modulesPath}/installer/cd-dvd/installation-cd-graphical-gnome.nix"
+    "${modulesPath}/installer/cd-dvd/installation-cd-minimal-new-kernel.nix"
   ];
   networking.hostName = "liveusb";
-  boot.kernelPackages = pkgs.linuxPackages_latest;
   # Super useful for liveusb, e.g. allows setting up a system from flake inputs.
   nicdumz.embedFlake = true;
 }

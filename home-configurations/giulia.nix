@@ -1,7 +1,12 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  osConfig,
+  ...
+}:
 {
   home.username = "giulia";
   home.packages = [
-    pkgs.google-chrome
+    (lib.mkIf osConfig.nicdumz.graphical pkgs.google-chrome)
   ];
 }

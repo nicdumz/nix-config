@@ -1,8 +1,9 @@
 # Module common to all homes / users.
 {
-  lib,
-  inputs,
   config,
+  inputs,
+  lib,
+  osConfig,
   ...
 }:
 {
@@ -28,7 +29,7 @@
       rf = "${r.name} ${toString r.size}";
       mf = "${m.name} ${toString m.size}";
     in
-    {
+    lib.optionalAttrs osConfig.nicdumz.graphical {
       "org/gnome/desktop/interface" = {
         scaling-factor = lib.hm.gvariant.mkUint32 2;
         text-scaling-factor = lib.hm.gvariant.mkDouble 2.0;

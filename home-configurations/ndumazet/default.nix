@@ -1,6 +1,9 @@
 {
+  self,
+  osConfig,
   pkgs,
   config,
+  lib,
   ...
 }:
 {
@@ -30,7 +33,7 @@
 
   # TODO: lacks configuration
   programs.irssi.enable = true;
-  programs.hexchat.enable = true;
+  programs.hexchat.enable = osConfig.nicdumz.graphical;
 
   home.packages = [
     # useful for (shell) color diagnosis.
@@ -53,7 +56,7 @@
     };
   };
 
-  programs.librewolf = {
+  programs.librewolf = lib.optionalAttrs osConfig.nicdumz.graphical {
     enable = true;
     settings =
       let
@@ -69,5 +72,13 @@
           "[${(ext "ublock-origin")}, ${(ext "bitwarden-password-manager")}]";
         "font.name.monospace.x-western" = config.fontProfiles.monospace.name;
       };
+  };
+
+  # A strange one: embed the flake entire directory onto the produced system. This allows having
+  # access to the input .nix files, and is convenient when building an .iso which then can be used
+  # for deployment.
+  home.file.nixos-sources = lib.mkIf osConfig.nicdumz.embedFlake {
+    source = self.outPath;
+    target = "nixos-sources";
   };
 }

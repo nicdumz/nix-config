@@ -5,4 +5,5 @@
     ./windows-dual.nix
   ];
   networking.hostName = "bistannix";
+  nicdumz.graphical = true;
 }

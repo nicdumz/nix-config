@@ -14,7 +14,7 @@
 {
   imports = [
     ./agenix-rekey.nix
-    ./graphical.nix # TODO: remove for headless
+    ./graphical.nix
     ./nix.nix
     ./options.nix
     inputs.flake-programs-sqlite.nixosModules.programs-sqlite
