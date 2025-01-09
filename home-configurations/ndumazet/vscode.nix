@@ -3,19 +3,24 @@
   programs.vscode = {
     enable = true;
     package = pkgs.vscodium;
-    extensions = with pkgs.vscode-extensions; [
-      asvetliakov.vscode-neovim
-      jnoortheen.nix-ide
-      stkb.rewrap
-    ];
-    #++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-    #  {
-    #    name = "vscode-markdown-alert";
-    #    publisher = "yahyabatulu";
-    #    version = "0.0.4";
-    #    sha256 = "sha256-dCaSMPSntYo0QLr2pcs9GfJxOshfyeXbs8IMCwd+lqw=";
-    #  }
-    #];
+    enableExtensionUpdateCheck = false;
+    enableUpdateCheck = false;
+    mutableExtensionsDir = false;
+    extensions =
+      with pkgs.vscode-extensions;
+      [
+        asvetliakov.vscode-neovim
+        jnoortheen.nix-ide
+        stkb.rewrap
+      ]
+      ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        {
+          name = "vscode-markdown-alert";
+          publisher = "yahyabatulu";
+          version = "0.0.4";
+          sha256 = "sha256-dCaSMPSntYo0QLr2pcs9GfJxOshfyeXbs8IMCwd+lqw=";
+        }
+      ];
     userSettings = {
       "editor.fontSize" = 16;
       "editor.rulers" = [
