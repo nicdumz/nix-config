@@ -187,12 +187,9 @@
     useRoutingFeatures = "client";
     extraUpFlags = [
       "--ssh"
-      "--advertise-tags=tag:authkey-added"
     ];
+    # The key is a reusable key from https://login.tailscale.com/admin/settings/keys
+    # It unfortunately expires after 90d ..
     authKeyFile = config.age.secrets.tailscaleAuthKey.path;
-    authKeyParameters = {
-      ephemeral = false;
-      preauthorized = true;
-    };
   };
 }
