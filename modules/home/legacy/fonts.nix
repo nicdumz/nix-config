@@ -35,6 +35,7 @@ let
   cfg = config.fontProfiles;
 in
 {
+  # TODO: move to namespace
   options.fontProfiles = {
     monospace = mkFontOption {
       kind = "monospace";

@@ -1,9 +1,9 @@
 { modulesPath, pkgs, ... }:
 {
+  # TODO: should this be x86_64-iso ? x86_64-install-iso?
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal-new-kernel.nix"
   ];
-  networking.hostName = "liveusb";
   networking.wireless.enable = true;
   networking.wireless.userControlled.enable = true; # %wheel can setup
 

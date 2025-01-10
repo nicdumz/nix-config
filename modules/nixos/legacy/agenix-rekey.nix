@@ -1,9 +1,9 @@
 {
   config,
   lib,
-  self,
   inputs,
   pkgs,
+  system,
   ...
 }:
 let
@@ -16,8 +16,8 @@ let
     ./identities/yubikey-v5-backup.pub
   ];
   # Relative to flake directory.
-  publicKeyRelPath = "nixos-configurations/${config.networking.hostName}/host.pub";
-  publicKeyAbsPath = self.outPath + "/" + publicKeyRelPath;
+  publicKeyRelPath = "systems/${system}/${config.networking.hostName}/host.pub";
+  publicKeyAbsPath = lib.snowfall.fs.get-file publicKeyRelPath;
 in
 {
   imports = [
@@ -40,7 +40,7 @@ in
 
       After initial host provisioning, run:
 
-        ssh-keyscan -qt ssh-ed25519 $host | cut -d' ' -f2,3 > ./${publicKeyRelPath}
+        ssh-keyscan -qt ssh-ed25519 ${config.networking.hostName} | cut -d' ' -f2,3 > ./${publicKeyRelPath}
 
       And rebuild NixOS.
     '')
@@ -49,7 +49,8 @@ in
   config.age.rekey =
     {
       masterIdentities = ageMasterIdentities;
-      localStorageDir = self.outPath + "/secrets/rekeyed/${config.networking.hostName}";
+      # NOTE: this is OK because there are no clashes between archs, but technically this should change.
+      localStorageDir = lib.snowfall.fs.get-file "secrets/rekeyed/${config.networking.hostName}";
       storageMode = "local";
       agePlugins = [ pkgs.age-plugin-fido2-hmac ];
     }

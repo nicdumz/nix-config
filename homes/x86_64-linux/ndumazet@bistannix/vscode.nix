@@ -2,11 +2,12 @@
   config,
   lib,
   osConfig,
+  namespace,
   pkgs,
   ...
 }:
 {
-  programs.vscode = lib.optionalAttrs osConfig.nicdumz.graphical {
+  programs.vscode = lib.optionalAttrs osConfig.${namespace}.graphical {
     enable = true;
     package = pkgs.vscodium;
     enableExtensionUpdateCheck = false;

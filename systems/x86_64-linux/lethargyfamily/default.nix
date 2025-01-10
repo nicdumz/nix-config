@@ -1,18 +1,16 @@
 {
   inputs,
-  ezModules,
+  namespace,
+  lib,
   ...
 }:
 {
   imports = [
-    ezModules.persistence
     inputs.disko.nixosModules.disko
     ./configuration.nix
   ];
 
-  disko.devices = (import ../../lib).mkDiskLayout "16G";
-
-  networking.hostName = "lethargyfamily";
+  disko.devices = lib.${namespace}.mkDiskLayout "16G";
 
   # TODO: wifi?
   # networking.wireless.enable = true;
@@ -24,5 +22,8 @@
   #   "ndumazet"
   # ];
 
-  nicdumz.graphical = true;
+  ${namespace} = {
+    graphical = true;
+    persistence.enable = true;
+  };
 }

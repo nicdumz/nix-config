@@ -1,9 +1,9 @@
 {
-  self,
-  osConfig,
   pkgs,
   config,
+  osConfig,
   lib,
+  namespace,
   ...
 }:
 {
@@ -13,7 +13,8 @@
     ./vscode.nix
   ];
 
-  home.username = "ndumazet";
+  # Default?
+  # home.username = "ndumazet";
 
   programs.git = {
     userEmail = "nicdumz.commits@gmail.com";
@@ -33,7 +34,7 @@
 
   # TODO: lacks configuration
   programs.irssi.enable = true;
-  programs.hexchat.enable = osConfig.nicdumz.graphical;
+  programs.hexchat.enable = osConfig.${namespace}.graphical;
 
   home.packages = [
     # useful for (shell) color diagnosis.
@@ -56,7 +57,7 @@
     };
   };
 
-  programs.librewolf = lib.optionalAttrs osConfig.nicdumz.graphical {
+  programs.librewolf = lib.optionalAttrs osConfig.${namespace}.graphical {
     enable = true;
     settings =
       let
@@ -78,8 +79,8 @@
   # A strange one: embed the flake entire directory onto the produced system. This allows having
   # access to the input .nix files, and is convenient when building an .iso which then can be used
   # for deployment.
-  home.file.nixos-sources = lib.mkIf osConfig.nicdumz.embedFlake {
-    source = self.outPath;
+  home.file.nixos-sources = lib.mkIf osConfig.${namespace}.embedFlake {
+    source = lib.snowfall.fs.get-file "/";
     target = "nixos-sources";
   };
 }

@@ -1,9 +1,10 @@
 # Module common to all homes / users.
 {
   config,
+  osConfig,
   inputs,
   lib,
-  osConfig,
+  namespace,
   ...
 }:
 {
@@ -14,7 +15,7 @@
   ];
 
   programs.home-manager.enable = true;
-  home.homeDirectory = lib.mkDefault "/home/${config.home.username}";
+  # home.homeDirectory = lib.mkDefault "/home/${config.home.username}";
   home.stateVersion = "24.11";
 
   # For nixd
@@ -29,10 +30,10 @@
       rf = "${r.name} ${toString r.size}";
       mf = "${m.name} ${toString m.size}";
     in
-    lib.optionalAttrs osConfig.nicdumz.graphical {
+    lib.optionalAttrs osConfig.${namespace}.graphical {
       "org/gnome/desktop/interface" = {
-        scaling-factor = lib.hm.gvariant.mkUint32 0;
-        text-scaling-factor = lib.hm.gvariant.mkDouble 1.25;
+        scaling-factor = lib.home-manager.hm.gvariant.mkUint32 0;
+        text-scaling-factor = lib.home-manager.hm.gvariant.mkDouble 1.25;
         cursor-size = 24;
         color-scheme = "prefer-dark";
         document-font-name = rf;

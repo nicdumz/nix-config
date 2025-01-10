@@ -6,7 +6,6 @@
   config,
   lib,
   pkgs,
-  self,
   inputs,
   ...
 }:
@@ -30,13 +29,6 @@
     ];
 
     systemd.enable = true;
-  };
-
-  # A strange one: embed the flake entire directory onto the produced system. This allows having
-  # access to the input .nix files, and is convenient when building an .iso which then can be used
-  # for deployment.
-  environment.etc.nixos-sources = lib.mkIf config.nicdumz.embedFlake {
-    source = self.outPath;
   };
 
   security.sudo.extraConfig = "Defaults insults,timestamp_timeout=30";
@@ -70,7 +62,7 @@
   # https://nixos.wiki/wiki/Automatic_system_upgrades
   system.autoUpgrade = {
     enable = true;
-    flake = self.outPath;
+    flake = lib.snowfall.fs.get-file "/";
     flags = [
       "--update-input"
       "nixpkgs"
@@ -100,13 +92,13 @@
           # decrypt passwords then (using hashedPasswordFile is not feasible).
           hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
         };
+        finalAuth = {
+          hashedPasswordFile = config.age.secrets.ndumazetHashedPassword.path;
+        };
       in
       {
         ndumazet =
           let
-            finalAuth = {
-              hashedPasswordFile = config.age.secrets.ndumazetHashedPassword.path;
-            };
             actual = if config.me.foundPublicKey then finalAuth else initialAuth;
           in
           {
@@ -155,15 +147,13 @@
     secrets = lib.mkIf config.me.foundPublicKey {
       # This is an OAuth Client (key) authorized to create auth_keys.
       tailscaleAuthKey = {
-        rekeyFile = self.outPath + "/secrets/tailscale-oauth.age";
+        rekeyFile = inputs.self + "/secrets/tailscale-oauth.age";
         # Note: defaults are nicely restricted:
         # mode = "0400";
         # owner = "root";
         # group = "root";
       };
-      ndumazetHashedPassword.rekeyFile = self.outPath + "/secrets/ndumazet-hashed-password.age";
-      # TODO I cant use this because this is an encrypted (clear) passwd
-      # passwd.rekeyFile = ./secrets/linux_passwd.age;
+      ndumazetHashedPassword.rekeyFile = inputs.self + "/secrets/ndumazet-hashed-password.age";
     };
   };
 

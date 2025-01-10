@@ -1,11 +1,12 @@
 {
   config,
-  lib,
   osConfig,
+  lib,
+  namespace,
   ...
 }:
 {
-  programs.kitty = lib.optionalAttrs osConfig.nicdumz.graphical {
+  programs.kitty = lib.optionalAttrs osConfig.${namespace}.graphical {
     enable = true;
     font = {
       # TODO: this actually depends on display scaling ..
