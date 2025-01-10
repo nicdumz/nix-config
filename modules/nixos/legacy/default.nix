@@ -62,7 +62,7 @@
   # https://nixos.wiki/wiki/Automatic_system_upgrades
   system.autoUpgrade = {
     enable = true;
-    flake = lib.snowfall.fs.get-file "/";
+    flake = inputs.self.outPath;
     flags = [
       "--update-input"
       "nixpkgs"

@@ -17,7 +17,7 @@ let
   ];
   # Relative to flake directory.
   publicKeyRelPath = "systems/${system}/${config.networking.hostName}/host.pub";
-  publicKeyAbsPath = lib.snowfall.fs.get-file publicKeyRelPath;
+  publicKeyAbsPath = inputs.self + "/" + publicKeyRelPath;
 in
 {
   imports = [
@@ -50,7 +50,7 @@ in
     {
       masterIdentities = ageMasterIdentities;
       # NOTE: this is OK because there are no clashes between archs, but technically this should change.
-      localStorageDir = lib.snowfall.fs.get-file "secrets/rekeyed/${config.networking.hostName}";
+      localStorageDir = inputs.self + "/secrets/rekeyed/${config.networking.hostName}";
       storageMode = "local";
       agePlugins = [ pkgs.age-plugin-fido2-hmac ];
     }

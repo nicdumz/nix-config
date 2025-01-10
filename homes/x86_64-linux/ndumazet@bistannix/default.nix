@@ -3,6 +3,7 @@
   config,
   osConfig,
   lib,
+  inputs,
   namespace,
   ...
 }:
@@ -80,7 +81,7 @@
   # access to the input .nix files, and is convenient when building an .iso which then can be used
   # for deployment.
   home.file.nixos-sources = lib.mkIf osConfig.${namespace}.embedFlake {
-    source = lib.snowfall.fs.get-file "/";
+    source = inputs.self;
     target = "nixos-sources";
   };
 }
