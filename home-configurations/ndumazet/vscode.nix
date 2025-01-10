@@ -44,9 +44,10 @@
       ];
       "nix.serverPath" = "nixd";
       "nix.enableLanguageServer" = true;
-      "[nix]" = {
-        "editor.formatOnSave" = true;
-      };
+      # way too slow for now.
+      # "[nix]" = {
+      #   "editor.formatOnSave" = true;
+      # };
       "extensions.experimental.affinity" = {
         "asvetliakov.vscode-neovim" = 1;
       };

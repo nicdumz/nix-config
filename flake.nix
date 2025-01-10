@@ -79,10 +79,11 @@
           in
           {
             bistannix.userHomeModules = allUsers;
+            lethargyfamily.userHomeModules = allUsers ++ [ "giulia" ];
             nixosvm.userHomeModules = allUsers;
             # `nix build .#nixosConfigurations.liveusb.config.system.build.isoImage`
             # Builds an .iso in /result/ which conveniently will contain this flake in
-            # /etc/nixos-sources, allowing for a liveusb installation.
+            # $HOME/nixos-sources, allowing for a liveusb installation.
             liveusb.userHomeModules = allUsers;
           };
       };

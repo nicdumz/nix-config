@@ -61,28 +61,6 @@
     ${pkgs.gnused}/bin/sed -i 's/default nixos-generation-[0-9][0-9].conf/default @saved/g' /boot/loader/loader.conf
   '';
 
-  environment.persistence."/persist" = {
-    hideMounts = true;
-    directories = [
-      # TODO: find some location for configs. With flake I have no reason to
-      # have configs there.
-      # "/etc/nixos"
-      "/etc/ssh"
-      # I originally only preserved the fish_history file in this directory but
-      # this created noise due to
-      # https://github.com/fish-shell/fish-shell/issues/10730
-      "/root/.local/share/fish"
-      "/var/cache"
-      "/var/db/sudo"
-      "/var/lib"
-      "/var/log"
-    ];
-    files = [
-      "/etc/machine-id"
-      "/etc/nix/id_rsa"
-    ];
-  };
-
   time.timeZone = "Europe/Zurich";
   i18n.defaultLocale = "en_GB.UTF-8";
 
@@ -115,35 +93,44 @@
     defaultUserShell = pkgs.fish;
     mutableUsers = false;
 
-    users = {
-      ndumazet =
-        let
-          initialAuth = {
-            # via mkpasswd, this is a trivial / dummy PW for installs, since no key is available to
-            # decrypt passwords then (using hashedPasswordFile is not feasible).
-            hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
-          };
-          finalAuth = {
-            hashedPasswordFile = config.age.secrets.ndumazetHashedPassword.path;
-          };
-          actual = if config.me.foundPublicKey then finalAuth else initialAuth;
-        in
-        {
+    users =
+      let
+        initialAuth = {
+          # via mkpasswd, this is a trivial / dummy PW for installs, since no key is available to
+          # decrypt passwords then (using hashedPasswordFile is not feasible).
+          hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
+        };
+      in
+      {
+        ndumazet =
+          let
+            finalAuth = {
+              hashedPasswordFile = config.age.secrets.ndumazetHashedPassword.path;
+            };
+            actual = if config.me.foundPublicKey then finalAuth else initialAuth;
+          in
+          {
+            isNormalUser = true;
+            extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+            createHome = true;
+            uid = 1000; # Debian defaults.
+            openssh.authorizedKeys.keys = [
+              # TODO: formalize this.
+              "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIIU3bA3q9/SlrUXzsApLaVkUDAlQY1c5PMmnoC+XnmjOAAAABHNzaDo= ndumazet@bistannix nano"
+            ];
+          }
+          // actual;
+
+        # TODO: add password
+        giulia = {
           isNormalUser = true;
-          extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-          createHome = true;
-          uid = 1000; # Debian defaults.
-          openssh.authorizedKeys.keys = [
-            # TODO: formalize this.
-            "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIIU3bA3q9/SlrUXzsApLaVkUDAlQY1c5PMmnoC+XnmjOAAAABHNzaDo= ndumazet@bistannix nano"
-          ];
-        }
-        // actual;
-      root = {
-        # NOTE: no passwd, no need for direct login.
-        uid = 0;
+        } // initialAuth;
+
+        root = {
+          # NOTE: no passwd, no need for direct login.
+          uid = 0;
+        };
       };
-    };
   };
   # This is technically needed to not have assertions failing due to
   # defaultUserShell. But actual configuration happens in home-manager below.

@@ -1,4 +1,3 @@
-{ inputs, ... }:
 let
   btrfsMountOptions = [
     "defaults"
@@ -8,11 +7,85 @@ let
   ];
 in
 {
-  imports = with inputs; [
-    disko.nixosModules.disko
-  ];
+  # TODO: there are ways to be smarter here and not repeat ourselves.
 
-  disko.devices = {
+  # TODO: actually should be optional swap and disabled for the VM ...
+  mkDiskLayout = swapSize: {
+    nodev = {
+      "/tmp" = {
+        fsType = "tmpfs";
+        mountOptions = [
+          "defaults"
+          "size=4G" # or size=50% ?
+          "mode=755"
+        ];
+        mountpoint = "/";
+      };
+    };
+    disk = {
+      main = {
+        # When using disko-install, we will overwrite this value from the commandline
+        device = "/dev/disk/by-uuid/6133b07e-2e28-4a0a-a3c9-e0561db51866";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            ESP = {
+              name = "ESP";
+              label = "boot";
+              priority = 1;
+              type = "EF00";
+              size = "512M";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+                mountOptions = [
+                  "defaults"
+                  "umask=0077"
+                ];
+                extraArgs = [
+                  "-n"
+                  "boot"
+                ];
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "btrfs";
+                extraArgs = [
+                  "-f" # Override existing partition
+                  "-L"
+                  "btrfs"
+                ];
+                subvolumes = {
+                  "home" = {
+                    mountOptions = btrfsMountOptions;
+                    mountpoint = "/home";
+                  };
+                  "nix" = {
+                    mountOptions = btrfsMountOptions;
+                    mountpoint = "/nix";
+                  };
+                  "persist" = {
+                    mountOptions = btrfsMountOptions;
+                    mountpoint = "/persist";
+                  };
+                  "/swap" = {
+                    mountpoint = "/swap";
+                    swap.swapfile.size = swapSize;
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+
+  mkEncryptedDiskLayout = swapSize: {
     nodev = {
       "/tmp" = {
         fsType = "tmpfs";
@@ -91,7 +164,7 @@ in
                     };
                     "/swap" = {
                       mountpoint = "/swap";
-                      swap.swapfile.size = "32G";
+                      swap.swapfile.size = swapSize;
                     };
                   };
                 };
@@ -102,7 +175,4 @@ in
       };
     };
   };
-
-  fileSystems."/".neededForBoot = true;
-  fileSystems."/persist".neededForBoot = true;
 }

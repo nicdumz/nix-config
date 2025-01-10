@@ -54,10 +54,10 @@ Everyday usage:
 
 ```sh
 nixos-rebuild build --flake .#bistannix # build
-sudo nixos-rebuild switch --flake .#bistannix # deploy
+nixos-rebuild switch --flake .#bistannix --use-remote-sudo # deploy for current machine
 ```
 
-Building an iso for a liveusb purpose (containing this repo in `/etc/nixos-sources`):
+Building an iso for a liveusb purpose (containing this repo in `$HOME/nixos-sources`):
 
 ```sh
 nix build .#nixosConfigurations.liveusb.config.system.build.isoImage
@@ -66,5 +66,5 @@ nix build .#nixosConfigurations.liveusb.config.system.build.isoImage
 Deploying a new machine (with disk partitioning):
 
 ```sh
-sudo nix run 'github:nix-community/disko/latest#disko-install' -- --write-efi-boot-entries --flake '.#myvm' --disk main /dev/sda
+sudo nix run 'github:nix-community/disko/latest#disko-install' -- --write-efi-boot-entries --flake '.#bistannix' --disk main /dev/sda
 ```
