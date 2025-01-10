@@ -36,20 +36,17 @@
       "editor.fontFamily" = config.fontProfiles.monospace.name + ", 'monospace', monospace";
       "rewrap.autoWrap.enabled" = true;
       "rewrap.wrappingColumn" = 100;
-      "nix.formatterPath" = [
-        "nix"
-        "fmt"
-        "--"
-        "--"
-      ];
+      "nix.formatterPath" = [ "nixfmt" ];
       "nix.serverPath" = "nixd";
       "nix.enableLanguageServer" = true;
-      # way too slow for now.
-      # "[nix]" = {
-      #   "editor.formatOnSave" = true;
-      # };
+      "[nix]" = {
+        "editor.formatOnSave" = true;
+        "editor.formatOnPaste" = true;
+        "editor.formatOnType" = false;
+      };
       "extensions.experimental.affinity" = {
         "asvetliakov.vscode-neovim" = 1;
+        "jnoortheen.nix-ide" = 1;
       };
       "nix.serverSettings" = {
         nixd = {
