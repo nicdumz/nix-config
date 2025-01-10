@@ -18,6 +18,8 @@
         asvetliakov.vscode-neovim
         jnoortheen.nix-ide
         stkb.rewrap
+        catppuccin.catppuccin-vsc-icons
+        catppuccin.catppuccin-vsc
       ]
       ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {
@@ -63,6 +65,20 @@
           };
         };
       };
+      "workbench.colorTheme" = "Catppuccin Mocha";
+      "workbench.iconTheme" = "catppuccin-mocha";
+      # BEGIN Catpuccin recs
+      # we try to make semantic highlighting look good
+      "editor.semanticHighlighting.enabled" = true;
+      # prevent VSCode from modifying the terminal colors
+      "terminal.integrated.minimumContrastRatio" = 1;
+      # make the window's titlebar use the workbench colors
+      "window.titleBarStyle" = "custom";
+      # applicable if you use Go, this is an opt-in flag!
+      "gopls" = {
+        "ui.semanticTokens" = true;
+      };
+      # END Catpuccin recs
     };
   };
 }
