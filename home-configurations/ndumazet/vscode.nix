@@ -28,7 +28,10 @@
         }
       ];
     userSettings = {
-      "editor.fontSize" = 16;
+      # Tricky to get enough information density and not tiny fonts.
+      "editor.fontSize" = config.fontProfiles.monospace.size - 2;
+      "window.zoomLevel" = 1;
+
       "editor.rulers" = [
         80
         100

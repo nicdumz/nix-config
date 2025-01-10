@@ -71,6 +71,7 @@
         "browser.policies.runOncePerModification.extensionsInstall" =
           "[${(ext "ublock-origin")}, ${(ext "bitwarden-password-manager")}]";
         "font.name.monospace.x-western" = config.fontProfiles.monospace.name;
+        "font.minimum-size.x-western" = config.fontProfiles.monospace.size;
       };
   };
 

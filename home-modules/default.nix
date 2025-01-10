@@ -31,9 +31,9 @@
     in
     lib.optionalAttrs osConfig.nicdumz.graphical {
       "org/gnome/desktop/interface" = {
-        scaling-factor = lib.hm.gvariant.mkUint32 2;
-        text-scaling-factor = lib.hm.gvariant.mkDouble 2.0;
-        cursor-size = 36;
+        scaling-factor = lib.hm.gvariant.mkUint32 0;
+        text-scaling-factor = lib.hm.gvariant.mkDouble 1.25;
+        cursor-size = 24;
         color-scheme = "prefer-dark";
         document-font-name = rf;
         font-name = rf;

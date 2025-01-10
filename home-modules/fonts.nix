@@ -27,7 +27,7 @@ let
       # TODO: find a way to scale this depending on scaling factors.
       size = lib.mkOption {
         type = lib.types.int;
-        default = 12;
+        default = 18;
         description = "Size in pixels for ${kind} font profile";
         example = "14";
       };

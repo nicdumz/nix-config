@@ -9,7 +9,7 @@
     enable = true;
     font = {
       # TODO: this actually depends on display scaling ..
-      size = 20;
+      inherit (config.fontProfiles.monospace) size;
       inherit (config.fontProfiles.monospace) name;
     };
     # https://sw.kovidgoyal.net/kitty/shell-integration/
