@@ -11,21 +11,9 @@ that on top of user configuration intent this repo also encodes machine configur
 I follow exactly the structure from [snowfall-lib](https://snowfall.org/guides/lib/quickstart/) and
 recommend a read to understand their philosophy.
 
-<!-- TODO: update -->
-
 ```
-├── home-configurations
-│   │── $user               home-manager config for $user
-│   └── ...
-│── home-modules            home-manager modules
-│   └── default.nix         Included for all users
-│── nixos-configurations    NixOs per-host configurations
-│   └── $host              Configuration for $host
-│       └── default.nix     Host entrypoint.
-│   └── $host2.nix          Simple single-file config for $host2
-│── nixos-modules           NixOs optional modules
-│   └── default.nix         Included for all hosts
-│── secrets                 agenix encrypted secrets
+├── nix/                    snowfall-lib structure
+│── secrets/                agenix encrypted secrets
 ├── .envrc                  direnv directive
 ├── README.md               Github Repo landing page
 ├── flake.nix               Core flake

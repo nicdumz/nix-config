@@ -54,6 +54,7 @@
 
       snowfall = {
         namespace = "nicdumz";
+        root = ./nix;
       };
 
       outputs-builder = channels: {

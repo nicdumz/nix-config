@@ -17,7 +17,7 @@ let
     ./identities/yubikey-v5-backup.pub
   ];
   # Relative to flake directory.
-  publicKeyRelPath = "systems/${system}/${config.networking.hostName}/host.pub";
+  publicKeyRelPath = "nix/systems/${system}/${config.networking.hostName}/host.pub";
   publicKeyAbsPath = inputs.self.outPath + "/" + publicKeyRelPath;
   cfg = config.${namespace};
 in
