@@ -1,8 +1,8 @@
 {
-  pkgs,
   mkShell,
   inputs,
   system,
+  pkgs,
   ...
 }:
 # The 'default' devShell can be invoked manually with `nix develop` from the flake directory, and
@@ -12,10 +12,13 @@ mkShell {
   # Note: this refers to our checks/git-hooks module.
   inherit (inputs.self.checks.${system}.git-hooks) shellHook;
 
+  packages = [
+    inputs.agenix-rekey.packages.${system}.default
+    # Note: pgs.colmena below would be too old
+    inputs.colmena.defaultPackage.${system}
+  ];
+
   buildInputs = [
-    # Note: this package comes from the agenix overlay.
-    pkgs.agenix-rekey # agenix CLI
     pkgs.age-plugin-fido2-hmac
-    pkgs.colmena
   ];
 }

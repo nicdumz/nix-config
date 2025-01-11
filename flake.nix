@@ -54,7 +54,6 @@
       src = ./.;
 
       imports = [ inputs.agenix-rekey.flakeModule ];
-      overlays = [ inputs.agenix-rekey.overlays.default ];
 
       snowfall = {
         namespace = "nicdumz";
