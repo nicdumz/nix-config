@@ -86,17 +86,10 @@
 
       };
 
-      # TODO:
-      # * colmena frustrates me by not accepting dirty repositories so I can't simply `colmena build`
-      #   https://github.com/zhaofengli/colmena/issues/202 mentions some of that but I couldn't figure
-      #   out workarounds (and I don't want to pass --impure to underlying nix commands, this defeats
-      #   a lot of the purpose)
-      # * Probably related, I'm also not managing to use the experimental flag at
-      #   https://github.com/zhaofengli/colmena/pull/228
-      # * I have a dislike of the fact that colmena cannot simply harvest nixosConfigurations, it
-      #   seems stuck in the past.
-      #
-      # So. MEH. CLI looked great, turns out not so useful. Might remove that later.
+      # Note: due to https://github.com/zhaofengli/colmena/issues/202 /
+      #   https://github.com/zhaofengli/colmena/pull/228, in order to work from a dirty flake dir,
+      #   I have to pass
+      #     `colmena --experimental-flake-eval build` and friends.
       colmenaHive = inputs.colmena.lib.makeHive inputs.self.outputs.colmena;
       colmena =
         let
@@ -115,7 +108,7 @@
               targetHost = null;
             };
           };
-          # lethargyfamily = { };
+          lethargyfamily = { };
         }
         // builtins.mapAttrs (_name: value: { imports = value._module.args.modules; }) conf;
 

@@ -26,4 +26,6 @@
     graphical = true;
     persistence.enable = true;
   };
+  # Due to Chrome in G's profile.
+  nixpkgs.config.allowUnfree = true;
 }

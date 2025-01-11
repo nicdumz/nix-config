@@ -35,7 +35,8 @@ recommend a read to understand their philosophy.
 Everyday usage:
 
 ```sh
-nixos-rebuild build --flake .#bistannix # build
+colmena --experimental-flake-eval build  # builds all things
+nixos-rebuild build --flake .#bistannix # build for one host
 nixos-rebuild switch --flake .#bistannix --use-remote-sudo # deploy for current machine
 ```
 
