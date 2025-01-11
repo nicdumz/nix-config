@@ -12,9 +12,10 @@ mkShell {
   # Note: this refers to our checks/git-hooks module.
   inherit (inputs.self.checks.${system}.git-hooks) shellHook;
 
-  nativeBuildInputs = [
+  buildInputs = [
     # Note: this package comes from the agenix overlay.
     pkgs.agenix-rekey # agenix CLI
     pkgs.age-plugin-fido2-hmac
+    pkgs.colmena
   ];
 }

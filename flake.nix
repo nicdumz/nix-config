@@ -38,6 +38,10 @@
 
     nova-vim.url = "github:nicdumz/nova-vim";
     nova-vim.flake = false;
+
+    colmena.url = "github:zhaofengli/colmena";
+    colmena.inputs.nixpkgs.follows = "nixpkgs";
+    colmena.inputs.stable.follows = "nixpkgs";
   };
 
   # snowfall rewrite TODOs:
@@ -80,7 +84,41 @@
             statix.enable = true;
           };
         };
+
       };
+
+      # TODO:
+      # * colmena frustrates me by not accepting dirty repositories so I can't simply `colmena build`
+      #   https://github.com/zhaofengli/colmena/issues/202 mentions some of that but I couldn't figure
+      #   out workarounds (and I don't want to pass --impure to underlying nix commands, this defeats
+      #   a lot of the purpose)
+      # * Probably related, I'm also not managing to use the experimental flag at
+      #   https://github.com/zhaofengli/colmena/pull/228
+      # * I have a dislike of the fact that colmena cannot simply harvest nixosConfigurations, it
+      #   seems stuck in the past.
+      #
+      # So. MEH. CLI looked great, turns out not so useful. Might remove that later.
+      colmenaHive = inputs.colmena.lib.makeHive inputs.self.outputs.colmena;
+      colmena =
+        let
+          conf = inputs.self.nixosConfigurations;
+        in
+        {
+          meta = {
+            nixpkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
+            nodeNixpkgs = builtins.mapAttrs (_name: value: value.pkgs) conf;
+            nodeSpecialArgs = builtins.mapAttrs (_name: value: value._module.specialArgs) conf;
+          };
+
+          bistannix = {
+            deployment = {
+              allowLocalDeployment = true;
+              targetHost = null;
+            };
+          };
+          # lethargyfamily = { };
+        }
+        // builtins.mapAttrs (_name: value: { imports = value._module.args.modules; }) conf;
 
       agenix-rekey = inputs.agenix-rekey.configure {
         userFlake = inputs.self; # expects the flake itself (not flakedir)
