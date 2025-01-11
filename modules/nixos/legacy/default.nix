@@ -7,6 +7,7 @@
   lib,
   pkgs,
   inputs,
+  namespace,
   ...
 }:
 
@@ -92,15 +93,17 @@
           # decrypt passwords then (using hashedPasswordFile is not feasible).
           hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
         };
-        finalAuth = {
-          hashedPasswordFile = config.age.secrets.ndumazetHashedPassword.path;
-        };
       in
+      # finalAuth = {
+      #   hashedPasswordFile = config.age.secrets.ndumazetHashedPassword.path;
+      # };
       {
         ndumazet =
           let
-            actual = if config.me.foundPublicKey then finalAuth else initialAuth;
+            # actual = if config.${namespace}.foundPublicKey then finalAuth else initialAuth;
+            actual = initialAuth;
           in
+          # TODO: broken, need to use dumb passwords for now.
           {
             isNormalUser = true;
             extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
@@ -144,20 +147,20 @@
   services.pcscd.enable = true;
 
   age = {
-    secrets = lib.mkIf config.me.foundPublicKey {
+    secrets = lib.mkIf config.${namespace}.foundPublicKey {
       # This is an OAuth Client (key) authorized to create auth_keys.
       tailscaleAuthKey = {
-        rekeyFile = inputs.self + "/secrets/tailscale-oauth.age";
+        rekeyFile = inputs.self.outPath + "/secrets/tailscale-oauth.age";
         # Note: defaults are nicely restricted:
         # mode = "0400";
         # owner = "root";
         # group = "root";
       };
-      ndumazetHashedPassword.rekeyFile = inputs.self + "/secrets/ndumazet-hashed-password.age";
+      ndumazetHashedPassword.rekeyFile = inputs.self.outPath + "/secrets/ndumazet-hashed-password.age";
     };
   };
 
-  services.tailscale = lib.optionalAttrs config.me.foundPublicKey {
+  services.tailscale = lib.optionalAttrs config.${namespace}.foundPublicKey {
     enable = true;
     openFirewall = true;
     # TODO: "server" or "both" for an exit node

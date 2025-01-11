@@ -8,6 +8,11 @@ that on top of user configuration intent this repo also encodes machine configur
 
 ## Structure
 
+I follow exactly the structure from [snowfall-lib](https://snowfall.org/guides/lib/quickstart/) and
+recommend a read to understand their philosophy.
+
+<!-- TODO: update -->
+
 ```
 ├── home-configurations
 │   │── $user               home-manager config for $user
@@ -27,17 +32,6 @@ that on top of user configuration intent this repo also encodes machine configur
 ├── flake.lock              Lockfile
 └── LICENSE                 Project License
 ```
-
-I found [ez-configs](https://flake.parts/options/ez-configs) as a way to organize modules and I
-quite liked it. It is setup in such a way that `nixos-rebuild build --flake .#bistannix` includes:
-
-- `nixos-configurations/bistannix`
-- `nixos-modules/default`
-- `home-configurations/{root,ndumazet}`
-- `home-configurations/default`
-
-> \[!TIP\]
-> `foo/default.nix` and `foo.nix` are interchangeable and both produce a `foo` submodule, I use both depending on complexity.
 
 ## Features
 

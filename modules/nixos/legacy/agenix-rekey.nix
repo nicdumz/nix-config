@@ -4,6 +4,7 @@
   inputs,
   pkgs,
   system,
+  namespace,
   ...
 }:
 let
@@ -17,7 +18,8 @@ let
   ];
   # Relative to flake directory.
   publicKeyRelPath = "systems/${system}/${config.networking.hostName}/host.pub";
-  publicKeyAbsPath = inputs.self + "/" + publicKeyRelPath;
+  publicKeyAbsPath = inputs.self.outPath + "/" + publicKeyRelPath;
+  cfg = config.${namespace};
 in
 {
   imports = [
@@ -25,39 +27,41 @@ in
     inputs.agenix-rekey.nixosModules.default
   ];
 
-  options = {
-    me.foundPublicKey = lib.mkOption {
+  options.${namespace} = {
+    foundPublicKey = lib.mkOption {
       type = lib.types.bool;
       default = builtins.pathExists publicKeyAbsPath;
     };
   };
 
-  config.warnings = [
-    (lib.mkIf (!config.me.foundPublicKey) ''
-      [ndumazet]: no public key configured for target system.
+  config = {
+    warnings = [
+      (lib.mkIf (!cfg.foundPublicKey) ''
+        [ndumazet]: no public key configured for target system.
 
-      This means that some features (e.g. Tailscale) are not enabled.
+        This means that some features (e.g. Tailscale) are not enabled.
 
-      After initial host provisioning, run:
+        After initial host provisioning, run:
 
-        ssh-keyscan -qt ssh-ed25519 ${config.networking.hostName} | cut -d' ' -f2,3 > ./${publicKeyRelPath}
+          ssh-keyscan -qt ssh-ed25519 ${config.networking.hostName} | cut -d' ' -f2,3 > ./${publicKeyRelPath}
 
-      And rebuild NixOS.
-    '')
-  ];
+        And rebuild NixOS.
+      '')
+    ];
 
-  config.age.rekey =
-    {
-      masterIdentities = ageMasterIdentities;
-      # NOTE: this is OK because there are no clashes between archs, but technically this should change.
-      localStorageDir = inputs.self + "/secrets/rekeyed/${config.networking.hostName}";
-      storageMode = "local";
-      agePlugins = [ pkgs.age-plugin-fido2-hmac ];
-    }
-    # Only set the pubkey if we find it.
-    // lib.optionalAttrs config.me.foundPublicKey {
-      # TODO: put this into the correct file
-      # hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAcy5s114N7IL5WJIeMh2R7AZE+Gi9f4gVY6u4ZELFWX root@nixos";
-      hostPubkey = builtins.readFile publicKeyAbsPath;
-    };
+    age.rekey =
+      {
+        masterIdentities = ageMasterIdentities;
+        # NOTE: this is OK because there are no clashes between archs, but technically this should change.
+        localStorageDir = inputs.self.outPath + "/secrets/rekeyed/${config.networking.hostName}";
+        storageMode = "local";
+        agePlugins = [ pkgs.age-plugin-fido2-hmac ];
+      }
+      # Only set the pubkey if we find it.
+      // lib.optionalAttrs cfg.foundPublicKey {
+        # TODO: put this into the correct file
+        # hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAcy5s114N7IL5WJIeMh2R7AZE+Gi9f4gVY6u4ZELFWX root@nixos";
+        hostPubkey = builtins.readFile publicKeyAbsPath;
+      };
+  };
 }

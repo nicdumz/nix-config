@@ -40,8 +40,8 @@
     nova-vim.flake = false;
   };
 
-  # Rewrite TODOs:
-  #  * Update README
+  # snowfall rewrite TODOs:
+  #  * why cant i set passwords sigh
 
   outputs =
     inputs:
@@ -82,7 +82,7 @@
       };
 
       agenix-rekey = inputs.agenix-rekey.configure {
-        userFlake = inputs.self;
+        userFlake = inputs.self; # expects the flake itself (not flakedir)
         inherit (inputs.self) nixosConfigurations;
       };
     };
