@@ -27,17 +27,21 @@ recommend a read to understand their philosophy.
 - Multi-machine, multi-user by design.
 - `disko` handles partition layout for new installs.
 - Development on this repo:
+  - I cannot commit to the `main` branch, instead I need to use feature branches, via Github PRs.
+    Each PR integrates with [Garnix](https://garnix.io/), building all the hosts, and validating configs.
   - `direnv` integration: if you `cd` into the repo you should get a useable development environment.
   - `nix fmt` in this repo just does the right thing.
+  - A few git hooks enforcing best practices.
 
 ## Usage examples
 
 Everyday usage:
 
 ```sh
-colmena --experimental-flake-eval build  # builds all things
-nixos-rebuild build --flake .#bistannix # build for one host
-nixos-rebuild switch --flake .#bistannix --use-remote-sudo # deploy for current machine
+colmena --experimental-flake-eval build  # builds all hosts
+colmena --experimental-flake-eval apply  # apply to all remote hosts
+colmena --experimental-flake-eval apply-local --sudo build # build for my local host
+colmena --experimental-flake-eval apply-local --sudo switch # apply for my local host
 ```
 
 Building an iso for a liveusb purpose (containing this repo in `$HOME/nixos-sources`):
@@ -51,3 +55,8 @@ Deploying a new machine (with disk partitioning):
 ```sh
 sudo nix run 'github:nix-community/disko/latest#disko-install' -- --write-efi-boot-entries --flake '.#bistannix' --disk main /dev/sda
 ```
+
+## Inspiration
+
+- https://truxnell.github.io/nix-config/ is a great read.
+- https://github.com/jakehamilton/config fairly clean repo using snowfall-lib.
