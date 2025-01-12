@@ -1,4 +1,4 @@
-{
+_: {
   programs.git = {
     enable = true;
     aliases = {
@@ -14,5 +14,10 @@
     };
     userEmail = "nicdumz.commits@gmail.com";
     userName = "Nicolas Dumazet";
+  };
+
+  programs.gh = {
+    enable = true;
+    settings.git_protocol = "ssh";
   };
 }
