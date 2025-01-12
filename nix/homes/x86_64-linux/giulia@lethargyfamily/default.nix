@@ -1,13 +1,13 @@
 {
   pkgs,
   lib,
-  osConfig,
+  osConfig ? { },
   namespace,
   ...
 }:
 {
   # home.username = "giulia";
   home.packages = [
-    (lib.mkIf osConfig.${namespace}.graphical pkgs.google-chrome)
+    (lib.mkIf (osConfig.${namespace}.graphical or false) pkgs.google-chrome)
   ];
 }

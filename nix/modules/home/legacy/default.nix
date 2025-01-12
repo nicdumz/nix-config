@@ -1,7 +1,7 @@
 # Module common to all homes / users.
 {
   config,
-  osConfig,
+  osConfig ? { },
   inputs,
   lib,
   namespace,
@@ -30,7 +30,7 @@
       rf = "${r.name} ${toString r.size}";
       mf = "${m.name} ${toString m.size}";
     in
-    lib.optionalAttrs osConfig.${namespace}.graphical {
+    lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
       "org/gnome/desktop/interface" = {
         scaling-factor = lib.home-manager.hm.gvariant.mkUint32 0;
         text-scaling-factor = lib.home-manager.hm.gvariant.mkDouble 1.25;

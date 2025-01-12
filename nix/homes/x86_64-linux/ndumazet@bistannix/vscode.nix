@@ -1,13 +1,13 @@
 {
   config,
   lib,
-  osConfig,
+  osConfig ? { },
   namespace,
   pkgs,
   ...
 }:
 {
-  programs.vscode = lib.optionalAttrs osConfig.${namespace}.graphical {
+  programs.vscode = lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
     enable = true;
     package = pkgs.vscodium;
     enableExtensionUpdateCheck = false;

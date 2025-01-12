@@ -1,12 +1,12 @@
 {
   config,
-  osConfig,
+  osConfig ? { },
   lib,
   namespace,
   ...
 }:
 {
-  programs.kitty = lib.optionalAttrs osConfig.${namespace}.graphical {
+  programs.kitty = lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
     enable = true;
     font = {
       # TODO: this actually depends on display scaling ..

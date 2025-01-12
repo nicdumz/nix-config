@@ -2,11 +2,11 @@
   config,
   lib,
   namespace,
-  osConfig,
+  osConfig ? { },
   ...
 }:
 {
-  programs.librewolf = lib.optionalAttrs osConfig.${namespace}.graphical {
+  programs.librewolf = lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
     enable = true;
     settings =
       let
