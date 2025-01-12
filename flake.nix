@@ -36,9 +36,6 @@
     git-hooks-nix.inputs.nixpkgs.follows = "nixpkgs";
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
 
-    nova-vim.url = "github:nicdumz/nova-vim";
-    nova-vim.flake = false;
-
     colmena.url = "github:zhaofengli/colmena";
     colmena.inputs.nixpkgs.follows = "nixpkgs";
     colmena.inputs.stable.follows = "nixpkgs";
