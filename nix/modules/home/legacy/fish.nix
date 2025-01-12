@@ -9,27 +9,29 @@
     # e.g. eza will setup abbrevations
     preferAbbrs = true;
     interactiveShellInit = ''
-      set -x tide_nix3_shell_bg_color "brblue"
-      set -x tide_nix3_shell_color "white"
-      set -x tide_nix3_shell_icon ""
+      set -l myblue "5277C3"
 
-      set -x tide_docker_bg_color "blue"
-      set -x tide_docker_color "normal"
-      set -x tide_docker_icon ""
+      set -U tide_nix3_shell_bg_color $myblue
+      set -U tide_nix3_shell_color "white"
+      set -U tide_nix3_shell_icon ""
 
-      set -x tide_python_bg_color "cyan"
-      set -x tide_python_color "normal"
-      set -x tide_python_icon "󰌠"
+      set -U tide_docker_bg_color $myblue
+      set -U tide_docker_color "white"
+      set -U tide_docker_icon ""
 
-      set -x tide_gcloud_bg_color "blue"
-      set -x tide_gcloud_color "normal"
-      set -x tide_gcloud_icon "󰊭"
+      set -U tide_python_bg_color $myblue
+      set -U tide_python_color "white"
+      set -U tide_python_icon "󰌠"
 
-      set -x tide_go_bg_color "brcyan"
-      set -x tide_go_color "normal"
-      set -x tide_go_icon ""
+      set -U tide_gcloud_bg_color $myblue
+      set -U tide_gcloud_color "white"
+      set -U tide_gcloud_icon "󰊭"
 
-      set -x tide_right_prompt_items status cmd_duration context jobs direnv time newline nix3_shell docker python go
+      set -U tide_go_bg_color $myblue
+      set -U tide_go_color "white"
+      set -U tide_go_icon ""
+
+      set -U tide_right_prompt_items status cmd_duration context jobs direnv time newline nix3_shell docker python go
     ''; # maybe extend later
     functions = {
       fish_greeting = ""; # bye greeting.
@@ -87,6 +89,6 @@
   #  * `run` is necessary to support dry-run
   #  * `linkGeneration` dependency is also required
   home.activation.configure-tide = lib.hm.dag.entryAfter [ "installPackages" "linkGeneration" ] ''
-    run ${lib.getExe pkgs.fish} -c "tide configure --auto --style=Rainbow --prompt_colors='16 colors' --show_time='24-hour format' --rainbow_prompt_separators=Round --powerline_prompt_heads=Round --powerline_prompt_tails=Round --powerline_prompt_style='Two lines, character and frame' --prompt_connection=Solid --powerline_right_prompt_frame=No --prompt_spacing=Sparse --icons='Many icons' --transient=No"
+    run ${lib.getExe pkgs.fish} -c "tide configure --auto --style=Rainbow --prompt_colors='True color' --show_time='24-hour format' --rainbow_prompt_separators=Round --powerline_prompt_heads=Round --powerline_prompt_tails=Round --powerline_prompt_style='Two lines, character and frame' --prompt_connection=Solid --powerline_right_prompt_frame=No --prompt_connection_andor_frame_color=Dark --prompt_spacing=Sparse --icons='Many icons' --transient=No"
   '';
 }
