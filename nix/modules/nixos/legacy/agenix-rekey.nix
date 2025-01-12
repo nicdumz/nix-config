@@ -49,19 +49,33 @@ in
       '')
     ];
 
-    age.rekey =
-      {
-        masterIdentities = ageMasterIdentities;
-        # NOTE: this is OK because there are no clashes between archs, but technically this should change.
-        localStorageDir = inputs.self.outPath + "/secrets/rekeyed/${config.networking.hostName}";
-        storageMode = "local";
-        agePlugins = [ pkgs.age-plugin-fido2-hmac ];
-      }
-      # Only set the pubkey if we find it.
-      // lib.optionalAttrs cfg.foundPublicKey {
-        # TODO: put this into the correct file
-        # hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAcy5s114N7IL5WJIeMh2R7AZE+Gi9f4gVY6u4ZELFWX root@nixos";
-        hostPubkey = builtins.readFile publicKeyAbsPath;
+    age = {
+      rekey =
+        {
+          masterIdentities = ageMasterIdentities;
+          # NOTE: this is OK because there are no clashes between archs, but technically this should change.
+          localStorageDir = inputs.self.outPath + "/secrets/rekeyed/${config.networking.hostName}";
+          storageMode = "local";
+          agePlugins = [ pkgs.age-plugin-fido2-hmac ];
+        }
+        # Only set the pubkey if we find it.
+        // lib.optionalAttrs cfg.foundPublicKey {
+          # TODO: put this into the correct file
+          # hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAcy5s114N7IL5WJIeMh2R7AZE+Gi9f4gVY6u4ZELFWX root@nixos";
+          hostPubkey = builtins.readFile publicKeyAbsPath;
+        };
+      secrets = lib.mkIf cfg.foundPublicKey {
+        # This is an OAuth Client (key) authorized to create auth_keys.
+        tailscaleAuthKey = {
+          # TODO: modularize this and split
+          rekeyFile = inputs.self.outPath + "/secrets/tailscale-oauth.age";
+          # Note: defaults are nicely restricted:
+          # mode = "0400";
+          # owner = "root";
+          # group = "root";
+        };
+        ndumazetHashedPassword.rekeyFile = inputs.self.outPath + "/secrets/ndumazet-hashed-password.age";
       };
+    };
   };
 }
