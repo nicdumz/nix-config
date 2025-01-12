@@ -79,6 +79,7 @@
     extraConfig = ''
       set nomodeline " vulns
       set noswapfile
+      set ff=unix fixeol
 
       set cmdheight=2
       set shortmess=atToOcCF
