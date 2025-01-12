@@ -16,4 +16,6 @@
     graphical = true;
     persistence.enable = true;
   };
+
+  services.pcscd.enable = true;
 }

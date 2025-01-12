@@ -52,24 +52,4 @@
     };
 
   xdg.enable = true;
-
-  programs.eza = {
-    enable = true;
-    icons = "auto";
-    colors = "auto";
-  };
-
-  programs.git = {
-    enable = true;
-    aliases = {
-      st = "status";
-      ci = "commit";
-      glog = "log --graph --decorate --branches=*";
-    };
-    extraConfig = {
-      github.user = "nicdumz";
-      "url \"git@github.com:\"".pushInsteadOf = "https://github.com/";
-      core.editor = "nvim";
-    };
-  };
 }

@@ -3,11 +3,10 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
-  config,
+  inputs,
   lib,
   pkgs,
-  inputs,
-  namespace,
+  system,
   ...
 }:
 
@@ -23,15 +22,6 @@
 
   system.stateVersion = "24.11";
 
-  boot.initrd = {
-    availableKernelModules = [
-      "ata_piix"
-      "sd_mod"
-    ];
-
-    systemd.enable = true;
-  };
-
   security.sudo.extraConfig = "Defaults insults,timestamp_timeout=30";
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
@@ -40,26 +30,38 @@
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
 
-  boot.loader.efi.canTouchEfiVariables = true;
-  # TODO: I would technically prefer refind (for prettiness), but no
-  # declarative way to expose generations for now.
-  boot.loader.grub.enable = false;
-  boot.loader.systemd-boot = {
-    enable = true;
-    configurationLimit = 10;
-    editor = false;
+  boot = {
+    initrd = {
+      availableKernelModules = [
+        "ata_piix"
+        "sd_mod"
+      ];
+      systemd.enable = true;
+    };
+
+    loader = {
+      efi.canTouchEfiVariables = true;
+      # TODO: I would technically prefer refind (for prettiness), but no
+      # declarative way to expose generations for now, so use systemd-boot.
+      grub.enable = false;
+      systemd-boot = {
+        enable = true;
+        configurationLimit = 10;
+        editor = false;
+        # highlight last booted
+        extraInstallCommands = ''
+          ${pkgs.gnused}/bin/sed -i 's/default nixos-generation-[0-9][0-9].conf/default @saved/g' /boot/loader/loader.conf
+        '';
+      };
+    };
   };
-  # highlight last booted
-  boot.loader.systemd-boot.extraInstallCommands = ''
-    ${pkgs.gnused}/bin/sed -i 's/default nixos-generation-[0-9][0-9].conf/default @saved/g' /boot/loader/loader.conf
-  '';
 
   time.timeZone = "Europe/Zurich";
   i18n.defaultLocale = "en_GB.UTF-8";
 
   services.openssh.enable = true;
 
-  nixpkgs.hostPlatform = "x86_64-linux";
+  nixpkgs.hostPlatform = system;
   # https://nixos.wiki/wiki/Automatic_system_upgrades
   system.autoUpgrade = {
     enable = true;
@@ -143,33 +145,4 @@
     unzip
     wget
   ];
-
-  services.pcscd.enable = true;
-
-  age = {
-    secrets = lib.mkIf config.${namespace}.foundPublicKey {
-      # This is an OAuth Client (key) authorized to create auth_keys.
-      tailscaleAuthKey = {
-        rekeyFile = inputs.self.outPath + "/secrets/tailscale-oauth.age";
-        # Note: defaults are nicely restricted:
-        # mode = "0400";
-        # owner = "root";
-        # group = "root";
-      };
-      ndumazetHashedPassword.rekeyFile = inputs.self.outPath + "/secrets/ndumazet-hashed-password.age";
-    };
-  };
-
-  services.tailscale = lib.optionalAttrs config.${namespace}.foundPublicKey {
-    enable = true;
-    openFirewall = true;
-    # TODO: "server" or "both" for an exit node
-    useRoutingFeatures = "client";
-    extraUpFlags = [
-      "--ssh"
-    ];
-    # The key is a reusable key from https://login.tailscale.com/admin/settings/keys
-    # It unfortunately expires after 90d ..
-    authKeyFile = config.age.secrets.tailscaleAuthKey.path;
-  };
 }
