@@ -1,12 +1,4 @@
-{ pkgs, inputs, ... }:
-let
-  mkNvimPlugin =
-    src: pname:
-    pkgs.vimUtils.buildVimPlugin {
-      inherit pname src;
-      version = src.lastModifiedDate;
-    };
-in
+{ pkgs, ... }:
 {
   programs.neovim = {
     enable = true;
@@ -17,8 +9,54 @@ in
     ];
     plugins = with pkgs.vimPlugins; [
       (nvim-treesitter.withPlugins (ps: [ ps.nix ]))
-      cmp-nvim-lsp
-      nvim-cmp
+      {
+        plugin = nvim-cmp;
+        type = "lua";
+        config = # lua
+          ''
+            local cmp = require('cmp')
+
+            cmp.setup({
+              mapping = cmp.mapping.preset.insert({
+                ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+                ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                ['<C-Space>'] = cmp.mapping.complete(),
+                ['<C-e>'] = cmp.mapping.abort(),
+                ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+              }),
+              sources = cmp.config.sources({
+                { name = 'nvim_lsp' },
+              }, {
+                { name = 'buffer' },
+              })
+            })
+          '';
+
+      }
+      {
+        plugin = cmp-nvim-lsp;
+        type = "lua";
+        config = # lua
+          ''
+            local capabilities = require('cmp_nvim_lsp').default_capabilities()
+            -- note that ./. below works because nixd starts in root_dir() (where .git or flake.nix is)
+            require('lspconfig').nixd.setup({
+              capabilities = capabilities,
+              settings = {
+                nixd = {
+                  options = {
+                    nixos = {
+                      expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.bistannix.options',
+                    },
+                    home_manager = {
+                      expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."ndumazet@bistannix".options',
+                    },
+                  },
+                },
+              },
+            })
+          '';
+      }
       nvim-lspconfig
       {
         plugin = vim-airline;
@@ -30,8 +68,8 @@ in
       vim-airline-themes
       vim-sensible
       {
-        plugin = mkNvimPlugin inputs.nova-vim "nova-vim";
-        config = "colorscheme nova";
+        plugin = catppuccin-nvim;
+        config = "colorscheme catppuccin-mocha";
       }
     ];
     defaultEditor = true;
@@ -67,42 +105,6 @@ in
 
       " Show Git diff in window split when commiting
       autocmd FileType gitcommit DiffGitCached | wincmd L | wincmd p
-    '';
-    extraLuaConfig = ''
-      local cmp = require('cmp')
-
-      cmp.setup({
-        mapping = cmp.mapping.preset.insert({
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<C-e>'] = cmp.mapping.abort(),
-          ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-        }),
-        sources = cmp.config.sources({
-          { name = 'nvim_lsp' },
-        }, {
-          { name = 'buffer' },
-        })
-      })
-
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      -- note that ./. below works because nixd starts in root_dir() (where .git or flake.nix is)
-      require('lspconfig').nixd.setup({
-        capabilities = capabilities,
-        settings = {
-          nixd = {
-            options = {
-              nixos = {
-                expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.bistannix.options',
-              },
-              home_manager = {
-                expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."ndumazet@bistannix".options',
-              },
-            },
-          },
-        },
-      })
     '';
   };
 
