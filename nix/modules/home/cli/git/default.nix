@@ -8,6 +8,7 @@ _: {
     };
     extraConfig = {
       core.editor = "nvim";
+      core.askPass = ""; # needs to be empty to use terminal for ask pass
       "url \"git@github.com:\"".pushInsteadOf = "https://github.com/";
       # TODO: everything below should be configured per-user.
       github.user = "nicdumz";
