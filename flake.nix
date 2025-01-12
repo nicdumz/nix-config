@@ -49,16 +49,18 @@
 
   outputs =
     inputs:
-    inputs.snowfall-lib.mkFlake {
-      inherit inputs;
-      src = ./.;
-
-      imports = [ inputs.agenix-rekey.flakeModule ];
-
-      snowfall = {
-        namespace = "nicdumz";
-        root = ./nix;
+    let
+      lib = inputs.snowfall-lib.mkLib {
+        inherit inputs;
+        src = ./.;
+        snowfall = {
+          namespace = "nicdumz";
+          root = ./nix;
+        };
       };
+    in
+    lib.mkFlake {
+      imports = [ inputs.agenix-rekey.flakeModule ];
 
       outputs-builder = channels: {
         # inlined treefmt config.
@@ -87,30 +89,17 @@
       };
 
       # Note: due to https://github.com/zhaofengli/colmena/issues/202 /
+      # Note: due to https://github.com/zhaofengli/colmena/issues/60 /
       #   https://github.com/zhaofengli/colmena/pull/228, in order to work from a dirty flake dir,
       #   I have to pass
       #     `colmena --experimental-flake-eval build` and friends.
-      colmenaHive = inputs.colmena.lib.makeHive inputs.self.outputs.colmena;
-      colmena =
-        let
-          conf = inputs.self.nixosConfigurations;
-        in
-        {
-          meta = {
-            nixpkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
-            nodeNixpkgs = builtins.mapAttrs (_name: value: value.pkgs) conf;
-            nodeSpecialArgs = builtins.mapAttrs (_name: value: value._module.specialArgs) conf;
-          };
-
-          bistannix = {
-            deployment = {
-              allowLocalDeployment = true;
-              targetHost = null;
-            };
-          };
-          lethargyfamily = { };
-        }
-        // builtins.mapAttrs (_name: value: { imports = value._module.args.modules; }) conf;
+      colmenaHive = lib.mkColmenaHive inputs.self.pkgs.x86_64-linux.nixpkgs {
+        bistannix = {
+          allowLocalDeployment = true;
+          targetHost = null;
+        };
+        liveusb.targetHost = null;
+      };
 
       agenix-rekey = inputs.agenix-rekey.configure {
         userFlake = inputs.self; # expects the flake itself (not flakedir)
