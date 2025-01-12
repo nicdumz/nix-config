@@ -40,6 +40,7 @@
         100
       ];
       "editor.fontFamily" = config.fontProfiles.monospace.name + ", 'monospace', monospace";
+      "files.insertFinalNewline" = true;
       "rewrap.autoWrap.enabled" = true;
       "rewrap.wrappingColumn" = 100;
       "nix.formatterPath" = [ "nixfmt" ];
