@@ -5,4 +5,4 @@
 let
   flake = builtins.getFlake (toString ./.);
 in
-flake.vm-noguiConfigurations.qemu
+flake.nixosConfigurations.qemu
