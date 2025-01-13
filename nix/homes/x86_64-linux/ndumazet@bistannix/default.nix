@@ -10,6 +10,8 @@
   imports = [
     ./kitty.nix
     ./vscode.nix
+    # TODO: move to an actual module, it's ignored because of /this/ default.nix
+    ./app/librewolf
   ];
 
   # TODO: lacks configuration
