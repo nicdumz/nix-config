@@ -38,10 +38,10 @@ recommend a read to understand their philosophy.
 Everyday usage:
 
 ```sh
-colmena --experimental-flake-eval build  # builds all hosts
-colmena --experimental-flake-eval apply  # apply to all remote hosts
-colmena --experimental-flake-eval apply-local --sudo build # build for my local host
-colmena --experimental-flake-eval apply-local --sudo switch # apply for my local host
+colmena build  # builds all hosts
+colmena apply  # apply to all remote hosts
+colmena apply-local --sudo build # build for my local host
+colmena apply-local --sudo switch # apply for my local host
 ```
 
 Building an iso for a liveusb purpose (containing this repo in `$HOME/nixos-sources`):

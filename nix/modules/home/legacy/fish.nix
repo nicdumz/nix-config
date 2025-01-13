@@ -65,6 +65,7 @@
             _tide_print_item nix3_shell $tide_nix3_shell_icon' ' " $(string shorten -m 60 "$packages")"
           end
         '';
+      colmena = "command colmena --experimental-flake-eval $argv";
     };
     plugins = [
       {
