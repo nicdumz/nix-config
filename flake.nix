@@ -13,12 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # In order to build system images and artifacts supported by nixos-generators.
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager?ref=release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -119,11 +113,21 @@
           targetHost = null;
         };
         liveusb.targetHost = null;
+        qemu = {
+          targetHost = "localhost";
+          targetPort = 2222;
+        };
       };
 
       agenix-rekey = inputs.agenix-rekey.configure {
         userFlake = inputs.self; # expects the flake itself (not flakedir)
         inherit (inputs.self) nixosConfigurations;
       };
+
+      # This loads a vm in the current shell:
+      #   nix build .#qemu-vm && ./result/bin/run-qemu-vm
+      # Log into it via ssh:
+      #   ssh -p 2222 root@localhost
+      qemu-vm = inputs.self.nixosConfigurations.qemu.config.system.build.vm;
     };
 }
