@@ -11,27 +11,27 @@
     interactiveShellInit = ''
       set -l myblue "5277C3"
 
-      set -U tide_nix3_shell_bg_color $myblue
-      set -U tide_nix3_shell_color "white"
-      set -U tide_nix3_shell_icon ""
+      set -g tide_nix3_shell_bg_color $myblue
+      set -g tide_nix3_shell_color "white"
+      set -g tide_nix3_shell_icon ""
 
-      set -U tide_docker_bg_color $myblue
-      set -U tide_docker_color "white"
-      set -U tide_docker_icon ""
+      set -g tide_docker_bg_color $myblue
+      set -g tide_docker_color "white"
+      set -g tide_docker_icon ""
 
-      set -U tide_python_bg_color $myblue
-      set -U tide_python_color "white"
-      set -U tide_python_icon "󰌠"
+      set -g tide_python_bg_color $myblue
+      set -g tide_python_color "white"
+      set -g tide_python_icon "󰌠"
 
-      set -U tide_gcloud_bg_color $myblue
-      set -U tide_gcloud_color "white"
-      set -U tide_gcloud_icon "󰊭"
+      set -g tide_gcloud_bg_color $myblue
+      set -g tide_gcloud_color "white"
+      set -g tide_gcloud_icon "󰊭"
 
-      set -U tide_go_bg_color $myblue
-      set -U tide_go_color "white"
-      set -U tide_go_icon ""
+      set -g tide_go_bg_color $myblue
+      set -g tide_go_color "white"
+      set -g tide_go_icon ""
 
-      set -U tide_right_prompt_items status cmd_duration context jobs direnv time newline nix3_shell docker python go
+      set -g tide_right_prompt_items status cmd_duration context jobs direnv time newline nix3_shell docker python go
     ''; # maybe extend later
     functions = {
       fish_greeting = ""; # bye greeting.
