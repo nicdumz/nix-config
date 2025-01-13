@@ -32,8 +32,19 @@
 
   boot = {
     initrd = {
+      kernelModules = [
+        "nvme"
+        "usbhid" # fido2 over usb
+        # yubico
+        "nls_cp437"
+        "nls_iso8859-1"
+      ];
       availableKernelModules = [
-        "ata_piix"
+        "xhci_pci"
+        "ahci"
+        "nvme"
+        "usbhid"
+        "usb_storage"
         "sd_mod"
       ];
       systemd.enable = true;
@@ -54,6 +65,11 @@
         '';
       };
     };
+  };
+  hardware = {
+    enableRedistributableFirmware = true;
+    cpu.intel.updateMicrocode = true;
+    cpu.amd.updateMicrocode = true;
   };
 
   time.timeZone = "Europe/Zurich";
