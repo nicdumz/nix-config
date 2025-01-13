@@ -111,6 +111,10 @@
           # decrypt passwords then (using hashedPasswordFile is not feasible).
           hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
         };
+        ndumazetKeys = [
+          # TODO: formalize this.
+          "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIIU3bA3q9/SlrUXzsApLaVkUDAlQY1c5PMmnoC+XnmjOAAAABHNzaDo= ndumazet@bistannix nano"
+        ];
       in
       # finalAuth = {
       #   hashedPasswordFile = config.age.secrets.ndumazetHashedPassword.path;
@@ -127,10 +131,7 @@
             extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
             createHome = true;
             uid = 1000; # Debian defaults.
-            openssh.authorizedKeys.keys = [
-              # TODO: formalize this.
-              "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIIU3bA3q9/SlrUXzsApLaVkUDAlQY1c5PMmnoC+XnmjOAAAABHNzaDo= ndumazet@bistannix nano"
-            ];
+            openssh.authorizedKeys.keys = ndumazetKeys;
           }
           // actual;
 
@@ -142,6 +143,7 @@
         root = {
           # NOTE: no passwd, no need for direct login.
           uid = 0;
+          openssh.authorizedKeys.keys = ndumazetKeys;
         };
       };
   };
