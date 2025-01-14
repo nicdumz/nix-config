@@ -7,6 +7,13 @@
   ...
 }:
 {
+  # TODO: modularize
+  # I use Go below
+  home.packages = [
+    pkgs.go
+    pkgs.gopls
+  ];
+
   programs.vscode = lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
     enable = true;
     package = pkgs.vscodium;
@@ -17,10 +24,12 @@
       with pkgs.vscode-extensions;
       [
         asvetliakov.vscode-neovim
+        catppuccin.catppuccin-vsc
+        catppuccin.catppuccin-vsc-icons
+        continue.continue
+        golang.go
         jnoortheen.nix-ide
         stkb.rewrap
-        catppuccin.catppuccin-vsc-icons
-        catppuccin.catppuccin-vsc
       ]
       ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {

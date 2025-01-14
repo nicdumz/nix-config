@@ -157,6 +157,7 @@
     colordiff
     efibootmgr
     git
+    killall
     libfido2 # provides fido2-token utility
     nixd
     nixfmt-rfc-style
