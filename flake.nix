@@ -74,6 +74,8 @@
       };
     in
     lib.mkFlake {
+      # Simplify eval, do not generate all systems ...
+      supportedSystems = [ "x86_64-linux" ];
       imports = [ inputs.agenix-rekey.flakeModule ];
 
       outputs-builder = channels: {
