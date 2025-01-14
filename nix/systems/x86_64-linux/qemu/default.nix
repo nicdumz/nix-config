@@ -5,6 +5,9 @@
   # not recognized).
   imports = [ "${modulesPath}/virtualisation/qemu-vm.nix" ];
 
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   virtualisation = {
     graphics = false;
     qemu.options = [ "-serial mon:stdio" ];
@@ -17,12 +20,14 @@
       }
     ];
     mountHostNixStore = true;
-    # Unfortunately this breaks, maybe https://github.com/NixOS/nixpkgs/issues/240086
-    # useBootLoader = true;
-    # useEFIBoot = true;
-    diskSize = 2 * 1024;
-    memorySize = 4 * 1024;
+    useBootLoader = true;
+    useEFIBoot = true;
+    diskSize = 10 * 1024;
+    memorySize = 8 * 1024;
     # NOTE: sharedDirectories = is useful if I need to share with the host.
   };
+  nixpkgs.hostPlatform = "x86_64-linux";
+  system.stateVersion = "24.11";
+  # networking.hostName = "qemu-vm";
   # nicdumz.embedFlake = true; # for fun
 }
