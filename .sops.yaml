@@ -1,0 +1,7 @@
+keys:
+  # USB A v5 yubikeys
+  - &nano age1vqnguqjqxpjckft5gjlt2m4lzdhh8ymzwycha9cahqnj6ygjc4ms855jds
+  - &portable age1a0a4av92pa3ld4mwqpg2g72csxhxau4hw96860d5zvlzldq0aemsdn9lwd
+  - &backup age105nux02frp73gs98f9j5dec3dae6608xsr58atzhxresc7p72e7sakds6z
+creation_rules:
+  - path_regex: secrets/[^/]+\.yaml$

@@ -56,6 +56,11 @@
         stable.follows = "nixpkgs";
       };
     };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -96,6 +101,7 @@
             );
             nixfmt.enable = true;
             statix.enable = true;
+            yamlfmt.enable = true;
           };
         };
 
