@@ -22,6 +22,9 @@ in
         "/var/db/sudo"
         "/var/lib"
         "/var/log"
+        # TODO: if there's ever a NM persistence problem, you likely need to uncomment:
+        # but not sure it's needed, will need a test.
+        # "/etc/NetworkManager/system-connections"
       ];
       files = [
         "/etc/machine-id"
