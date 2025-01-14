@@ -19,19 +19,31 @@
   };
 
   # TODO: package in a module
+  # Load nvidia driver for Xorg and Wayland
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia = {
+    # Modesetting is required.
+    modesetting.enable = true;
+    open = true; # required for RTX
+  };
+
+  # TODO: package in a module
   services.ollama = {
     enable = true;
     acceleration = "cuda";
     loadModels = [ "qwen2.5-coder:1.5b" ];
   };
 
-  # Cuda (for ollama) is unfree.
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (lib.getName pkg) [
+      # Cuda (for ollama) is unfree.
       "cuda_cccl"
       "cuda_cudart"
       "cuda_nvcc"
       "libcublas"
+      # nvidia drivers
+      "nvidia-x11"
+      "nvidia-settings"
     ];
 }
