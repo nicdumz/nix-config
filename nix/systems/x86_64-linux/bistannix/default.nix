@@ -22,8 +22,9 @@
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
-    # Modesetting is required.
+    # Modesetting is required, for wayland etc.
     modesetting.enable = true;
+    powerManagement.enable = true; # Try that to avoid tearing?
     open = true; # required for RTX
   };
 
