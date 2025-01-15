@@ -33,7 +33,6 @@
   - ollama
   - nvidia
   - role for a 'developer'
-- can `Continue` config be versioned (right now it's in $HOME/.continue)
 - I'd like to configure Librewolf extensions, e.g. have canvas blocker always allow strava,linkedin.
 - I would love to have a "top" of vscode entry with nix things, how comes it seems to work on code on the laptop? :o
 - Play with other greeters e.g. `regreet`.
@@ -44,3 +43,8 @@
 - consider https://github.com/maralorn/nix-output-monitor?tab=readme-ov-file
 - https://nixery.dev/ for Docker?
 - https://taskfile.dev/ seems interesting for common tasks
+
+## Postponed
+
+- can `Continue` config be versioned (right now it's in $HOME/.continue). _Postponed because I
+  disabled it_.
