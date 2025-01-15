@@ -131,5 +131,10 @@
       # Log into it via ssh:
       #   ssh -p 2222 root@localhost
       qemu-vm = inputs.self.nixosConfigurations.qemu.config.system.build.vm;
+
+      templates = {
+        homemodule.description = "Simple Snowfall lib Home module template";
+        nixosmodule.description = "Simple Snowfall lib NixOS module template";
+      };
     };
 }
