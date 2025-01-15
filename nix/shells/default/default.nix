@@ -14,6 +14,22 @@ let
 in
 mkShell {
   inherit (check) shellHook;
+  # Note: this is cool. Would be a nativeBuildInput
+  # pkgs.writeTextFile
+  # {
+  #   name = "mkModuleHelpers.completions"; # just a name
+  #   destination = "/share/fish/vendor_completions.d/${namespace}-helpers.fish";
+  #   text = ''
+  #     set -l commands home nixos
+  #     complete -c futurecmd -f # no file completions
+  #     complete -c futurecmd -n "not __fish_seen_subcommand_from $commands" -ra 'home' 'nixos'
+  #     complete -c futurecmd -ra 'home nixos'
+  #   '';
+  # };
+  nativeBuildInputs = [
+    inputs.self.packages.${system}.initHomeModule
+    inputs.self.packages.${system}.initNixosModule
+  ];
 
   packages = [
     inputs.agenix-rekey.packages.${system}.default
