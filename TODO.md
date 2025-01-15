@@ -31,7 +31,6 @@
 - Move stuff to features:
   - Go
   - ollama
-  - nvidia
   - role for a 'developer'
 - I'd like to configure Librewolf extensions, e.g. have canvas blocker always allow strava,linkedin.
 - I would love to have a "top" of vscode entry with nix things, how comes it seems to work on code on the laptop? :o

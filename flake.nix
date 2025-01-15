@@ -58,9 +58,6 @@
     };
   };
 
-  # snowfall rewrite TODOs:
-  #  * why cant i set passwords sigh
-
   outputs =
     inputs:
     let

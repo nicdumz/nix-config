@@ -17,4 +17,5 @@
     graphical = true;
     persistence.enable = true;
   };
+  snowfallorg.users.giulia.create = true;
 }
