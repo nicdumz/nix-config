@@ -26,10 +26,12 @@
         asvetliakov.vscode-neovim
         catppuccin.catppuccin-vsc
         catppuccin.catppuccin-vsc-icons
-        continue.continue
         golang.go
         jnoortheen.nix-ide
         stkb.rewrap
+      ]
+      ++ lib.optionals (osConfig.${namespace}.nvidia.enable or false) [
+        continue.continue # Continue needs ollama and nvidia
       ]
       ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
         {
