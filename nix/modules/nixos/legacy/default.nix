@@ -12,7 +12,6 @@
 
 {
   imports = [
-    ./agenix-rekey.nix
     ./graphical.nix
     ./nix.nix
     ./options.nix
@@ -99,57 +98,6 @@
     # Before overwriting a non-managed file, move it to .backup
     backupFileExtension = "backup";
   };
-
-  users = {
-    defaultUserShell = pkgs.fish;
-    mutableUsers = false;
-
-    users =
-      let
-        initialAuth = {
-          # via mkpasswd, this is a trivial / dummy PW for installs, since no key is available to
-          # decrypt passwords then (using hashedPasswordFile is not feasible).
-          hashedPassword = "$y$j9T$b6nmy2WZ6DxfKozDeSCM20$bs/3HW99ABTmjx/9gp62oDKIDzKn.MNOJv5VTa0Wj29";
-        };
-        ndumazetKeys = [
-          # TODO: formalize this.
-          "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIIU3bA3q9/SlrUXzsApLaVkUDAlQY1c5PMmnoC+XnmjOAAAABHNzaDo= ndumazet@bistannix nano"
-        ];
-      in
-      # finalAuth = {
-      #   hashedPasswordFile = config.age.secrets.ndumazetHashedPassword.path;
-      # };
-      {
-        ndumazet =
-          let
-            # actual = if config.${namespace}.foundPublicKey then finalAuth else initialAuth;
-            actual = initialAuth;
-          in
-          # TODO: broken, need to use dumb passwords for now.
-          {
-            isNormalUser = true;
-            extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-            createHome = true;
-            uid = 1000; # Debian defaults.
-            openssh.authorizedKeys.keys = ndumazetKeys;
-          }
-          // actual;
-
-        # TODO: add password
-        giulia = {
-          isNormalUser = true;
-        } // initialAuth;
-
-        root = {
-          # NOTE: no passwd, no need for direct login.
-          uid = 0;
-          openssh.authorizedKeys.keys = ndumazetKeys;
-        };
-      };
-  };
-  # This is technically needed to not have assertions failing due to
-  # defaultUserShell. But actual configuration happens in home-manager below.
-  programs.fish.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

@@ -28,17 +28,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    agenix = {
-      url = "github:ryantm/agenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
-
-    agenix-rekey = {
-      url = "github:oddlama/agenix-rekey";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -78,7 +67,6 @@
     lib.mkFlake {
       # Simplify eval, do not generate all systems ...
       supportedSystems = [ "x86_64-linux" ];
-      modules = [ inputs.agenix-rekey.flakeModule ];
 
       outputs-builder = channels: {
         # inlined treefmt config.
@@ -122,11 +110,6 @@
           targetHost = "localhost";
           targetPort = 2222;
         };
-      };
-
-      agenix-rekey = inputs.agenix-rekey.configure {
-        userFlake = inputs.self; # expects the flake itself (not flakedir)
-        inherit (inputs.self) nixosConfigurations;
       };
 
       # This loads a vm in the current shell:
