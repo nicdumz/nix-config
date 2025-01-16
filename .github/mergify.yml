@@ -1,0 +1,19 @@
+pull_request_rules:
+  - name: Automatic merge when CI passes
+    conditions:
+      - label="merge-queue"
+      - check-success=All Garnix checks
+    actions:
+      merge:
+        method: rebase
+      delete_head_branch:
+
+  - name: Warn on conflicts
+    conditions:
+      - conflict
+    actions:
+      comment:
+        message: "@{{author}} this pull request is now in conflict 😩"
+      label:
+        toggle:
+          - conflict
