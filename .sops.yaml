@@ -3,5 +3,13 @@ keys:
   - &nano age1vqnguqjqxpjckft5gjlt2m4lzdhh8ymzwycha9cahqnj6ygjc4ms855jds
   - &portable age1a0a4av92pa3ld4mwqpg2g72csxhxau4hw96860d5zvlzldq0aemsdn9lwd
   - &backup age105nux02frp73gs98f9j5dec3dae6608xsr58atzhxresc7p72e7sakds6z
+  # plain Age key (not FIDO backed). Will eventually go away.
+  - &plain age1vpv9a94wj6p0tkngymfsysnzam20fkrjd3zs3trzfatzpqz42ayqpp2amc
 creation_rules:
   - path_regex: secrets/[^/]+\.yaml$
+    key_groups:
+      - age:
+          - *nano
+          - *portable
+          - *backup
+          - *plain
