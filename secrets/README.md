@@ -3,6 +3,6 @@ on various machines.
 
 Run:
 
-`sops updatekeys secrets/global.yaml`
+`sops updatekeys secrets/global.yaml && nix fmt`
 
 To rewrap for new hosts.

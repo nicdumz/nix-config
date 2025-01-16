@@ -33,6 +33,7 @@ mkShell {
 
   packages = [
     pkgs.sops
+    pkgs.ssh-to-age
     # Note: pgs.colmena below would be too old
     inputs.colmena.defaultPackage.${system}
     pkgs.age-plugin-fido2-hmac
