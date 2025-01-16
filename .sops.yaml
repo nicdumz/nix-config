@@ -7,6 +7,7 @@ keys:
   - &plain age1vpv9a94wj6p0tkngymfsysnzam20fkrjd3zs3trzfatzpqz42ayqpp2amc
   # One iteration of my test VM.
   - &qemu age163377n4x95khq0tvmlddpz2ykxq4wmxtcf0cel4vsassfkaug9qsntyv88
+  - &bistannix age1efmhh99fn52a9w0yszfdxupz93lr77ewag2cd6n5l5jfhgp6z3hs8ck48g
 creation_rules:
   - path_regex: secrets/[^/]+\.yaml$
     key_groups:
@@ -16,3 +17,4 @@ creation_rules:
           - *backup
           - *plain
           - *qemu
+          - *bistannix
