@@ -1,12 +1,12 @@
 # Run the following to get a clean VM:
-# nixos-rebuild build-vm-with-bootloader --flake ./repro#qemu && ./result/bin/run-qemu-vm-vm
+# nixos-rebuild build-vm-with-bootloader --flake ./testing#qemu && ./result/bin/run-qemu-vm-vm
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-24.11";
   };
 
   outputs = inputs: {
-    # Available through 'nixos-rebuild --flake .#qemu
+    # Available through 'nixos-rebuild --flake ./testing#qemu
     nixosConfigurations.qemu = inputs.nixpkgs.lib.nixosSystem {
       modules = [
         "${inputs.nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
