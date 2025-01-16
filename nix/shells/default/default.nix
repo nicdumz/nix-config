@@ -32,7 +32,7 @@ mkShell {
   ];
 
   packages = [
-    inputs.agenix-rekey.packages.${system}.default
+    pkgs.sops
     # Note: pgs.colmena below would be too old
     inputs.colmena.defaultPackage.${system}
     pkgs.age-plugin-fido2-hmac

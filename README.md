@@ -13,7 +13,7 @@ recommend a read to understand their philosophy.
 
 ```
 ├── nix/                    snowfall-lib structure
-│── secrets/                agenix encrypted secrets
+│── secrets/                sops encrypted secrets
 ├── .envrc                  direnv directive
 ├── README.md               Github Repo landing page
 ├── flake.nix               Core flake
@@ -23,7 +23,8 @@ recommend a read to understand their philosophy.
 
 ## Features
 
-- Secret management: integration with `agenix`/`agenix-rekey` lets me check-in encrypted secrets. My FIDO2 keys allow for decryption/rewrapping for a new host's pubkey. After deployment to a new host, the host can decrypt its secrets, exposing them via `/run/...` to the correct application.
+- Secret management: integration with `sops`/`sops-nix` lets me check-in encrypted secrets. My FIDO2 keys allow for decryption/rewrapping for a new host's pubkey. After deployment to a new host, the host can decrypt its secrets, exposing them via `/run/...` to the correct application.
+  - TODO: actually not FIDO yet...
 - Multi-machine, multi-user by design.
 - `disko` handles partition layout for new installs.
 - Development on this repo:

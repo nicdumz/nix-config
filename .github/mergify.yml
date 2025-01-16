@@ -7,7 +7,6 @@ pull_request_rules:
       merge:
         method: rebase
       delete_head_branch:
-
   - name: Warn on conflicts
     conditions:
       - conflict

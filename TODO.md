@@ -8,7 +8,7 @@
 - Secret management ([sops-nix?](https://github.com/Mic92/sops-nix)):
   - [ ] Have sops-nix support FIDO2 keys.
     - [ ] Remove my non FIDO key.
-  - [ ] Give sops-nix a try.
+  - [x] Give sops-nix a try.
 - [ ] Once this works I want
   https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md setup and tested.
 - [ ] Templates to create modules (home, and nixos).

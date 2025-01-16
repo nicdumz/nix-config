@@ -17,6 +17,12 @@
           ];
           boot.loader.systemd-boot.enable = true;
           boot.loader.efi.canTouchEfiVariables = true;
+          # Note: my manual tests try to figure out if I can update machine/users/password and not
+          # brick my host.
+          users.users.ndumazet = {
+            password = "testing";
+            isNormalUser = true;
+          };
 
           virtualisation = {
             graphics = false;

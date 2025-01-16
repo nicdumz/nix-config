@@ -25,6 +25,7 @@
   ${namespace} = {
     graphical = true;
     persistence.enable = true;
+    tailscale.enable = true;
   };
   snowfallorg.users.giulia.create = true;
 }
