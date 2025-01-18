@@ -54,8 +54,6 @@
 
       # Fallback quickly if substituters are not available.
       connect-timeout = 25;
-      # Avoid copying unnecessary stuff over SSH
-      builders-use-substitutes = true;
 
       trusted-users = [
         "root"
