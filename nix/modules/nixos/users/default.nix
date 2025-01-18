@@ -15,7 +15,7 @@
         kitty.enable = true;
         librewolf.enable = true;
         vscode.enable = true;
-
+        wallpaper.path = ./nixos-wallpaper.png;
       };
     };
     giulia = {
@@ -24,6 +24,7 @@
       admin = false;
       home.config.${namespace} = {
         chrome.enable = true;
+        wallpaper.path = ./fuji2.webp;
       };
     };
   };
