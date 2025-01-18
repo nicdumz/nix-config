@@ -21,8 +21,6 @@
   # For nixd
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
-  programs.htop.enable = true;
-
   dconf.settings =
     let
       r = config.fontProfiles.regular;

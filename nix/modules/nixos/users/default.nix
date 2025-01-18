@@ -11,9 +11,11 @@
       create = true;
       admin = true;
       home.config.${namespace} = {
+        irc.enable = true;
         kitty.enable = true;
-        vscode.enable = true;
         librewolf.enable = true;
+        vscode.enable = true;
+
       };
     };
     giulia = {
