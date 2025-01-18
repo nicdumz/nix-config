@@ -41,12 +41,6 @@
       "org/gnome/desktop/wm/preferences" = {
         titlebar-font = rf;
       };
-      "org/gnome/desktop/background" = {
-        picture-uri-dark = "file://" + ./nixos-wallpaper.png;
-      };
-      "org/gnome/desktop/screensaver" = {
-        picture-uri = "file://" + ./nixos-wallpaper.png;
-      };
     };
 
   xdg.enable = true;
