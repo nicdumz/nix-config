@@ -21,4 +21,5 @@
   };
 
   services.pcscd.enable = true;
+  snowfallorg.users.ndumazet.create = false;
 }

@@ -8,7 +8,7 @@
 {
   snowfallorg.users = {
     ndumazet = {
-      create = true;
+      create = lib.mkDefault true;
       admin = true;
       home.config.${namespace} = {
         irc.enable = true;
@@ -71,4 +71,14 @@
   # This is technically needed to not have assertions failing due to
   # defaultUserShell. But actual configuration happens in home-manager below.
   programs.fish.enable = true;
+
+  # If the user is created I always want a home-configuration for it.
+  assertions =
+    let
+      createAssert = n: v: {
+        assertion = !v.create || (builtins.hasAttr n config.home-manager.users);
+        message = "${config.networking.hostName}: user '${n}' will be created but has no home configuration";
+      };
+    in
+    lib.attrsets.mapAttrsToList createAssert config.snowfallorg.users;
 }
