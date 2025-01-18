@@ -68,6 +68,10 @@
       # Simplify eval, do not generate all systems ...
       supportedSystems = [ "x86_64-linux" ];
 
+      channels-config = {
+        allowUnfree = true;
+      };
+
       outputs-builder = channels: {
         # inlined treefmt config.
         formatter = inputs.treefmt-nix.lib.mkWrapper channels.nixpkgs {
