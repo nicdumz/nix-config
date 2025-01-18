@@ -11,7 +11,7 @@
   - [x] Give sops-nix a try.
 - [ ] Once this works I want
   https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md setup and tested.
-- [ ] Templates to create modules (home, and nixos).
+- [x] Templates (actually, snippets) to create modules (home, and nixos).
 
 ## Later
 
