@@ -32,6 +32,7 @@ mkShell {
   ];
 
   packages = [
+    pkgs.jq
     pkgs.sops
     pkgs.ssh-to-age
     # Note: pgs.colmena below would be too old
