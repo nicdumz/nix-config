@@ -105,6 +105,7 @@
     colordiff
     efibootmgr
     git
+    htop
     killall
     libfido2 # provides fido2-token utility
     nixd
@@ -112,4 +113,5 @@
     unzip
     wget
   ];
+  programs.gnupg.agent.pinentryPackage = pkgs.pinentry-curses;
 }

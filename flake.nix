@@ -106,10 +106,6 @@
           targetHost = null;
         };
         liveusb.targetHost = null;
-        qemu = {
-          targetHost = "localhost";
-          targetPort = 2222;
-        };
       };
 
       # This loads a vm in the current shell:
