@@ -2,6 +2,8 @@
   pkgs,
   lib,
   config,
+  namespace,
+  osConfig ? { },
   ...
 }:
 let
@@ -27,7 +29,7 @@ let
       # TODO: find a way to scale this depending on scaling factors.
       size = lib.mkOption {
         type = lib.types.int;
-        default = 18;
+        default = osConfig.${namespace}.scaling.defaultFontSize or 14;
         description = "Size in pixels for ${kind} font profile";
         example = "14";
       };

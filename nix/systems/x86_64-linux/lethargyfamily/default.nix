@@ -30,6 +30,10 @@
     graphical = true;
     persistence.enable = true;
     tailscale.enable = true;
+    scaling = {
+      defaultFontSize = 14;
+      factor = 0.8;
+    };
   };
   snowfallorg.users.giulia.create = true;
 }
