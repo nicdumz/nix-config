@@ -11,7 +11,10 @@
     ./windows-dual.nix
   ];
 
-  disko.devices = lib.${namespace}.mkEncryptedDiskLayout "32";
+  disko.devices = lib.${namespace}.mkEncryptedDiskLayout {
+    swapsize = 32;
+    device = "/dev/disk/by-id/WD_BLACK_SN770_2TB_230502467307";
+  };
 
   ${namespace} = {
     graphical = true;

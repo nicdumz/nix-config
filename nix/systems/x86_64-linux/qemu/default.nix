@@ -1,9 +1,23 @@
-{ modulesPath, ... }:
+{
+  lib,
+  namespace,
+  modulesPath,
+  inputs,
+  ...
+}:
 {
   # Note: I do this instead of using the snowfall-lib integration "magic" because this then creates
   # the host as a nixosConfigurations which is then part of builds / CI / etc. (vmConfigurations is
   # not recognized).
-  imports = [ "${modulesPath}/virtualisation/qemu-vm.nix" ];
+  imports = [
+    inputs.disko.nixosModules.disko
+    "${modulesPath}/virtualisation/qemu-vm.nix"
+  ];
+
+  disko.devices = lib.${namespace}.mkDiskLayout {
+    swapsize = 0;
+    device = "/dev/vda";
+  };
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -29,5 +43,4 @@
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "24.11";
   # networking.hostName = "qemu-vm";
-  # nicdumz.embedFlake = true; # for fun
 }

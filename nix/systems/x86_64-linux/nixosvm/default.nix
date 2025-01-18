@@ -10,7 +10,10 @@
     ./qemu-guest.nix
   ];
 
-  disko.devices = lib.${namespace}.mkDiskLayout "16G";
+  disko.devices = lib.${namespace}.mkDiskLayout {
+    swapsize = 0;
+    device = "/dev/vda";
+  };
 
   ${namespace} = {
     graphical = true;
