@@ -26,10 +26,6 @@ mkShell {
   #     complete -c futurecmd -ra 'home nixos'
   #   '';
   # };
-  nativeBuildInputs = [
-    inputs.self.packages.${system}.initHomeModule
-    inputs.self.packages.${system}.initNixosModule
-  ];
 
   packages = [
     pkgs.jq
