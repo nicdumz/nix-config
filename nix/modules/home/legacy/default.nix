@@ -31,7 +31,9 @@
     lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
       "org/gnome/desktop/interface" = {
         scaling-factor = lib.home-manager.hm.gvariant.mkUint32 0;
-        text-scaling-factor = lib.home-manager.hm.gvariant.mkDouble 1.25;
+        text-scaling-factor = lib.home-manager.hm.gvariant.mkDouble (
+          osConfig.${namespace}.scaling.factor or 1.0
+        );
         cursor-size = 24;
         color-scheme = "prefer-dark";
         document-font-name = rf;
