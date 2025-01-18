@@ -51,7 +51,7 @@ Building an iso for a liveusb purpose (containing this repo in `$HOME/nixos-sour
 nix build .#nixosConfigurations.liveusb.config.system.build.isoImage
 ```
 
-Deploying a new machine (with disk partitioning):
+Deploying a new machine locally (with disk partitioning):
 
 ```sh
 sudo nix run 'github:nix-community/disko/latest#disko-install' -- --write-efi-boot-entries --flake '.#bistannix' --disk main /dev/sda
