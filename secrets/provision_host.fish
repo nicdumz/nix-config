@@ -6,6 +6,9 @@ if test (count $argv) -lt 1
     echo "Reimage anew a host. Assumes host keys are already generated."
     exit
 end
+
+read -l -P 'Remember that this only works if the remote is *not* connected via wifi [enter to continue]' ignored
+
 echo $argv | read -l host passthru
 # Create a temporary directory
 set temp $(mktemp -d)

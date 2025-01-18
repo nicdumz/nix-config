@@ -2,14 +2,14 @@
 
 - [x] create local VMs.
 - [x] test deployment via (remote) `colmena` to local VM.
-- [ ] test nixos-anywhere install to a VM (reimage CUJ). https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md
-- [ ] I want to have a nixos-anywhere workflow to create host ssh keys and provision new machines.
+- [x] test nixos-anywhere install to a VM (reimage CUJ). https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md
+- [x] I want to have a nixos-anywhere workflow to create host ssh keys and provision new machines.
   Maybe https://github.com/nix-community/nixos-anywhere/blob/main/docs/howtos/secrets.md
 - Secret management ([sops-nix?](https://github.com/Mic92/sops-nix)):
   - [ ] Have sops-nix support FIDO2 keys.
     - [ ] Remove my non FIDO key.
   - [x] Give sops-nix a try.
-- [ ] Once this works I want
+- [x] Once this works I want
   https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md setup and tested.
 - [x] Templates (actually, snippets) to create modules (home, and nixos).
 
