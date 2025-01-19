@@ -22,6 +22,5 @@
 
   # Super useful for liveusb, e.g. allows setting up a system from flake inputs.
   nicdumz.embedFlake = true;
-  programs.command-not-found.enable = true; # somehow disabled in cd-minimal
   snowfallorg.users.ndumazet.create = false;
 }

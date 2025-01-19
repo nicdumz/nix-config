@@ -1,26 +1,11 @@
-# Module common to all homes / users.
 {
   config,
   osConfig ? { },
-  inputs,
   lib,
   namespace,
   ...
 }:
 {
-  imports = [
-    ./fish.nix
-    ./fonts.nix
-    ./neovim.nix
-  ];
-
-  programs.home-manager.enable = true;
-  # home.homeDirectory = lib.mkDefault "/home/${config.home.username}";
-  home.stateVersion = "24.11";
-
-  # For nixd
-  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-
   dconf.settings =
     let
       r = config.fontProfiles.regular;
@@ -44,6 +29,4 @@
         titlebar-font = rf;
       };
     };
-
-  xdg.enable = true;
 }

@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -89,7 +90,8 @@
   # Note: most examples I found on github were doing this wrong.
   #  * `run` is necessary to support dry-run
   #  * `linkGeneration` dependency is also required
-  home.activation.configure-tide = lib.hm.dag.entryAfter [ "installPackages" "linkGeneration" ] ''
+  # Note: https://github.com/snowfallorg/lib/issues/58 for config.lib vs lib.hm
+  home.activation.configure-tide = config.lib.dag.entryAfter [ "installPackages" "linkGeneration" ] ''
     run ${lib.getExe pkgs.fish} -c "tide configure --auto --style=Rainbow --prompt_colors='True color' --show_time='24-hour format' --rainbow_prompt_separators=Round --powerline_prompt_heads=Round --powerline_prompt_tails=Round --powerline_prompt_style='Two lines, character and frame' --prompt_connection=Solid --powerline_right_prompt_frame=No --prompt_connection_andor_frame_color=Dark --prompt_spacing=Sparse --icons='Many icons' --transient=No"
   '';
 }
