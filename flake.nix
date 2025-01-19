@@ -78,8 +78,13 @@
           projectRootFile = "flake.nix";
           settings.global.excludes = [
             "*.age"
+            "*.code-snippets"
             "*.png"
             "*.pub"
+            "*.webp"
+            ".editorconfig"
+            ".envrc"
+            "LICENSE"
           ];
           programs = {
             deadnix.enable = true;
