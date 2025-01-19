@@ -37,7 +37,7 @@
 			"      description = \"Enable ...\";",
 			"    };",
 			"  };",
-    		"  # TODO: consider (osConfig.\\${namespace}.graphical or false) pattern",
+			"  # TODO: consider (osConfig.\\${namespace}.graphical or false) pattern",
 			"  config = lib.mkIf cfg.enable {",
 			"  };",
 			"}",
