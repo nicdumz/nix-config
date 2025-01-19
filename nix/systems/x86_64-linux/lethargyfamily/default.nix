@@ -7,7 +7,6 @@
 {
   imports = [
     inputs.disko.nixosModules.disko
-    ./configuration.nix
   ];
 
   disko.devices = lib.${namespace}.mkDiskLayout {
