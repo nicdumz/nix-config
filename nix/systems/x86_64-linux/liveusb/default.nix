@@ -20,7 +20,5 @@
   };
   boot.initrd.systemd.enable = lib.mkForce false;
 
-  # Super useful for liveusb, e.g. allows setting up a system from flake inputs.
-  nicdumz.embedFlake = true;
   snowfallorg.users.ndumazet.create = false;
 }
