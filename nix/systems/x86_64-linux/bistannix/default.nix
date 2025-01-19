@@ -7,9 +7,10 @@
 {
   imports = [
     inputs.disko.nixosModules.disko
-    ./configuration.nix
     ./windows-dual.nix
   ];
+
+  boot.kernelModules = [ "kvm-intel" ]; # Will run VMs.
 
   disko.devices = lib.${namespace}.mkEncryptedDiskLayout {
     swapsize = 32;
