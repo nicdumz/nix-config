@@ -15,11 +15,11 @@
 
 ## Later
 
-- xdg-open for kitty is broken at the moment.
-- Fail tailscale deployment if > Apr 9th and ask to regenerate key.
-- Consider if I can fix the several gnubby touches per deployment problem.
-- Consider encrypting and versioning some SSH keys.
-- Cleanup /repro/ and integrate with the main flake
+- [ ] xdg-open for kitty is broken at the moment.
+- [ ] Fail tailscale deployment if > Apr 9th and ask to regenerate key.
+- [x] Consider if I can fix the several gnubby touches per deployment problem.
+- [ ] Consider encrypting and versioning some SSH keys.
+- [ ] Cleanup /testing/ and integrate with the main flake
 
 ### Missing from dotfiles repo
 
@@ -28,6 +28,8 @@
 
 ## Nice to have
 
+- Why do I have to create empty home files ...
+- New location for `secrets/provision_host.fish`?
 - Maybe read pubkeys from some directory.
 - Move stuff to features:
   - Go

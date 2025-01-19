@@ -1,4 +1,5 @@
 {
+  inputs,
   namespace,
   config,
   lib,
@@ -8,6 +9,10 @@ let
   cfg = config.${namespace}.persistence;
 in
 {
+  imports = [
+    inputs.impermanence.nixosModules.impermanence
+  ];
+
   options.${namespace}.persistence.enable = lib.mkEnableOption "Enable persistence";
   config = lib.mkIf cfg.enable {
     environment.persistence."/persist" = {

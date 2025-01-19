@@ -1,9 +1,27 @@
 {
   lib,
   inputs,
+  pkgs,
+  system,
   ...
 }:
 {
+  system.stateVersion = "24.11";
+  nixpkgs.hostPlatform = system;
+
+  # https://nixos.wiki/wiki/Automatic_system_upgrades
+  system.autoUpgrade = {
+    enable = true;
+    flake = inputs.self.outPath;
+    flags = [
+      "--update-input"
+      "nixpkgs"
+      "-L" # print build logs
+    ];
+    dates = "02:00";
+    randomizedDelaySec = "45min";
+  };
+
   ## Below is to align shell/system to flake's nixpkgs
   ## ref: https://nixos-and-flakes.thiscute.world/best-practices/nix-path-and-flake-registry
 
@@ -71,5 +89,10 @@
       auto-optimise-store = true;
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    nixd
+    nixfmt-rfc-style
+  ];
 
 }
