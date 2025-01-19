@@ -21,3 +21,6 @@ queue_rules:
     merge_method: rebase
     update_method: rebase
     name: default_rule
+    queue_conditions:
+      - and:
+          - check-success = All Garnix checks
