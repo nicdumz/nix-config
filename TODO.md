@@ -45,6 +45,8 @@
 - consider https://github.com/maralorn/nix-output-monitor?tab=readme-ov-file
 - https://nixery.dev/ for Docker?
 - https://taskfile.dev/ seems interesting for common tasks
+- https://github.com/mdlayher/homelab/blob/main/nixos/routnerr-3/networking.nix has a solid example
+  of a nixos router config, + tailscale etc. Found via https://francis.begyn.be/blog/nixos-home-router
 
 ## Postponed
 

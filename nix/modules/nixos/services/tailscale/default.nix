@@ -14,16 +14,24 @@ in
       default = false;
       description = "Turn on tailscale on host.";
     };
+    useRoutingFeatures = lib.mkOption {
+      type = string;
+      default = "client";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     sops.secrets.tailscale_oauth_token = { };
 
+    systemd.services.tailscaled = {
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+    };
+
     services.tailscale = {
       enable = true;
       openFirewall = true;
-      # TODO: "server" or "both" for an exit node
-      useRoutingFeatures = "client";
+      inherit (cfg) useRoutingFeatures;
       extraUpFlags = [
         "--ssh"
       ];
