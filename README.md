@@ -45,7 +45,7 @@ colmena apply-local --sudo build # build for my local host
 colmena apply-local --sudo switch # apply for my local host
 ```
 
-Building an iso for a liveusb purpose (containing this repo in `$HOME/nixos-sources`):
+Building an iso for a liveusb purpose:
 
 ```sh
 nix build .#nixosConfigurations.liveusb.config.system.build.isoImage
