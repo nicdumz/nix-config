@@ -28,5 +28,8 @@ sops decrypt --extract "[\"ssh_host_keys\"][\"$host\"]" ./secrets/deploy.yaml >"
 chmod 600 "$temp/etc/ssh/ssh_host_ed25519_key"
 
 # Install NixOS to the host system with our secrets
+#  1. No need for substitutions, local network is faster.
+#  2. Do not reboot when done so I can inspect the state.
 nix run github:nix-community/nixos-anywhere -- \
+    --no-substitute-on-destination --no-reboot \
     --extra-files "$temp" --flake ".#$host" "$passthru" --target-host root@$host
