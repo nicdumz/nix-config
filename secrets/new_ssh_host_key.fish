@@ -16,6 +16,11 @@ end
 set keyfile $temp/sshkey
 ssh-keygen -t ed25519 -q -N "" -C "ssh host key for $host" -f $keyfile
 sops set ./secrets/deploy.yaml "[\"ssh_host_keys\"][\"$host\"]" "$(jq -Rsa . < $keyfile)"
-nix fmt ./secrets/deploy.yaml &>/dev/null
+echo "Public key:" >&2
 # Print public key on stdout
-ssh-to-age -i "$keyfile.pub"
+set pubkey (ssh-to-age -i "$keyfile.pub")
+echo $pubkey
+yq -i ".keys.all += \"$pubkey\"" .sops.yaml
+yq -i ".keys.all[-1] anchor = \"$host\"" .sops.yaml
+sops updatekeys secrets/global.yaml
+nix fmt ./secrets/* &>/dev/null

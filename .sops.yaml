@@ -13,7 +13,7 @@ keys:
     - &qemu age1hhx4lwwr9jc26x4l9yrmpzx84zsczrf8rxjhud5xh79qs4qfeuls3scd06
     - &bistannix age1efmhh99fn52a9w0yszfdxupz93lr77ewag2cd6n5l5jfhgp6z3hs8ck48g
     - &lethargyfamily age1h9v3qw4jh09xs0ykjed4um36gqh0nlpxjmencz0872qf776m6passrxtm6
-    # End: hosts
+    - &jonsnow age1gdmlc4jgap5f7sup4jlmvt73at6cv7hdm555sac0vzkzaz9vpveq9gfc5z
   deploy: &deploy
     - *nano
     - *portable
