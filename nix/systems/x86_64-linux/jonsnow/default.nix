@@ -92,7 +92,8 @@ in
       "15-lan" = {
         matchConfig.Name = lan;
         address = [
-          "fd83:c8db:133a::1/64" # generated ULA
+          # TODO: learn about ULA and see if this makes sense.
+          # "fd83:c8db:133a::1/64" # generated ULA
           "192.168.1.0/24"
         ];
         networkConfig = {
