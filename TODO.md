@@ -15,7 +15,7 @@
 
 ## Later
 
-- [ ] xdg-open for kitty is broken at the moment.
+- [x] xdg-open for kitty is broken at the moment.
 - [ ] Fail tailscale deployment if > Apr 9th and ask to regenerate key.
 - [x] Consider if I can fix the several gnubby touches per deployment problem.
 - [ ] Consider encrypting and versioning some SSH keys.

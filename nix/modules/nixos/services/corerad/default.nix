@@ -15,11 +15,11 @@ in
       description = "Enable Corerad integration";
     };
     lan = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       description = "lan interface";
     };
     wan = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       description = "wan interface";
     };
   };
