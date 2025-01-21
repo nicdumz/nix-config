@@ -25,7 +25,11 @@ in
         "/root/.local/share/fish"
         "/var/cache"
         "/var/db/sudo"
-        "/var/lib"
+        # NOTE: List below is experimental, it used to be "/var/lib"
+        "/var/lib/bluetooth"
+        "/var/lib/NetworkManager"
+        "/var/lib/nixos"
+        "/var/lib/tailscale" # maybe play without this to see what actually happens.
         "/var/log"
         # NM networks.
         "/etc/NetworkManager/system-connections"
@@ -35,6 +39,9 @@ in
         "/etc/nix/id_rsa"
       ];
     };
+
+    # TODO: is there a useable way to set this up on home directories and not end up in a world of
+    # hurt and regret.
 
     fileSystems."/".neededForBoot = true;
     fileSystems."/persist".neededForBoot = true;
