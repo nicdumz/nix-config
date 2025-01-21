@@ -48,10 +48,6 @@ in
           "x-scheme-handler/unknown" = "librewolf.desktop";
         };
       };
-      desktopEntries.librewolf = {
-        name = "LibreWolf";
-        exec = "${config.programs.librewolf.package}/bin/librewolf";
-      };
     };
   };
 }

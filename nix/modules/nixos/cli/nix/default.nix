@@ -85,6 +85,9 @@
       # Refer to the following link for more details:
       # https://nixos.org/manual/nix/stable/command-ref/conf-file.html#conf-auto-optimise-store
       auto-optimise-store = true;
+
+      # Very confused but apparently https://github.com/nix-community/home-manager/pull/3876 wants this.
+      use-xdg-base-directories = true;
     };
   };
 

@@ -15,7 +15,7 @@ in
       description = "Turn on tailscale on host.";
     };
     useRoutingFeatures = lib.mkOption {
-      type = string;
+      type = str;
       default = "client";
     };
   };
