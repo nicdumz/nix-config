@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.${namespace}.nvidia;
+  cfg = config.${namespace}.tailscale;
 in
 {
   options.${namespace}.tailscale = with lib.types; {
