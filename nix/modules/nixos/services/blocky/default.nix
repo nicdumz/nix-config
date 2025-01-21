@@ -44,11 +44,11 @@ in
         };
       };
       caching.prefetching = true;
-      # queryLog:
-      #   type: mysql
-      #   target: blocky:blocky@tcp(mysql:3306)/blocky?charset=utf8mb4&parseTime=True&loc=Local
-      #   logRetentionDays: 7
-      # TODO: consider changing that.
+      queryLog = {
+        type = "csv";
+        logRetentionDays = 7;
+        target = "/var/log/blocky";
+      };
       ports.http = 4000;
       prometheus.enable = true;
       blocking = {
