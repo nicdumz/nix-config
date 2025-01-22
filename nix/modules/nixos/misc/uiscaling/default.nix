@@ -7,6 +7,7 @@
   options.${namespace}.scaling = {
     defaultFontSize = lib.mkOption {
       type = lib.types.int;
+      default = 14;
       description = "Default fontsize at the OS level.";
     };
     factor = lib.mkOption {
