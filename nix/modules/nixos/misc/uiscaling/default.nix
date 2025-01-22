@@ -1,12 +1,8 @@
 {
-  config,
   lib,
   namespace,
   ...
 }:
-let
-  cfg = config.${namespace}.scaling;
-in
 {
   options.${namespace}.scaling = {
     defaultFontSize = lib.mkOption {
@@ -19,6 +15,6 @@ in
       description = "Scaling for the UX.";
     };
   };
-  config = lib.mkIf cfg.enable {
+  config = {
   };
 }
