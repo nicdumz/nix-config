@@ -1,14 +1,5 @@
-{
-  pkgs,
-  ...
-}:
-{
-
-  home.packages = [
-    # useful for (shell) color diagnosis.
-    pkgs.neofetch
-  ];
-
+# Overrides specific to bistannix
+_: {
   programs.ssh = {
     enable = true;
     # Only touch FIDO keys once every hour.
