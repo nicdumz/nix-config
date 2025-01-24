@@ -19,11 +19,13 @@ in
   };
   config = lib.mkIf cfg.enable {
     virtualisation.docker = {
+      # TODO: what about enableOnBoot
       # Do I need this?
       storageDriver = "btrfs";
       # previously was "storage-driver": "overlay2" on host
       logDriver = "local";
       rootless = {
+        # TODO: this might break /var/run/docker.sock users
         enable = true;
         setSocketVariable = true;
       };

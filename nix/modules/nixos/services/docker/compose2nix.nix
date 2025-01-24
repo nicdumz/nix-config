@@ -56,6 +56,7 @@ lib.mkIf config.${namespace}.docker.enable {
 
   virtualisation.oci-containers = {
 
+    # TODO: I could probably try moving to podman with virtualisation.podman.dockerSocket.enable on
     backend = "docker";
 
     # Containers
@@ -438,7 +439,10 @@ lib.mkIf config.${namespace}.docker.enable {
           secrets.gandi_token_env.path
         ];
         volumes = [
-          "TODO/config/traefik:/etc/traefik:ro"
+          "${./config/traefik/dynamic.yml}:/etc/traefik/dynamic.yml:ro"
+          "${./config/traefik/traefik.yml}:/etc/traefik/traefik.yml:ro"
+          # TODO: is it possible to adapt the above to become a directory link?
+          # "something/config/traefik:/etc/traefik:ro"
           "${fast}/traefik:/data:rw"
           # TODO: do we need this?
           # "/usr/share/zoneinfo:/usr/share/zoneinfo:ro"
