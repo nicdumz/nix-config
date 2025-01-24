@@ -1,0 +1,32 @@
+api:
+  dashboard: true
+  debug: false
+ping: {}
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+providers:
+  docker:
+    # exposedByDefault: true # this is the default
+    # endpoint: "unix:///var/run/docker.sock" # this is the default
+    defaultRule: "Host(`{{ .ContainerName }}.home.nicdumz.fr`)"
+  file:
+    watch: true
+    filename: /etc/traefik/dynamic.yml
+entryPoints:
+  websecure:
+    address: :443
+    http:
+      middlewares:
+        - cors@file
+      tls:
+        certResolver: gandi
+# Verbose traffic log so I can debug
+accessLog: {}
+certificatesResolvers:
+  gandi:
+    acme:
+      email: "nicdumz@gmail.com"
+      storage: "/data/acme.json"
+      dnsChallenge:
+        provider: gandiv5
