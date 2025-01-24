@@ -12,9 +12,6 @@ _: {
       IdentityFile /home/ndumazet/.ssh/noauto/id_ed25519_sk
     '';
     matchBlocks = {
-      # TODO: should this be a hostconfiguration somewhere.
-      jonsnow.hostname = "192.168.1.1";
-      lethargyfamily.hostname = "192.168.1.232";
       qemu = {
         hostname = "localhost";
         port = 2222;
