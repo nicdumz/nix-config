@@ -1,5 +1,4 @@
 {
-  namespace,
   lib,
   pkgs,
   config,
@@ -10,22 +9,11 @@
     ndumazet = {
       create = lib.mkDefault true;
       admin = true;
-      home.config.${namespace} = {
-        irc.enable = true;
-        kitty.enable = true;
-        librewolf.enable = true;
-        vscode.enable = true;
-        wallpaper.path = ./nixos-wallpaper.png;
-      };
     };
     giulia = {
       # Do not enable by default, opt-in.
       create = lib.mkDefault false;
       admin = false;
-      home.config.${namespace} = {
-        chrome.enable = true;
-        wallpaper.path = ./fuji2.webp;
-      };
     };
   };
 
