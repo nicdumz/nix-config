@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   namespace,
@@ -119,66 +120,14 @@ in
           EmitDNS = true;
           DNS = "_server_address";
         };
-        dhcpServerStaticLeases = [
-          # usw-mini
-          {
-            MACAddress = "74:ac:b9:ab:b7:34";
-            Address = "192.168.1.2";
-          }
-          # unifi-ap-ac-prod
-          {
-            MACAddress = "f4:92:bf:23:42:c7";
-            Address = "192.168.1.3";
-          }
-          # unifi-cloudkey
-          {
-            MACAddress = "74:ac:b9:16:73:33";
-            Address = "192.168.1.4";
-          }
-          # jonsnow-admin0
-          {
-            # this is the admin0 port
-            MACAddress = "a8:a1:59:92:8f:9d";
-            Address = "192.168.1.5";
-          }
-
-          # chromecastgoogletv
-          {
-            MACAddress = "14:c1:4e:01:b3:21";
-            Address = "192.168.1.10";
-          }
-          # pikvm
-          {
-            MACAddress = "e4:5f:01:4c:f8:24";
-            Address = "192.168.1.11";
-          }
-          # bistannix
-          {
-            MACAddress = "f0:2f:74:79:de:79";
-            Address = "192.168.1.42";
-          }
-          # traboule
-          {
-            MACAddress = "10:e7:c6:34:de:74";
-            Address = "192.168.1.43";
-          }
-
-          # elgato-keylight
-          {
-            MACAddress = "3c:6a:9d:14:cd:fd";
-            Address = "192.168.1.240";
-          }
-          # philips-hue
-          {
-            MACAddress = "00:17:88:6b:d0:9b";
-            Address = "192.168.1.241";
-          }
-          # tahoma-bridge
-          {
-            MACAddress = "f4:3c:3b:e7:1c:3e";
-            Address = "192.168.1.242";
-          }
-        ];
+        dhcpServerStaticLeases =
+          let
+            toLease = _n: v: {
+              MACAddress = v.mac;
+              Address = v.ip;
+            };
+          in
+          lib.attrsets.mapAttrsToList toLease config.${namespace}.networkmap;
 
         # v6
         dhcpPrefixDelegationConfig = {
