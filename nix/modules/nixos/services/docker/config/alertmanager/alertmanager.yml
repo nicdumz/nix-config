@@ -1,0 +1,22 @@
+route:
+  receiver: 'telegram'
+  repeat_interval: 4h
+  group_by: [alertname]
+  routes:
+    - receiver: 'dead-man-snitch'
+      matchers:
+        - service = deadman
+      repeat_interval: 10m
+receivers:
+  # Default receiver sends a ping to a group chat.
+  - name: telegram
+    telegram_configs:
+      - bot_token_file: /run/secrets/telegram_token
+        chat_id: -797768186
+        api_url: "https://api.telegram.org"
+        parse_mode: "HTML"
+  # We ping every 10 mins a URL and if this URL / service doesn't hear
+  # back it emails us after 1h.
+  - name: 'dead-man-snitch'
+    webhook_configs:
+      - url_file: /run/secrets/deadmanssnitch
