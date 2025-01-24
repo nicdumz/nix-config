@@ -208,8 +208,6 @@ in
     ethtool
   ];
 
-  # Note: default group was ndumazet (1000), could be users (100)
-
   # TODO: backup cron
   # 0 4 * * * rclone --drive-shared-with-me copy /media/bigslowdata/paperless/media/documents/originals/ drive-remote:jonsnow-backups/paperless-backups
 
