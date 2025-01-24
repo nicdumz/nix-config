@@ -40,6 +40,8 @@ lib.mkIf config.${namespace}.docker.enable {
       names = [
         "deadmansnitch_url"
         "gandi_token_env"
+        "prometheus_password"
+        "prometheus_username"
         "telegram_token"
         "watchtower_env"
       ];
@@ -66,7 +68,7 @@ lib.mkIf config.${namespace}.docker.enable {
         environment = env;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
-          "TODO/config/alertmanager:/etc/alertmanager:ro"
+          "${./config/alertmanager/alertmanager.yml}:/etc/alertmanager/alertmanager.yml:ro"
           "${slow}/dockerstate/alertmanager:/alertmanager:rw"
           # Those paths are expected in alertmanager.yml
           "${secrets.telegram_token.path}:/run/secrets/telegram_token:ro"
@@ -98,7 +100,8 @@ lib.mkIf config.${namespace}.docker.enable {
         environment = env;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
-          "TODO/config/prometheus:/config:ro"
+          # TODO: this could be a pkgs.writers.writeYAML
+          "${./config/blackbox/blackbox.yml}:/config/blackbox.yml:ro"
         ];
         cmd = [ "--config.file=/config/blackbox.yml" ];
         inherit user;
@@ -353,8 +356,11 @@ lib.mkIf config.${namespace}.docker.enable {
         environment = env;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
-          "TODO/config/prometheus:/etc/prometheus:ro"
+          "${./config/prometheus/prometheus.yml}:/etc/prometheus/prometheus.yml:ro"
+          "${./config/prometheus/alerts.yml}:/etc/prometheus/alerts.yml:ro"
           "${fast}/prometheus:/prometheus:rw"
+          "${secrets.prometheus_username.path}:/run/secrets/username:ro"
+          "${secrets.prometheus_password.path}:/run/secrets/password:ro"
         ];
         cmd = [
           "--config.file=/etc/prometheus/prometheus.yml"

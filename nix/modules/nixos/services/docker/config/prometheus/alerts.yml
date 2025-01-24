@@ -1,0 +1,80 @@
+# https://awesome-prometheus-alerts.grep.to/rules.html
+
+groups:
+  - name: Presence
+    rules:
+      - alert: NodeExporterDown
+        expr: up{job="node"} < 1
+        for: 5m
+      - alert: TraefikDown
+        expr: up{job="traefik"} < 1
+        for: 5m
+      - alert: PrometheusAlertmanagerJobMissing
+        expr: absent(up{job="alertmanager"})
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Prometheus AlertManager job missing (instance {{ $labels.instance }})
+          description: "A Prometheus AlertManager job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      - alert: CoreradDown
+        expr: node_systemd_unit_state{name="corerad.service", state="active"} < 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Corerad daemon is not running, IPv6 is probably broken.
+          description: "Corerad.service systemd is missing"
+      - alert: CoreradScrapingBroken
+        expr: up{job="corerad"} < 1
+        for: 10m
+  - name: Host
+    rules:
+      # Please add ignored mountpoints in node_exporter parameters like
+      # "--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|run)($|/)".
+      # Same rule using "node_filesystem_free_bytes" will fire when disk fills for non-root users.
+      - alert: HostOutOfDiskSpace
+        expr: (node_filesystem_avail_bytes * 100) / node_filesystem_size_bytes < 30 and ON (instance, device, mountpoint) node_filesystem_readonly == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: Host out of disk space (instance {{ $labels.instance }})
+          description: "Disk is almost full (< 30% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      - alert: HostPhysicalComponentTooHot
+        expr: node_hwmon_temp_celsius > 75
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Host physical component too hot (instance {{ $labels.instance }})
+          description: "Physical hardware component too hot\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+  - name: Probing
+    rules:
+      - alert: BlackboxProbeFailed
+        expr: probe_success == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Blackbox probe failed (instance {{ $labels.instance }})
+          description: "Probe failed\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+      - alert: PrometheusAlertmanagerE2eDeadManSwitch
+        expr: vector(1)
+        for: 0m
+        labels:
+          severity: end2endtest
+          service: deadman
+        annotations:
+          summary: Prometheus AlertManager E2E dead man switch (instance {{ $labels.instance }})
+          description: "Prometheus DeadManSwitch is an always-firing alert. It's used as an end-to-end test of Prometheus through the Alertmanager.\n  LABELS = {{ $labels }}"
+  - name: Misc
+    rules:
+      - alert: PrometheusTemplateTextExpansionFailures
+        expr: increase(prometheus_template_text_expansion_failures_total[3m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: Prometheus template text expansion failures (instance {{ $labels.instance }})
+          description: "Prometheus encountered {{ $value }} template text expansion failures\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
