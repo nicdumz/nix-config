@@ -49,6 +49,8 @@ in
     "net.ipv6.conf.${wan}.autoconf" = 1;
   };
 
+  networking.useDHCP = false; # manually configure below via networkd
+
   systemd.network = {
     enable = true;
 
