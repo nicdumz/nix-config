@@ -7,6 +7,10 @@ if test (count $argv) -lt 1
     exit
 end
 
+# TODO: fix it: in particular jonsnow private key in the store is something else ..
+echo "Unfortunately this script failed to properly provision SSH keys last time."
+exit
+
 read -l -P 'Remember that this only works if the remote is *not* connected via wifi [enter to continue]' ignored
 
 echo $argv | read -l host passthru
