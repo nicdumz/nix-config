@@ -63,8 +63,8 @@
       ip = "192.168.1.43";
     };
     lethargyfamily = {
-      mac = "10:e7:c6:34:de:74";
-      ip = "192.168.1.243";
+      mac = "e4:c7:67:52:f7:4c";
+      ip = "192.168.1.44";
     };
 
     elgato-keylight = {
