@@ -18,7 +18,7 @@ in
   disko.devices = lib.${namespace}.mkDiskLayout {
     swapsize = 0;
     # Take no chances and refer to the precise part.
-    device = "TODO";
+    device = "/dev/disk/by-id/nvme-KINGSTON_SKC2500M8500G_50026B76853C3655";
   };
 
   ${namespace} = {
@@ -27,12 +27,6 @@ in
       enable = true;
       useRoutingFeatures = "both";
     };
-    # TODO: Sounds like networkd might take care of that.
-    # corerad = {
-    #   enable = true;
-    #   inherit lan;
-    #   inherit wan;
-    # };
     blocky.enable = true;
     prober7.enable = true;
   };
@@ -52,11 +46,36 @@ in
 
   networking.useDHCP = false; # manually configure below via networkd
 
+  # Default opens for all interfaces and it's dumb.
+  services.openssh.openFirewall = false;
+  networking.firewall.interfaces.${lan} = {
+    # ssh, Blocky DNS
+    allowedTCPPorts = [
+      22
+      53
+    ];
+    # Blocky DNS, DHCP server
+    allowedUDPPorts = [
+      53
+      67
+    ];
+  };
+
   systemd.network = {
     enable = true;
 
     # TODO: allow hotplug for all
     # NOTE: nftables.enable = true is tempting however interactions with Docker are complicated.
+
+    wait-online = {
+      extraArgs = [
+        "--ipv4"
+        "--ipv6"
+        "--interface=${wan}"
+        "--interface=${lan}"
+      ];
+      timeout = 20; # seconds
+    };
 
     networks = {
       "10-wan" = {
@@ -97,7 +116,7 @@ in
         address = [
           # TODO: learn about ULA and see if this makes sense.
           # "fd83:c8db:133a::1/64" # generated ULA
-          "192.168.1.0/24"
+          "192.168.1.1/24"
         ];
         networkConfig = {
           # v4 stuff
@@ -118,6 +137,7 @@ in
           PoolOffset = 50;
           PoolSize = 100;
           EmitDNS = true;
+          EmitRouter = true;
           DNS = "_server_address";
         };
         dhcpServerStaticLeases =
