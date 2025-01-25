@@ -7,6 +7,8 @@
     git
     htop
     killall
+    kitty.terminfo
+    tcpdump
     unzip
     wget
   ];
