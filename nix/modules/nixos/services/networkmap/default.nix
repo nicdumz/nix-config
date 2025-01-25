@@ -26,6 +26,9 @@
   };
 
   config.${namespace}.networkmap = {
+    jonsnow = {
+      ip = "192.168.1.1";
+    };
     usw-mini = {
       mac = "74:ac:b9:ab:b7:34";
       ip = "192.168.1.2";
