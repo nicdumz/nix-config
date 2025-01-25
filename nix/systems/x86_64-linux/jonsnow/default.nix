@@ -146,8 +146,9 @@ in
               MACAddress = v.mac;
               Address = v.ip;
             };
+            filterOutSelf = lib.attrsets.filterAttrs (n: _v: n != config.networking.hostName);
           in
-          lib.attrsets.mapAttrsToList toLease config.${namespace}.networkmap;
+          lib.attrsets.mapAttrsToList toLease (filterOutSelf config.${namespace}.networkmap);
 
         # v6
         dhcpPrefixDelegationConfig = {
