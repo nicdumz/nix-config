@@ -2,10 +2,12 @@
   config,
   lib,
   namespace,
+  pkgs,
   ...
 }:
 let
   cfg = config.${namespace}.tailscale;
+  exitNode = cfg.exitNode.wanInterface != "";
 in
 {
   options.${namespace}.tailscale = with lib.types; {
@@ -14,11 +16,11 @@ in
       default = false;
       description = "Turn on tailscale on host.";
     };
-    useRoutingFeatures = lib.mkOption {
+    exitNode.wanInterface = lib.mkOption {
       type = str;
-      default = "client";
+      description = "Make this host an exit node? If yes, let me know what is the wan interface.";
+      default = "";
     };
-    extraFlags = lib.mkOption { type = listOf str; };
   };
 
   config = lib.mkIf cfg.enable {
@@ -32,13 +34,26 @@ in
     services.tailscale = {
       enable = true;
       openFirewall = true;
-      inherit (cfg) useRoutingFeatures;
+      useRoutingFeatures = if exitNode then "both" else "client";
       extraUpFlags = [
         "--ssh"
-      ] ++ cfg.extraFlags;
+      ] ++ lib.lists.optionals exitNode [ "--advertise-exit-node" ];
       # The key is a reusable key from https://login.tailscale.com/admin/settings/keys
       # It unfortunately expires after 90d ..
       authKeyFile = config.sops.secrets.tailscale_oauth_token.path;
     };
+
+    systemd.services.tailscale-transport-layer-offloads = lib.mkIf exitNode {
+      # See https://tailscale.com/kb/1320/performance-best-practices#ethtool-configuration.
+      description = "Tailscale: better performance for exit nodes";
+      after = [ "network.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.ethtool}/bin/ethtool -K ${cfg.exitNode.wanInterface} rx-udp-gro-forwarding on rx-gro-list off";
+      };
+      wantedBy = [ "default.target" ];
+    };
+
+    environment.systemPackages = lib.lists.optionals exitNode [ pkgs.ethtool ];
   };
 }

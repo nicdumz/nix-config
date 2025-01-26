@@ -3,7 +3,6 @@
   inputs,
   lib,
   namespace,
-  pkgs,
   ...
 }:
 let
@@ -25,8 +24,7 @@ in
     persistence.enable = true;
     tailscale = {
       enable = true;
-      useRoutingFeatures = "both";
-      extraFlags = [ "--advertise-exit-node" ];
+      exitNode.wanInterface = wan;
     };
     blocky.enable = true;
     prober7.enable = true;
@@ -163,23 +161,7 @@ in
         linkConfig.RequiredForOnline = "routable";
       };
     };
-
   };
-
-  systemd.services.tailscale-transport-layer-offloads = {
-    # See https://tailscale.com/kb/1320/performance-best-practices#ethtool-configuration.
-    description = "Tailscale: better performance for exit nodes";
-    after = [ "network.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.ethtool}/bin/ethtool -K ${wan} rx-udp-gro-forwarding on rx-gro-list off";
-    };
-    wantedBy = [ "default.target" ];
-  };
-
-  environment.systemPackages = with pkgs; [
-    ethtool
-  ];
 
   # TODO: backup cron
   # 0 4 * * * rclone --drive-shared-with-me copy /media/bigslowdata/paperless/media/documents/originals/ drive-remote:jonsnow-backups/paperless-backups
