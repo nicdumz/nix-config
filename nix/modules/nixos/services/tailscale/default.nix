@@ -18,6 +18,7 @@ in
       type = str;
       default = "client";
     };
+    extraFlags = lib.mkOption { type = listOf str; };
   };
 
   config = lib.mkIf cfg.enable {
@@ -34,7 +35,7 @@ in
       inherit (cfg) useRoutingFeatures;
       extraUpFlags = [
         "--ssh"
-      ];
+      ] ++ cfg.extraFlags;
       # The key is a reusable key from https://login.tailscale.com/admin/settings/keys
       # It unfortunately expires after 90d ..
       authKeyFile = config.sops.secrets.tailscale_oauth_token.path;
