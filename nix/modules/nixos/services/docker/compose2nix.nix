@@ -10,22 +10,9 @@
 }:
 
 let
-  uid = builtins.toString config.users.users.ndumazet.uid;
-  gid = builtins.toString config.users.groups.users.gid;
-  # TODO: Will need to move back to fast
-  fast = "/media/bigslowdata/dockerstate";
-  slow = "/media/bigslowdata";
-  # We make a superset of variables to avoid repeating ourselves.
-  # It would be nice if all those images could agree on one naming ;-)
-  env = {
-    PGID = gid;
-    GID = gid;
-    PUID = uid;
-    UID = uid;
-    USERMAP_GID = gid;
-    USERMAP_UID = uid;
-    TZ = config.time.timeZone;
-  };
+  cfg = config.${namespace}.containers;
+  inherit (cfg.dataroot) fast;
+  inherit (cfg.dataroot) slow;
   inherit (config.sops) secrets;
   exposeLanIP = config.${namespace}.myipv4;
   dockerSocket = builtins.head config.virtualisation.docker.listenOptions;
@@ -41,7 +28,6 @@ lib.mkIf config.${namespace}.docker.enable {
 
   ${namespace}.firewall = {
     tcp = [
-      443 # traefik
       7359 # jellyfin
       51413 # deluge
       6881 # qbittorrent
@@ -81,7 +67,7 @@ lib.mkIf config.${namespace}.docker.enable {
     containers = {
       alertmanager = {
         image = "prom/alertmanager";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${./config/alertmanager/alertmanager.yml}:/etc/alertmanager/alertmanager.yml:ro"
@@ -90,7 +76,7 @@ lib.mkIf config.${namespace}.docker.enable {
           "${secrets.telegram_token.path}:/run/secrets/telegram_token:ro"
           "${secrets.deadmanssnitch_url.path}:/run/secrets/deadmanssnitch:ro"
         ];
-        user = "${uid}:${gid}";
+        inherit (cfg) user;
         extraOptions = [
           "--network-alias=alertmanager"
           "--network=infra_default"
@@ -101,7 +87,7 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       bazarr = {
         image = "lscr.io/linuxserver/bazarr";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${slow}:/data:rw"
@@ -117,14 +103,14 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       blackbox = {
         image = "prom/blackbox-exporter";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           # TODO: this could be a pkgs.writers.writeYAML
           "${./config/blackbox/blackbox.yml}:/config/blackbox.yml:ro"
         ];
         cmd = [ "--config.file=/config/blackbox.yml" ];
-        user = "${uid}:${gid}";
+        inherit (config.${namespace}.containers) user;
         extraOptions = [
           "--dns=8.8.8.8"
           "--network-alias=blackbox"
@@ -136,7 +122,7 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       deluge = {
         image = "lscr.io/linuxserver/deluge";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${fast}/config/deluge:/config:rw"
@@ -157,7 +143,7 @@ lib.mkIf config.${namespace}.docker.enable {
       # Not strictly necessary, but importantly no pretty way to pass the qb password through cleanly.
       # flood = {
       #   image = "jesec/flood";
-      #   environment = env;
+      #   environment = cfg.defaultEnvironment;
       #   volumes = [
       #     "/etc/localtime:/etc/localtime:ro"
       #   ];
@@ -180,12 +166,12 @@ lib.mkIf config.${namespace}.docker.enable {
         environment = {
           GF_INSTALL_PLUGINS = "grafana-piechart-panel";
           GF_PANELS_DISABLE_SANITIZE_HTML = "true";
-        } // env;
+        } // cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${fast}/grafana:/var/lib/grafana:rw"
         ];
-        user = "${uid}:${gid}";
+        inherit (cfg) user;
         extraOptions = [
           "--network-alias=grafana"
           "--network=infra_default"
@@ -198,7 +184,7 @@ lib.mkIf config.${namespace}.docker.enable {
         image = "ghcr.io/ajnart/homarr:latest";
         environment = {
           DEFAULT_COLOR_SCHEME = "dark";
-        } // env;
+        } // cfg.defaultEnvironment;
         volumes = [
           "${fast}/homarr/configs:/app/data/configs:rw"
           "${fast}/homarr/data:/data:rw"
@@ -216,7 +202,7 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       homeassistant = {
         image = "lscr.io/linuxserver/homeassistant:latest";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "${fast}/config/homeassistant:/config:rw"
         ];
@@ -234,7 +220,7 @@ lib.mkIf config.${namespace}.docker.enable {
         volumes = [
           "${fast}/redis:/data:rw"
         ];
-        user = "${uid}:${gid}";
+        inherit (cfg) user;
         extraOptions = [
           "--network-alias=redis-broker"
           "--network=infra_default"
@@ -245,7 +231,7 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       jackett = {
         image = "ghcr.io/linuxserver/jackett";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${fast}/config/jackett:/config:rw"
@@ -264,7 +250,7 @@ lib.mkIf config.${namespace}.docker.enable {
           DOCKER_MODS = "linuxserver/mods:jellyfin-opencl-intel";
           JELLYFIN_PublishedServerUrl = "http://jellyfin.lethargy/";
           VERSION = "latest";
-        } // env;
+        } // cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${slow}:/data:ro"
@@ -285,11 +271,11 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       jellyseerr = {
         image = "fallenbagel/jellyseerr:latest";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "${fast}/config/jellyseerr:/app/config:rw"
         ];
-        user = "${uid}:${gid}";
+        inherit (cfg) user;
         extraOptions = [
           "--network-alias=jellyseerr"
           "--network=infra_default"
@@ -306,7 +292,7 @@ lib.mkIf config.${namespace}.docker.enable {
           BASE_URL = "https://mealie.home.nicdumz.fr";
           MAX_WORKERS = "1";
           WEB_CONCURRENCY = "1";
-        } // env;
+        } // cfg.defaultEnvironment;
         volumes = [
           "${fast}/mealie:/app/data:rw"
         ];
@@ -353,7 +339,7 @@ lib.mkIf config.${namespace}.docker.enable {
           PAPERLESS_REDIS = "redis://redis-broker:6379";
           PAPERLESS_TIME_ZONE = config.time.timeZone;
           PAPERLESS_URL = "https://paperless.home.nicdumz.fr";
-        } // env;
+        } // cfg.defaultEnvironment;
         volumes = [
           "${fast}/config/paperless:/config:rw"
           "${slow}/paperless:/data:rw"
@@ -361,7 +347,7 @@ lib.mkIf config.${namespace}.docker.enable {
         dependsOn = [
           "infra-redis-broker"
         ];
-        user = "${uid}:${gid}";
+        inherit (cfg) user;
         extraOptions = [
           "--network-alias=paperless"
           "--network=infra_default"
@@ -372,7 +358,7 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       portainer = {
         image = "portainer/portainer-ce:latest";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${fast}/portainer:/data:rw"
@@ -389,7 +375,7 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       prometheus = {
         image = "prom/prometheus";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${./config/prometheus/prometheus.yml}:/etc/prometheus/prometheus.yml:ro"
@@ -406,7 +392,7 @@ lib.mkIf config.${namespace}.docker.enable {
           "--web.console.libraries=/usr/share/prometheus/console_libraries"
           "--web.console.templates=/usr/share/prometheus/consoles"
         ];
-        user = "${uid}:${gid}";
+        inherit (cfg) user;
         extraOptions = [
           "--add-host=host.docker.internal:host-gateway"
           "--network-alias=prometheus"
@@ -420,7 +406,7 @@ lib.mkIf config.${namespace}.docker.enable {
         image = "lscr.io/linuxserver/qbittorrent";
         environment = {
           WEBUI_PORT = "9092";
-        } // env;
+        } // cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${fast}/config/qbittorrent:/config:rw"
@@ -440,7 +426,7 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       radarr = {
         image = "ghcr.io/linuxserver/radarr";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${slow}:/data:rw"
@@ -460,7 +446,7 @@ lib.mkIf config.${namespace}.docker.enable {
       };
       sonarr = {
         image = "ghcr.io/linuxserver/sonarr";
-        environment = env;
+        environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${slow}:/data:rw"
@@ -478,54 +464,10 @@ lib.mkIf config.${namespace}.docker.enable {
           "traefik.http.services.sonarr.loadbalancer.server.port" = "7878";
         };
       };
-      traefik = {
-        image = "traefik";
-        environment = env;
-        environmentFiles = [
-          # Contains an env-like file.
-          secrets.gandi_token_env.path
-        ];
-        volumes =
-          let
-            # TODO: the entirety of the config could be in nix, allowing me to remove the docker
-            # provider / dependency on the socket entirely
-            conf = lib.${namespace}.fromYAML pkgs ./config/traefik/dynamic.yml;
-            final = lib.attrsets.recursiveUpdate conf {
-              http.middlewares.allowlist.ipAllowList.sourceRange = [
-                # "${exposeLanIP}/24"
-                # "127.0.0.1"
-                # All traffic appears to come from the bridge.
-                bridgeGateway
-                # TODO: consider adding tailscale network?
-              ];
-            };
-            dynamicFile = pkgs.writers.writeYAML "dynamic.yml" final;
-          in
-          [
-            "${dynamicFile}:/etc/traefik/dynamic.yml:ro"
-            "${./config/traefik/traefik.yml}:/etc/traefik/traefik.yml:ro"
-            # TODO: is it possible to adapt the above to become a directory link?
-            # "something/config/traefik:/etc/traefik:ro"
-            "${fast}/traefik:/data:rw"
-            # TODO: do we need this?
-            # "/usr/share/zoneinfo:/usr/share/zoneinfo:ro"
-            "${dockerSocket}:/var/run/docker.sock:ro"
-          ];
-        ports = [
-          "${exposeLanIP}:443:443"
-        ];
-        labels = {
-          "traefik.enable" = "false";
-        };
-        extraOptions = [
-          "--network-alias=traefik"
-          "--network=infra_default"
-        ];
-      };
       # Disable: I would prefer explicit updates.
       # watchtower = {
       #   image = "containrrr/watchtower";
-      #   environment = env;
+      #   environment = cfg.defaultEnvironment;
       #   environmentFiles = [ secrets.watchtower_env.path ];
       #   volumes = [
       #     "/etc/localtime:/etc/localtime:ro"
