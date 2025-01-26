@@ -27,6 +27,8 @@ let
     TZ = config.time.timezone;
   };
   inherit (config.sops) secrets;
+  # Where services need to be exported. Technically this is the LAN IP ...
+  exposeIP = config.${namespace}.myipv4;
 in
 lib.mkIf config.${namespace}.docker.enable {
   # Runtime
@@ -243,7 +245,7 @@ lib.mkIf config.${namespace}.docker.enable {
         ];
         ports = [
           "127.0.0.1:8096:8096/tcp"
-          "192.168.1.1:7359:7359/udp" # service auto-discovery on LAN
+          "${exposeIP}:7359:7359/udp" # service auto-discovery on LAN
         ];
         labels = {
           "traefik.http.services.jellyfin.loadbalancer.server.port" = 8096;
@@ -455,7 +457,7 @@ lib.mkIf config.${namespace}.docker.enable {
           "/var/run/docker.sock:/var/run/docker.sock:ro"
         ];
         ports = [
-          "192.168.1.1:443:443"
+          "${exposeIP}:443:443"
           "127.0.0.1:8080:8080"
         ];
         labels = {

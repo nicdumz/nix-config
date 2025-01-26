@@ -24,6 +24,12 @@ in
     # No need to start before network.
     systemd.services.blocky.after = [ "network-online.target" ];
     systemd.services.blocky.wants = [ "network-online.target" ];
+
+    nicdumz.firewall = {
+      udp = [ 53 ];
+      tcp = [ 53 ];
+    };
+
     services.blocky = {
       enable = true;
       settings = {
@@ -42,10 +48,7 @@ in
         customDNS = {
           customTTL = "1m";
           mapping = {
-            lethargy = "192.168.1.1";
-            "jonsnow.local" = "192.168.1.1";
-            bistannix = "192.168.1.42";
-            "home.nicdumz.fr" = "192.168.1.1";
+            "home.nicdumz.fr" = config.${namespace}.myipv4;
           };
         };
         caching.prefetching = true;
