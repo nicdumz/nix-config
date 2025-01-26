@@ -5,24 +5,30 @@
   ...
 }:
 {
-  options.${namespace}.networkmap = lib.mkOption {
-    type = lib.types.attrsOf (
-      lib.types.submodule {
-        options = {
-          mac = lib.mkOption {
-            type = lib.types.strMatching "([[:xdigit:]]{2}:){5}[[:xdigit:]]{2}";
-            description = "MAC address";
-            default = null;
+  options.${namespace} = {
+    networkmap = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            mac = lib.mkOption {
+              type = lib.types.strMatching "([[:xdigit:]]{2}:){5}[[:xdigit:]]{2}";
+              description = "MAC address";
+              default = null;
+            };
+            ip = lib.mkOption {
+              type = lib.types.strMatching "192\.168\.1\.[[:digit:]]{1,3}";
+              description = "IPv4 local address";
+              default = null;
+            };
           };
-          ip = lib.mkOption {
-            type = lib.types.strMatching "192\.168\.1\.[[:digit:]]{1,3}";
-            description = "IPv4 local address";
-            default = null;
-          };
-        };
-      }
-    );
-    description = "Networkmap";
+        }
+      );
+      description = "Network map.";
+    };
+    myipv4 = lib.mkOption {
+      type = lib.types.str;
+      default = config.${namespace}.networkmap.${config.networking.hostName}.ip;
+    };
   };
 
   config.${namespace}.networkmap = {

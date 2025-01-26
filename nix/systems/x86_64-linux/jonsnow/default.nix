@@ -28,6 +28,11 @@ in
     };
     blocky.enable = true;
     prober7.enable = true;
+    firewall = {
+      interface = lan;
+      # DHCP server.
+      udp = [ 67 ];
+    };
   };
 
   boot.kernel.sysctl = {
@@ -44,21 +49,6 @@ in
   };
 
   networking.useDHCP = false; # manually configure below via networkd
-
-  # Default opens for all interfaces and it's dumb.
-  services.openssh.openFirewall = false;
-  networking.firewall.interfaces.${lan} = {
-    # ssh, Blocky DNS
-    allowedTCPPorts = [
-      22
-      53
-    ];
-    # Blocky DNS, DHCP server
-    allowedUDPPorts = [
-      53
-      67
-    ];
-  };
 
   systemd.network = {
     enable = true;
@@ -115,7 +105,7 @@ in
         address = [
           # TODO: learn about ULA and see if this makes sense.
           # "fd83:c8db:133a::1/64" # generated ULA
-          "192.168.1.1/24"
+          "${config.${namespace}.myipv4}/24"
         ];
         networkConfig = {
           # v4 stuff
