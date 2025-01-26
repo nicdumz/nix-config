@@ -25,7 +25,7 @@ in
           probeUrl = sink: "\"http://prober7-${sink}.zekjur.net:42070/lightprobe/$(cat ${tokenPath})\"";
         in
         [
-          "* * * * * curl -s -o /dev/null ${probeUrl "sink"} ${probeUrl "sink6"}"
+          "* * * * * root curl -s -o /dev/null ${probeUrl "sink"} ${probeUrl "sink6"}"
         ];
     };
   };
