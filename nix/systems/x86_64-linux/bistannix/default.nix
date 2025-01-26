@@ -27,4 +27,18 @@
     };
   };
   snowfallorg.users.giulia.create = true;
+
+  # `networkctl` is nice, afterall.
+  systemd.network = {
+    enable = true;
+
+    wait-online = {
+      extraArgs = [
+        "--ipv4"
+        "--ipv6"
+        "--interface=enp3s0"
+      ];
+      timeout = 20; # seconds
+    };
+  };
 }
