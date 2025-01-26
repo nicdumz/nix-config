@@ -33,6 +33,7 @@ in
       # DHCP server.
       udp = [ 67 ];
     };
+    docker.enable = true;
   };
 
   boot.kernel.sysctl = {

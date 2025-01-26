@@ -17,23 +17,30 @@ in
   config = lib.mkIf cfg.enable {
     environment.persistence."/persist" = {
       hideMounts = true;
-      directories = [
-        "/etc/ssh"
-        # I originally only preserved the fish_history file in this directory but
-        # this created noise due to
-        # https://github.com/fish-shell/fish-shell/issues/10730
-        "/root/.local/share/fish"
-        "/var/cache"
-        "/var/db/sudo"
-        # NOTE: List below is experimental, it used to be "/var/lib"
-        "/var/lib/bluetooth"
-        "/var/lib/NetworkManager"
-        "/var/lib/nixos"
-        "/var/lib/tailscale" # maybe play without this to see what actually happens.
-        "/var/log"
-        # NM networks.
-        "/etc/NetworkManager/system-connections"
-      ];
+      directories =
+        [
+          "/etc/ssh"
+          # I originally only preserved the fish_history file in this directory but
+          # this created noise due to
+          # https://github.com/fish-shell/fish-shell/issues/10730
+          "/root/.local/share/fish"
+          "/var/cache"
+          "/var/db/sudo"
+          # NOTE: List below is experimental, it used to be "/var/lib"
+          "/var/lib/bluetooth"
+          "/var/lib/NetworkManager"
+          "/var/lib/nixos"
+          "/var/log"
+          # NM networks.
+          "/etc/NetworkManager/system-connections"
+        ]
+        # TODO: make a directory option and let modules declare this
+        ++ lib.lists.optionals config.${namespace}.docker.enable [
+          "/var/lib/dockerstate"
+        ]
+        ++ lib.lists.optionals config.${namespace}.tailscale.enable [
+          "/var/lib/tailscale" # maybe play without this to see what actually happens.
+        ];
       files = [
         "/etc/machine-id"
         "/etc/nix/id_rsa"
