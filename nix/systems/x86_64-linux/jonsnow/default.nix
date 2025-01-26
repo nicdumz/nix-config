@@ -34,6 +34,14 @@ in
       udp = [ 67 ];
     };
     docker.enable = true;
+    motd = {
+      enable = true;
+      networkInterfaces = [
+        lan
+        wan
+      ];
+    };
+    rebootRequiredCheck.enable = true;
   };
 
   boot.kernel.sysctl = {
