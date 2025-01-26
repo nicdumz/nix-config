@@ -2,7 +2,6 @@
 # Note: it's very verbose, not ideal. Just a starting point.
 {
   config,
-  hostname,
   inputs,
   lib,
   namespace,
@@ -11,24 +10,27 @@
 }:
 
 let
-  user = config.users.users.ndumazet.uid;
-  group = config.users.groups.users.gid;
+  uid = builtins.toString config.users.users.ndumazet.uid;
+  gid = builtins.toString config.users.groups.users.gid;
   # TODO: Will need to move back to fast
   fast = "/media/bigslowdata/dockerstate";
   slow = "/media/bigslowdata";
   # We make a superset of variables to avoid repeating ourselves.
+  # It would be nice if all those images could agree on one naming ;-)
   env = {
-    PGID = group;
-    GID = group;
-    PUID = user;
-    UID = user;
-    USERMAP_GID = group;
-    USERMAP_UID = user;
-    TZ = config.time.timezone;
+    PGID = gid;
+    GID = gid;
+    PUID = uid;
+    UID = uid;
+    USERMAP_GID = gid;
+    USERMAP_UID = uid;
+    TZ = config.time.timeZone;
   };
   inherit (config.sops) secrets;
-  # Where services need to be exported. Technically this is the LAN IP ...
-  exposeIP = config.${namespace}.myipv4;
+  exposeLanIP = config.${namespace}.myipv4;
+  dockerSocket = builtins.head config.virtualisation.docker.listenOptions;
+  bridgeSubnet = "172.20.0.0/16";
+  bridgeGateway = "172.20.0.1";
 in
 lib.mkIf config.${namespace}.docker.enable {
   # Runtime
@@ -37,22 +39,34 @@ lib.mkIf config.${namespace}.docker.enable {
     autoPrune.enable = true;
   };
 
+  ${namespace}.firewall = {
+    tcp = [
+      443 # traefik
+      7359 # jellyfin
+      51413 # deluge
+      6881 # qbittorrent
+    ];
+    udp = [
+      51413
+      6881
+    ];
+  };
+
   sops.secrets =
     let
       names = [
-        "deadmansnitch_url"
+        "deadmanssnitch_url"
         "gandi_token_env"
         "prometheus_password"
         "prometheus_username"
         "telegram_token"
-        "watchtower_env"
       ];
       attrList = builtins.map (
         n:
         lib.attrsets.nameValuePair n {
-          sopsFile = inputs.self.outPath + "/secrets/${hostname}.yaml";
-          owner = user;
-          inherit group;
+          sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
+          owner = "ndumazet";
+          group = "users";
         }
       ) names;
     in
@@ -74,14 +88,16 @@ lib.mkIf config.${namespace}.docker.enable {
           "${slow}/dockerstate/alertmanager:/alertmanager:rw"
           # Those paths are expected in alertmanager.yml
           "${secrets.telegram_token.path}:/run/secrets/telegram_token:ro"
-          "${secrets.deadmansnitch_url.path}:/run/secrets/deadmansnitch:ro"
+          "${secrets.deadmanssnitch_url.path}:/run/secrets/deadmanssnitch:ro"
         ];
-        inherit user;
+        user = "${uid}:${gid}";
         extraOptions = [
           "--network-alias=alertmanager"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:9093:9093" ];
+        labels = {
+          "traefik.http.services.alertmanager.loadbalancer.server.port" = "9093";
+        };
       };
       bazarr = {
         image = "lscr.io/linuxserver/bazarr";
@@ -95,7 +111,9 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network-alias=bazarr"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:6767:6767" ];
+        labels = {
+          "traefik.http.services.bazarr.loadbalancer.server.port" = "6767";
+        };
       };
       blackbox = {
         image = "prom/blackbox-exporter";
@@ -106,13 +124,15 @@ lib.mkIf config.${namespace}.docker.enable {
           "${./config/blackbox/blackbox.yml}:/config/blackbox.yml:ro"
         ];
         cmd = [ "--config.file=/config/blackbox.yml" ];
-        inherit user;
+        user = "${uid}:${gid}";
         extraOptions = [
           "--dns=8.8.8.8"
           "--network-alias=blackbox"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:9115:9115" ];
+        labels = {
+          "traefik.http.services.blackbox.loadbalancer.server.port" = "9115";
+        };
       };
       deluge = {
         image = "lscr.io/linuxserver/deluge";
@@ -125,16 +145,16 @@ lib.mkIf config.${namespace}.docker.enable {
         ports = [
           "51413:6881/tcp"
           "51413:6881/udp"
-          "127.0.0.1:8112:8112"
         ];
         labels = {
-          "traefik.http.services.deluge.loadbalancer.server.port" = 8112;
+          "traefik.http.services.deluge.loadbalancer.server.port" = "8112";
         };
         extraOptions = [
           "--network-alias=deluge"
           "--network=infra_default"
         ];
       };
+      # Not strictly necessary
       # flood = {
       #   image = "jesec/flood";
       #   environment = env;
@@ -154,24 +174,25 @@ lib.mkIf config.${namespace}.docker.enable {
       #     "--network-alias=flood"
       #     "--network=infra_default"
       #   ];
-      #  ports = [ "127.0.0.1:3000:3000" ];
       # };
       grafana = {
         image = "grafana/grafana-oss";
         environment = {
           GF_INSTALL_PLUGINS = "grafana-piechart-panel";
-          GF_PANELS_DISABLE_SANITIZE_HTML = true;
+          GF_PANELS_DISABLE_SANITIZE_HTML = "true";
         } // env;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${fast}/grafana:/var/lib/grafana:rw"
         ];
-        inherit user;
+        user = "${uid}:${gid}";
         extraOptions = [
           "--network-alias=grafana"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:3000:3000" ];
+        labels = {
+          "traefik.http.services.grafana.loadbalancer.server.port" = "3000";
+        };
       };
       homarr = {
         image = "ghcr.io/ajnart/homarr:latest";
@@ -182,16 +203,16 @@ lib.mkIf config.${namespace}.docker.enable {
           "${fast}/homarr/configs:/app/data/configs:rw"
           "${fast}/homarr/data:/data:rw"
           "${fast}/homarr/icons:/app/public/icons:rw"
-          "/var/run/docker.sock:/var/run/docker.sock:ro"
+          "${dockerSocket}:/var/run/docker.sock:ro"
         ];
         labels = {
           "traefik.http.routers.homarr.rule" = "Host(`home.nicdumz.fr`)";
+          "traefik.http.services.homarr.loadbalancer.server.port" = "7575";
         };
         extraOptions = [
           "--network-alias=homarr"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:7575:7575" ];
       };
       homeassistant = {
         image = "lscr.io/linuxserver/homeassistant:latest";
@@ -204,18 +225,23 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network-alias=homeassistant"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:8123:8123" ];
+        labels = {
+          "traefik.http.services.homeassistant.loadbalancer.server.port" = "8123";
+        };
       };
       infra-redis-broker = {
         image = "docker.io/library/redis:7";
         volumes = [
           "${fast}/redis:/data:rw"
         ];
-        user = "${user}:${group}";
+        user = "${uid}:${gid}";
         extraOptions = [
           "--network-alias=redis-broker"
           "--network=infra_default"
         ];
+        labels = {
+          "traefik.enable" = "false";
+        };
       };
       jackett = {
         image = "ghcr.io/linuxserver/jackett";
@@ -228,7 +254,9 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network-alias=jackett"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:9117:9117" ];
+        labels = {
+          "traefik.http.services.jackett.loadbalancer.server.port" = "9127";
+        };
       };
       jellyfin = {
         image = "ghcr.io/linuxserver/jellyfin";
@@ -244,11 +272,10 @@ lib.mkIf config.${namespace}.docker.enable {
           "${slow}/transcodes:/config/data/transcodes:rw"
         ];
         ports = [
-          "127.0.0.1:8096:8096/tcp"
-          "${exposeIP}:7359:7359/udp" # service auto-discovery on LAN
+          "${exposeLanIP}:7359:7359/udp" # service auto-discovery on LAN
         ];
         labels = {
-          "traefik.http.services.jellyfin.loadbalancer.server.port" = 8096;
+          "traefik.http.services.jellyfin.loadbalancer.server.port" = "8096";
         };
         extraOptions = [
           "--device=/dev/dri/renderD128:/dev/dri/renderD128:rwm"
@@ -262,12 +289,14 @@ lib.mkIf config.${namespace}.docker.enable {
         volumes = [
           "${fast}/config/jellyseerr:/app/config:rw"
         ];
-        user = "${user}:${group}";
+        user = "${uid}:${gid}";
         extraOptions = [
           "--network-alias=jellyseerr"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:5055:5055" ];
+        labels = {
+          "traefik.http.services.jellyseerr.loadbalancer.server.port" = "5055";
+        };
       };
       mealie = {
         image = "ghcr.io/mealie-recipes/mealie:v1.0.0-RC2";
@@ -275,8 +304,8 @@ lib.mkIf config.${namespace}.docker.enable {
           ALLOW_SIGNUP = "true";
           API_DOCS = "False";
           BASE_URL = "https://mealie.home.nicdumz.fr";
-          MAX_WORKERS = 1;
-          WEB_CONCURRENCY = 1;
+          MAX_WORKERS = "1";
+          WEB_CONCURRENCY = "1";
         } // env;
         volumes = [
           "${fast}/mealie:/app/data:rw"
@@ -286,7 +315,9 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network-alias=mealie"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:9000:9000" ];
+        labels = {
+          "traefik.http.services.mealie.loadbalancer.server.port" = "9000";
+        };
       };
       node-exporter = {
         image = "prom/node-exporter:latest";
@@ -304,13 +335,15 @@ lib.mkIf config.${namespace}.docker.enable {
           "--collector.systemd"
         ];
         labels = {
-          "traefik.enable" = false;
+          "traefik.enable" = "false";
         };
         extraOptions = [
           "--network-alias=node-exporter"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:9100:9100" ];
+        labels = {
+          "traefik.http.services.node-exporter.loadbalancer.server.port" = "9100";
+        };
       };
       paperless = {
         image = "ghcr.io/paperless-ngx/paperless-ngx:latest";
@@ -328,12 +361,14 @@ lib.mkIf config.${namespace}.docker.enable {
         dependsOn = [
           "infra-redis-broker"
         ];
-        user = "${user}:${group}";
+        user = "${uid}:${gid}";
         extraOptions = [
           "--network-alias=paperless"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:8000:8000" ];
+        labels = {
+          "traefik.http.services.paperless.loadbalancer.server.port" = "8000";
+        };
       };
       portainer = {
         image = "portainer/portainer-ce:latest";
@@ -341,12 +376,11 @@ lib.mkIf config.${namespace}.docker.enable {
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${fast}/portainer:/data:rw"
-          "/var/run/docker.sock:/var/run/docker.sock:ro"
+          "${dockerSocket}:/var/run/docker.sock:ro"
         ];
         labels = {
-          "traefik.http.services.portainer.loadbalancer.server.port" = 9000;
+          "traefik.http.services.portainer.loadbalancer.server.port" = "9000";
         };
-        ports = [ "127.0.0.1:9000:9000" ];
         extraOptions = [
           "--network-alias=portainer"
           "--network=infra_default"
@@ -372,18 +406,20 @@ lib.mkIf config.${namespace}.docker.enable {
           "--web.console.libraries=/usr/share/prometheus/console_libraries"
           "--web.console.templates=/usr/share/prometheus/consoles"
         ];
-        inherit user;
+        user = "${uid}:${gid}";
         extraOptions = [
           "--add-host=host.docker.internal:host-gateway"
           "--network-alias=prometheus"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:9090:9090" ];
+        labels = {
+          "traefik.http.services.prometheus.loadbalancer.server.port" = "9090";
+        };
       };
       qbittorrent = {
         image = "lscr.io/linuxserver/qbittorrent";
         environment = {
-          WEBUI_PORT = 9092;
+          WEBUI_PORT = "9092";
         } // env;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
@@ -393,10 +429,9 @@ lib.mkIf config.${namespace}.docker.enable {
         ports = [
           "6881:6881/tcp"
           "6881:6881/udp"
-          "127.0.0.1:9092:9092"
         ];
         labels = {
-          "traefik.http.services.qbittorrent.loadbalancer.server.port" = 9092;
+          "traefik.http.services.qbittorrent.loadbalancer.server.port" = "9092";
         };
         extraOptions = [
           "--network-alias=qbittorrent"
@@ -419,7 +454,9 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network-alias=radarr"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:7878:7878" ];
+        labels = {
+          "traefik.http.services.radarr.loadbalancer.server.port" = "7878";
+        };
       };
       sonarr = {
         image = "ghcr.io/linuxserver/sonarr";
@@ -437,7 +474,9 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network-alias=sonarr"
           "--network=infra_default"
         ];
-        ports = [ "127.0.0.1:8989:8989" ];
+        labels = {
+          "traefik.http.services.sonarr.loadbalancer.server.port" = "7878";
+        };
       };
       traefik = {
         image = "traefik";
@@ -446,51 +485,66 @@ lib.mkIf config.${namespace}.docker.enable {
           # Contains an env-like file.
           secrets.gandi_token_env.path
         ];
-        volumes = [
-          "${./config/traefik/dynamic.yml}:/etc/traefik/dynamic.yml:ro"
-          "${./config/traefik/traefik.yml}:/etc/traefik/traefik.yml:ro"
-          # TODO: is it possible to adapt the above to become a directory link?
-          # "something/config/traefik:/etc/traefik:ro"
-          "${fast}/traefik:/data:rw"
-          # TODO: do we need this?
-          # "/usr/share/zoneinfo:/usr/share/zoneinfo:ro"
-          "/var/run/docker.sock:/var/run/docker.sock:ro"
-        ];
+        volumes =
+          let
+            # TODO: all could be in nix...
+            conf = lib.${namespace}.fromYAML pkgs ./config/traefik/dynamic.yml;
+            final = lib.attrsets.recursiveUpdate conf {
+              http.middlewares.allowlist.ipAllowList.sourceRange = [
+                # "${exposeLanIP}/24"
+                # "127.0.0.1"
+                # All traffic appears to come from the bridge.
+                bridgeGateway
+                # TODO: consider adding tailscale network?
+              ];
+            };
+            dynamicFile = pkgs.writers.writeYAML "dynamic.yml" final;
+          in
+          [
+            "${dynamicFile}:/etc/traefik/dynamic.yml:ro"
+            "${./config/traefik/traefik.yml}:/etc/traefik/traefik.yml:ro"
+            # TODO: is it possible to adapt the above to become a directory link?
+            # "something/config/traefik:/etc/traefik:ro"
+            "${fast}/traefik:/data:rw"
+            # TODO: do we need this?
+            # "/usr/share/zoneinfo:/usr/share/zoneinfo:ro"
+            "${dockerSocket}:/var/run/docker.sock:ro"
+          ];
         ports = [
-          "${exposeIP}:443:443"
-          "127.0.0.1:8080:8080"
+          "${exposeLanIP}:443:443"
         ];
         labels = {
-          "traefik.enable" = false;
+          "traefik.enable" = "false";
         };
         extraOptions = [
           "--network-alias=traefik"
           "--network=infra_default"
         ];
       };
-      watchtower = {
-        image = "containrrr/watchtower";
-        environment = env;
-        environmentFiles = [ secrets.watchtower_env.file ];
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "/var/run/docker.sock:/var/run/docker.sock:ro"
-        ];
-        cmd = [
-          "--schedule"
-          "0 5 3 * * *"
-          "--cleanup"
-          "--notifications-level"
-          "error"
-        ];
-        labels = {
-          "traefik.enable" = false;
-        };
-        extraOptions = [
-          "--network-alias=watchtower"
-          "--network=infra_default"
-        ];
-      };
+      # Disable: I would prefer explicit updates.
+      # watchtower = {
+      #   image = "containrrr/watchtower";
+      #   environment = env;
+      #   environmentFiles = [ secrets.watchtower_env.path ];
+      #   volumes = [
+      #     "/etc/localtime:/etc/localtime:ro"
+      #     "${dockerSocket}:/var/run/docker.sock:ro"
+      #   ];
+      #   cmd = [
+      #     "--schedule"
+      #     "0 5 3 * * *"
+      #     "--cleanup"
+      #     "--notifications-level"
+      #     "error"
+      #   ];
+      #   labels = {
+      #     "traefik.enable" = "false";
+      #   };
+      #   extraOptions = [
+      #     "--network-alias=watchtower"
+      #     "--network=infra_default"
+      #   ];
+      # };
     };
   };
 
@@ -521,7 +575,7 @@ lib.mkIf config.${namespace}.docker.enable {
           ExecStop = "docker network rm -f infra_default";
         };
         script = ''
-          docker network inspect infra_default || docker network create infra_default
+          docker network inspect infra_default || docker network create infra_default --subnet=${bridgeSubnet} --gateway=${bridgeGateway} -o "com.docker.network.bridge.name"="docker-bridge"
         '';
         partOf = [ "docker-compose-infra-root.target" ];
         wantedBy = [ "docker-compose-infra-root.target" ];

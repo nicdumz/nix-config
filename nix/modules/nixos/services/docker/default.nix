@@ -20,21 +20,17 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.docker = {
       # TODO: what about enableOnBoot
-      # Do I need this?
       storageDriver = "btrfs";
-      # previously was "storage-driver": "overlay2" on host
       logDriver = "local";
-      rootless = {
-        # TODO: this might break /var/run/docker.sock users
-        enable = true;
-        setSocketVariable = true;
-      };
       daemon.settings = {
+        bridge = "none"; # explicitly created elsewhere.
         data-root = "/var/lib/dockerstate";
         features = {
           buildkit = true;
         };
-        metrics-addr = "0.0.0.0:9323";
+        metrics-addr = "127.0.0.1:9323";
+        # TODO: this breaks.
+        # dns = [ config.${namespace}.myipv4 ];
         experimental = true;
       };
     };

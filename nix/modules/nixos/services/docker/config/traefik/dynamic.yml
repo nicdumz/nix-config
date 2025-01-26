@@ -9,11 +9,8 @@ http:
     allowlist:
       ipAllowList:
         sourceRange:
-          # TODO: those IPs should not be hardcoded.
-          - "192.168.1.1/24"
-          - "127.0.0.1"
-          - "100.70.128.5"
-          - "100.99.40.65"
+          # Those IPs are set in compose2nix
+          - "ip.of.docker.bridge"
     cors:
       headers:
         accessControlAllowMethods:

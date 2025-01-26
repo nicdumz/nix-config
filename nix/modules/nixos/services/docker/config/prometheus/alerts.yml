@@ -17,17 +17,18 @@ groups:
         annotations:
           summary: Prometheus AlertManager job missing (instance {{ $labels.instance }})
           description: "A Prometheus AlertManager job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-      - alert: CoreradDown
-        expr: node_systemd_unit_state{name="corerad.service", state="active"} < 1
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: Corerad daemon is not running, IPv6 is probably broken.
-          description: "Corerad.service systemd is missing"
-      - alert: CoreradScrapingBroken
-        expr: up{job="corerad"} < 1
-        for: 10m
+          # Not using CoreRad no more.
+          # - alert: CoreradDown
+          #   expr: node_systemd_unit_state{name="corerad.service", state="active"} < 1
+          #   for: 5m
+          #   labels:
+          #     severity: warning
+          #   annotations:
+          #     summary: Corerad daemon is not running, IPv6 is probably broken.
+          #     description: "Corerad.service systemd is missing"
+          # - alert: CoreradScrapingBroken
+          #   expr: up{job="corerad"} < 1
+          #   for: 10m
   - name: Host
     rules:
       # Please add ignored mountpoints in node_exporter parameters like
