@@ -49,7 +49,7 @@
                       expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.bistannix.options',
                     },
                     home_manager = {
-                      expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations."ndumazet@bistannix".options',
+                      expr = '(builtins.getFlake ("git+file://" + toString ./.)).homeConfigurations.ndumazet.options',
                     },
                   },
                 },
