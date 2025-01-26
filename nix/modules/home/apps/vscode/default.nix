@@ -86,7 +86,7 @@ in
                 expr = "(builtins.getFlake \"\${workspaceFolder}\").nixosConfigurations.bistannix.options";
               };
               home-manager = {
-                expr = "(builtins.getFlake \"\${workspaceFolder}\").homeConfigurations.\"ndumazet@bistannix\".options";
+                expr = "(builtins.getFlake \"\${workspaceFolder}\").homeConfigurations.ndumazet.options";
               };
             };
           };
