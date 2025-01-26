@@ -26,6 +26,7 @@ in
     tailscale = {
       enable = true;
       useRoutingFeatures = "both";
+      extraFlags = [ "--advertise-exit-node" ];
     };
     blocky.enable = true;
     prober7.enable = true;
