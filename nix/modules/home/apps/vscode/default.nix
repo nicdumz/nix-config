@@ -40,6 +40,7 @@ in
           catppuccin.catppuccin-vsc-icons
           golang.go
           jnoortheen.nix-ide
+          mkhl.direnv
           stkb.rewrap
         ]
         ++ lib.optionals (osConfig.${namespace}.nvidia.enable or false) [
