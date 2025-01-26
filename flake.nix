@@ -3,6 +3,7 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-24.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Has no releases so far, and not using nixpkgs.
     impermanence.url = "github:nix-community/impermanence";

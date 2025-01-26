@@ -39,7 +39,6 @@ in
           catppuccin.catppuccin-vsc
           catppuccin.catppuccin-vsc-icons
           golang.go
-          jnoortheen.nix-ide
           mkhl.direnv
           stkb.rewrap
         ]
@@ -52,6 +51,13 @@ in
             publisher = "yahyabatulu";
             version = "0.0.4";
             sha256 = "sha256-dCaSMPSntYo0QLr2pcs9GfJxOshfyeXbs8IMCwd+lqw=";
+          }
+          # The one bundled with nixpkgs is way too old and buggy.
+          {
+            name = "nix-ide";
+            publisher = "jnoortheen";
+            version = "0.4.11";
+            sha256 = "sha256-Z+e4s+fcpPqxG7IU2E48Jq21FPU+DHHa+VwTEXKiznw=";
           }
         ];
       userSettings = {
