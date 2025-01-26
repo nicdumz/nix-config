@@ -154,7 +154,7 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network=infra_default"
         ];
       };
-      # Not strictly necessary
+      # Not strictly necessary, but importantly no pretty way to pass the qb password through cleanly.
       # flood = {
       #   image = "jesec/flood";
       #   environment = env;
@@ -487,7 +487,8 @@ lib.mkIf config.${namespace}.docker.enable {
         ];
         volumes =
           let
-            # TODO: all could be in nix...
+            # TODO: the entirety of the config could be in nix, allowing me to remove the docker
+            # provider / dependency on the socket entirely
             conf = lib.${namespace}.fromYAML pkgs ./config/traefik/dynamic.yml;
             final = lib.attrsets.recursiveUpdate conf {
               http.middlewares.allowlist.ipAllowList.sourceRange = [
