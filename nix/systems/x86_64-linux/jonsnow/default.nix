@@ -44,6 +44,9 @@ in
     rebootRequiredCheck.enable = true;
   };
 
+  # TODO?
+  #RxBufferSize = 4096;
+  #TxBufferSize = 4096;
   boot.kernel.sysctl = {
     # source:
     #  https://github.com/mdlayher/homelab/blob/main/nixos/routnerr-3/configuration.nix
@@ -57,10 +60,27 @@ in
     "net.ipv6.conf.${wan}.autoconf" = 1;
   };
 
-  networking.useDHCP = false; # manually configure below via networkd
+  networking = {
+    useDHCP = false; # manually configure below via networkd
+
+    # Docker firewall rules take over the forwarding chain and redirect all to DOCKER-USER.
+    # Make sure that forwarding still works as intended.
+    # There's a good discussion on https://github.com/NixOS/nixpkgs/issues/111852 although people
+    # are generally confused.
+    firewall.extraCommands = ''
+      ip46tables -N DOCKER-USER || true
+      ip46tables -F DOCKER-USER
+      ip46tables -A DOCKER-USER -i ${lan} -o ${wan} -j ACCEPT
+      ip46tables -A DOCKER-USER -i ${wan} -o ${lan} -m state --state RELATED,ESTABLISHED -j ACCEPT
+      ip46tables -A DOCKER-USER -i ${wan} -j DROP
+      ip46tables -A DOCKER-USER -j RETURN
+    '';
+  };
 
   systemd.network = {
     enable = true;
+
+    config.networkConfig.SpeedMeter = true;
 
     # TODO: allow hotplug for all
     # NOTE: nftables.enable = true is tempting however interactions with Docker are complicated.
@@ -85,8 +105,9 @@ in
           IPv6AcceptRA = true;
         };
         dhcpPrefixDelegationConfig = {
-          Token = "::1";
+          UplinkInterface = ":self";
           SubnetId = 0;
+          Announce = "no";
         };
         # Never accept ISP DNS or search domains for any DHCP/RA family.
         dhcpV4Config = {
@@ -150,8 +171,7 @@ in
 
         # v6
         dhcpPrefixDelegationConfig = {
-          Token = "::1";
-          SubnetId = 0;
+          SubnetId = 1;
         };
         ipv6SendRAConfig = {
           EmitDNS = true;
