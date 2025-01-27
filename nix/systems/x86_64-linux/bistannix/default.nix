@@ -43,14 +43,23 @@
         TxBufferSize = 8184;
       };
     };
-
-    wait-online = {
-      extraArgs = [
-        "--ipv4"
-        "--ipv6"
-        "--interface=lan0"
-      ];
-      timeout = 20; # seconds
+    networks."10-lan" = {
+      matchConfig.Name = "lan0";
+      linkConfig.RequiredFamilyForOnline = "both";
     };
+
+    links."20-downed" = {
+      matchConfig = {
+        Type = "ether";
+        MACAddress = "04:7c:16:cd:c5:cf";
+      };
+      linkConfig.Name = "downed-lan0";
+    };
+    networks."20-downed" = {
+      matchConfig.Name = "downed-lan0";
+      linkConfig.ActivationPolicy = "always-down";
+    };
+
+    wait-online.timeout = 20; # seconds
   };
 }
