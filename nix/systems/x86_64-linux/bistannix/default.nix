@@ -32,11 +32,23 @@
   systemd.network = {
     enable = true;
 
+    links."10-lan" = {
+      matchConfig = {
+        Type = "ether";
+        MACAddress = "f0:2f:74:79:de:79";
+      };
+      linkConfig = {
+        Name = "lan0";
+        RxBufferSize = 8184;
+        TxBufferSize = 8184;
+      };
+    };
+
     wait-online = {
       extraArgs = [
         "--ipv4"
         "--ipv6"
-        "--interface=enp3s0"
+        "--interface=lan0"
       ];
       timeout = 20; # seconds
     };
