@@ -6,8 +6,22 @@
   ...
 }:
 let
-  lan = "enp1s0f0";
-  wan = "enp1s0f1";
+  lan = "lan0";
+  wan = "wan0";
+
+  ethLink =
+    name:
+    (mac: {
+      matchConfig = {
+        Type = "ether";
+        MACAddress = mac;
+      };
+      linkConfig = {
+        Name = name;
+        RxBufferSize = 8196;
+        TxBufferSize = 8196;
+      };
+    });
 in
 {
   imports = [
@@ -44,9 +58,6 @@ in
     rebootRequiredCheck.enable = true;
   };
 
-  # TODO?
-  #RxBufferSize = 4096;
-  #TxBufferSize = 4096;
   boot.kernel.sysctl = {
     # source:
     #  https://github.com/mdlayher/homelab/blob/main/nixos/routnerr-3/configuration.nix
@@ -74,6 +85,11 @@ in
       ip46tables -A DOCKER-USER -i ${wan} -o ${lan} -m state --state RELATED,ESTABLISHED -j ACCEPT
       ip46tables -A DOCKER-USER -i ${wan} -j DROP
       ip46tables -A DOCKER-USER -j RETURN
+
+      # And we also have to take care of having ts-forward in the right place for tailscale...
+      ip46tables -F FORWARD
+      ip46tables -A FORWARD -j ts-forward
+      ip46tables -A FORWARD -j DOCKER-USER
     '';
   };
 
@@ -93,6 +109,11 @@ in
         "--interface=${lan}"
       ];
       timeout = 20; # seconds
+    };
+
+    links = {
+      "10-wan" = ethLink wan "00:1b:21:c3:4a:f6";
+      "15-lan" = ethLink lan "00:1b:21:c3:4a:f4";
     };
 
     networks = {
