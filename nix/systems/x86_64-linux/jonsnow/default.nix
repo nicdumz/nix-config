@@ -80,16 +80,38 @@ in
     # are generally confused.
     firewall.extraCommands = ''
       ip46tables -N DOCKER-USER || true
+      ip46tables -N DOCKER-ISOLATION-STAGE-1 || true
+      ip46tables -N ts-forward || true
+
+      ip46tables -F FORWARD
+      ip46tables -P FORWARD DROP
+      ip46tables -A FORWARD -j DOCKER-USER
+      ip46tables -A FORWARD -j DOCKER-ISOLATION-STAGE-1
+
+      # DOCKER-USER is the chain that Docker lets us control.
       ip46tables -F DOCKER-USER
-      ip46tables -A DOCKER-USER -i ${lan} -o ${wan} -j ACCEPT
-      ip46tables -A DOCKER-USER -i ${wan} -o ${lan} -m state --state RELATED,ESTABLISHED -j ACCEPT
+      # Tailscale rules first
+      ip46tables -A DOCKER-USER -j ts-forward
+      # Forward already open.
+      ip46tables -A DOCKER-USER -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+      ## Am a bit confused as to why those rules are required. Technically Docker should port
+      ## forward to the local host which should remove routing/fw needs; this needs more work.
+      # Lan to traefik
+      ip46tables -A DOCKER-USER -i ${lan} -o docker-bridge -p tcp -m tcp --dport 443 -j ACCEPT
+      # Wan to Deluge, qBittorrent
+      ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p udp -m udp --dport 6881 -j ACCEPT
+      ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p tcp -m tcp --dport 6881 -j ACCEPT
+      ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p udp -m udp --dport 51413 -j ACCEPT
+      ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p tcp -m tcp --dport 51413 -j ACCEPT
+
+      # Anything !wan can open to the outside.
+      ip46tables -A DOCKER-USER ! -i ${wan} -o ${wan} -j ACCEPT
+      # E.g. traefik reaching out to other containers (different phys ifaces)
+      ip46tables -A DOCKER-USER -i docker-bridge -o docker-bridge -j ACCEPT
+
       ip46tables -A DOCKER-USER -i ${wan} -j DROP
       ip46tables -A DOCKER-USER -j RETURN
-
-      # And we also have to take care of having ts-forward in the right place for tailscale...
-      ip46tables -F FORWARD
-      ip46tables -A FORWARD -j ts-forward
-      ip46tables -A FORWARD -j DOCKER-USER
     '';
   };
 
