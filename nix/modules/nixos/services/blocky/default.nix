@@ -22,8 +22,11 @@ in
     services.resolved.enable = false;
 
     # No need to start before network.
-    systemd.services.blocky.after = [ "network-online.target" ];
-    systemd.services.blocky.wants = [ "network-online.target" ];
+    systemd.services.blocky = {
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+      serviceConfig.LogsDirectory = "blocky";
+    };
 
     nicdumz.firewall = {
       udp = [ 53 ];
@@ -35,7 +38,7 @@ in
       settings = {
         bootstrapDns = [
           {
-            upstream = "tcp-tls:dns.quad9.net";
+            upstream = "https://dns.quad9.net/dns-query";
             ips = [
               "9.9.9.9"
               "149.112.112.112"
@@ -44,7 +47,7 @@ in
             ];
           }
         ];
-        upstreams.groups.default = [ "tcp-tls:dns.quad9.net" ];
+        upstreams.groups.default = [ "https://dns.quad9.net/dns-query" ];
         customDNS = {
           customTTL = "1m";
           mapping = {
@@ -55,7 +58,7 @@ in
         queryLog = {
           type = "csv";
           logRetentionDays = 7;
-          target = "/var/log/blocky";
+          target = "/var/log/blocky"; # created by systemd unit
         };
         ports.http = 4000;
         prometheus.enable = true;
