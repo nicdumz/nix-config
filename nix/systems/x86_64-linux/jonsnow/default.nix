@@ -48,6 +48,7 @@ in
       udp = [ 67 ];
     };
     docker.enable = true;
+    traefik.enable = true;
     motd = {
       enable = true;
       networkInterfaces = [
@@ -56,6 +57,11 @@ in
       ];
     };
     rebootRequiredCheck.enable = true;
+    # observability stuff
+    loki.enable = true;
+    vector.enable = true;
+    grafana.enable = true;
+    prometheus.enable = true;
   };
 
   boot.kernel.sysctl = {
@@ -97,8 +103,6 @@ in
 
       ## Am a bit confused as to why those rules are required. Technically Docker should port
       ## forward to the local host which should remove routing/fw needs; this needs more work.
-      # Lan to traefik
-      ip46tables -A DOCKER-USER -i ${lan} -o docker-bridge -p tcp -m tcp --dport 443 -j ACCEPT
       # Wan to Deluge, qBittorrent
       ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p udp -m udp --dport 6881 -j ACCEPT
       ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p tcp -m tcp --dport 6881 -j ACCEPT
@@ -107,7 +111,7 @@ in
 
       # Anything !wan can open to the outside.
       ip46tables -A DOCKER-USER ! -i ${wan} -o ${wan} -j ACCEPT
-      # E.g. traefik reaching out to other containers (different phys ifaces)
+      # cross containers (different phys ifaces)
       ip46tables -A DOCKER-USER -i docker-bridge -o docker-bridge -j ACCEPT
 
       ip46tables -A DOCKER-USER -i ${wan} -j DROP
