@@ -8,14 +8,11 @@ metrics:
 providers:
   docker:
     # exposedByDefault: true # this is the default
-    # endpoint: "unix:///var/run/docker.sock" # this is the default
+    # endpoint: # overriden in derivation
     defaultRule: "Host(`{{ .ContainerName }}.home.nicdumz.fr`)"
-  file:
-    watch: true
-    filename: /etc/traefik/dynamic.yml
 entryPoints:
   websecure:
-    address: :443
+    address: "somehost:443" # also overriden in derivation
     http:
       middlewares:
         - cors@file
@@ -27,6 +24,6 @@ certificatesResolvers:
   gandi:
     acme:
       email: "nicdumz@gmail.com"
-      storage: "/data/acme.json"
+      storage: "/var/lib/traefik/acme.json"
       dnsChallenge:
         provider: gandiv5

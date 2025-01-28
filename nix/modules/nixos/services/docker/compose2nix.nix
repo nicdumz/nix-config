@@ -2,7 +2,6 @@
 # Note: it's very verbose, not ideal. Just a starting point.
 {
   config,
-  inputs,
   lib,
   namespace,
   pkgs,
@@ -13,7 +12,6 @@ let
   cfg = config.${namespace}.containers;
   inherit (cfg.dataroot) fast;
   inherit (cfg.dataroot) slow;
-  inherit (config.sops) secrets;
   exposeLanIP = config.${namespace}.myipv4;
   dockerSocket = builtins.head config.virtualisation.docker.listenOptions;
   bridgeSubnet = "172.20.0.0/16";
@@ -29,6 +27,7 @@ lib.mkIf config.${namespace}.docker.enable {
   ${namespace}.firewall = {
     tcp = [
       7359 # jellyfin
+      # TODO: this is incorrect and needs to be open on Wan
       51413 # deluge
       6881 # qbittorrent
     ];
@@ -38,26 +37,6 @@ lib.mkIf config.${namespace}.docker.enable {
     ];
   };
 
-  sops.secrets =
-    let
-      names = [
-        "deadmanssnitch_url"
-        "gandi_token_env"
-        "prometheus_password"
-        "prometheus_username"
-        "telegram_token"
-      ];
-      attrList = builtins.map (
-        n:
-        lib.attrsets.nameValuePair n {
-          sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
-          owner = "ndumazet";
-          group = "users";
-        }
-      ) names;
-    in
-    builtins.listToAttrs attrList;
-
   virtualisation.oci-containers = {
 
     # TODO: I could probably try moving to podman with virtualisation.podman.dockerSocket.enable on
@@ -65,26 +44,6 @@ lib.mkIf config.${namespace}.docker.enable {
 
     # Containers
     containers = {
-      alertmanager = {
-        image = "prom/alertmanager";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${./config/alertmanager/alertmanager.yml}:/etc/alertmanager/alertmanager.yml:ro"
-          "${slow}/dockerstate/alertmanager:/alertmanager:rw"
-          # Those paths are expected in alertmanager.yml
-          "${secrets.telegram_token.path}:/run/secrets/telegram_token:ro"
-          "${secrets.deadmanssnitch_url.path}:/run/secrets/deadmanssnitch:ro"
-        ];
-        inherit (cfg) user;
-        extraOptions = [
-          "--network-alias=alertmanager"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.alertmanager.loadbalancer.server.port" = "9093";
-        };
-      };
       bazarr = {
         image = "lscr.io/linuxserver/bazarr";
         environment = cfg.defaultEnvironment;
@@ -99,25 +58,6 @@ lib.mkIf config.${namespace}.docker.enable {
         ];
         labels = {
           "traefik.http.services.bazarr.loadbalancer.server.port" = "6767";
-        };
-      };
-      blackbox = {
-        image = "prom/blackbox-exporter";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          # TODO: this could be a pkgs.writers.writeYAML
-          "${./config/blackbox/blackbox.yml}:/config/blackbox.yml:ro"
-        ];
-        cmd = [ "--config.file=/config/blackbox.yml" ];
-        inherit (config.${namespace}.containers) user;
-        extraOptions = [
-          "--dns=8.8.8.8"
-          "--network-alias=blackbox"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.blackbox.loadbalancer.server.port" = "9115";
         };
       };
       deluge = {
@@ -161,25 +101,6 @@ lib.mkIf config.${namespace}.docker.enable {
       #     "--network=infra_default"
       #   ];
       # };
-      grafana = {
-        image = "grafana/grafana-oss";
-        environment = {
-          GF_INSTALL_PLUGINS = "grafana-piechart-panel";
-          GF_PANELS_DISABLE_SANITIZE_HTML = "true";
-        } // cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${fast}/grafana:/var/lib/grafana:rw"
-        ];
-        inherit (cfg) user;
-        extraOptions = [
-          "--network-alias=grafana"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.grafana.loadbalancer.server.port" = "3000";
-        };
-      };
       homarr = {
         image = "ghcr.io/ajnart/homarr:latest";
         environment = {
@@ -305,57 +226,32 @@ lib.mkIf config.${namespace}.docker.enable {
           "traefik.http.services.mealie.loadbalancer.server.port" = "9000";
         };
       };
-      node-exporter = {
-        image = "prom/node-exporter:latest";
-        volumes = [
-          "/:/rootfs:ro"
-          "/proc:/host/proc:ro"
-          "/sys:/host/sys:ro"
-          "/var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro"
-        ];
-        cmd = [
-          "--path.procfs=/host/proc"
-          "--path.rootfs=/rootfs"
-          "--path.sysfs=/host/sys"
-          "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc|run)($|/)"
-          "--collector.systemd"
-        ];
-        labels = {
-          "traefik.enable" = "false";
-        };
-        extraOptions = [
-          "--network-alias=node-exporter"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.node-exporter.loadbalancer.server.port" = "9100";
-        };
-      };
-      paperless = {
-        image = "ghcr.io/paperless-ngx/paperless-ngx:latest";
-        environment = {
-          PAPERLESS_DATA_DIR = "/config";
-          PAPERLESS_MEDIA_ROOT = "/data/media";
-          PAPERLESS_REDIS = "redis://redis-broker:6379";
-          PAPERLESS_TIME_ZONE = config.time.timeZone;
-          PAPERLESS_URL = "https://paperless.home.nicdumz.fr";
-        } // cfg.defaultEnvironment;
-        volumes = [
-          "${fast}/config/paperless:/config:rw"
-          "${slow}/paperless:/data:rw"
-        ];
-        dependsOn = [
-          "infra-redis-broker"
-        ];
-        inherit (cfg) user;
-        extraOptions = [
-          "--network-alias=paperless"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.paperless.loadbalancer.server.port" = "8000";
-        };
-      };
+      # TODO: reenable and fix. Currently it prevents pushes because it's toasted.
+      # paperless = {
+      #   image = "ghcr.io/paperless-ngx/paperless-ngx:latest";
+      #   environment = {
+      #     PAPERLESS_DATA_DIR = "/config";
+      #     PAPERLESS_MEDIA_ROOT = "/data/media";
+      #     PAPERLESS_REDIS = "redis://redis-broker:6379";
+      #     PAPERLESS_TIME_ZONE = config.time.timeZone;
+      #     PAPERLESS_URL = "https://paperless.home.nicdumz.fr";
+      #   } // cfg.defaultEnvironment;
+      #   volumes = [
+      #     "${fast}/config/paperless:/config:rw"
+      #     "${slow}/paperless:/data:rw"
+      #   ];
+      #   dependsOn = [
+      #     "infra-redis-broker"
+      #   ];
+      #   inherit (cfg) user;
+      #   extraOptions = [
+      #     "--network-alias=paperless"
+      #     "--network=infra_default"
+      #   ];
+      #   labels = {
+      #     "traefik.http.services.paperless.loadbalancer.server.port" = "8000";
+      #   };
+      # };
       portainer = {
         image = "portainer/portainer-ce:latest";
         environment = cfg.defaultEnvironment;
@@ -372,35 +268,6 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network=infra_default"
           "--security-opt=no-new-privileges:true"
         ];
-      };
-      prometheus = {
-        image = "prom/prometheus";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${./config/prometheus/prometheus.yml}:/etc/prometheus/prometheus.yml:ro"
-          "${./config/prometheus/alerts.yml}:/etc/prometheus/alerts.yml:ro"
-          "${fast}/prometheus:/prometheus:rw"
-          "${secrets.prometheus_username.path}:/run/secrets/username:ro"
-          "${secrets.prometheus_password.path}:/run/secrets/password:ro"
-        ];
-        cmd = [
-          "--config.file=/etc/prometheus/prometheus.yml"
-          "--storage.tsdb.path=/prometheus"
-          "--storage.tsdb.retention.size=1GB"
-          "--storage.tsdb.wal-compression"
-          "--web.console.libraries=/usr/share/prometheus/console_libraries"
-          "--web.console.templates=/usr/share/prometheus/consoles"
-        ];
-        inherit (cfg) user;
-        extraOptions = [
-          "--add-host=host.docker.internal:host-gateway"
-          "--network-alias=prometheus"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.prometheus.loadbalancer.server.port" = "9090";
-        };
       };
       qbittorrent = {
         image = "lscr.io/linuxserver/qbittorrent";
