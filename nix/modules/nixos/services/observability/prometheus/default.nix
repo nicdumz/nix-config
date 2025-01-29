@@ -203,20 +203,27 @@ in
         {
           job_name = "blackbox-http";
           metrics_path = "/probe";
-          params = {
-            module = [ "http_2xx" ];
-            target = [ "google.com" ];
-          };
-          static_configs = [
-            {
-              targets = [
-                "https://amazon.com"
-                "https://www.google.com"
-                "https://www.init7.net"
-              ];
-            }
-          ];
+          static_configs =
+            let
+              mkConfig = module_: {
+                targets = [
+                  "https://www.amazon.com"
+                  "https://www.google.com"
+                  "https://www.init7.net"
+                ];
+                labels.module = module_;
+              };
+            in
+            # probe over ipv4 and ipv6
+            [
+              (mkConfig "http_2xx_v4")
+              (mkConfig "http_2xx_v6")
+            ];
           relabel_configs = [
+            {
+              source_labels = [ "module" ];
+              target_label = "__param_module";
+            }
             {
               source_labels = [ "__address__" ];
               target_label = "__param_target";
