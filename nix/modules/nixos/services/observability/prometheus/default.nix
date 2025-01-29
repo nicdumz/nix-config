@@ -205,19 +205,25 @@ in
           metrics_path = "/probe";
           static_configs =
             let
-              mkConfig = module_: {
-                targets = [
-                  "https://www.amazon.com"
-                  "https://www.google.com"
-                  "https://www.init7.net"
-                ];
+              mkConfig = module_: targets_: {
+                targets = targets_;
                 labels.module = module_;
               };
+              # probe over ipv4 and ipv6
+              ipv46targets = [
+                "https://www.amazon.com"
+                "https://www.google.com"
+                "https://www.init7.net"
+              ];
+              # TODO: make them reachable over ipv6?
+              # TODO: is it worth adding more services
+              ipv4Targets = ipv46targets ++ [
+                "https://traefik.home.nicdumz.fr"
+              ];
             in
-            # probe over ipv4 and ipv6
             [
-              (mkConfig "http_2xx_v4")
-              (mkConfig "http_2xx_v6")
+              (mkConfig "http_2xx_v4" ipv4Targets)
+              (mkConfig "http_2xx_v6" ipv46targets)
             ];
           relabel_configs = [
             {
