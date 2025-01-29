@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   namespace,
   ...
@@ -23,8 +24,6 @@ in
     services.grafana = {
       enable = true;
 
-      # Note to self, default is already:
-      # settings.server.http_addr = "127.0.0.1";
       provision = {
         enable = true;
         datasources.settings = {
@@ -33,6 +32,19 @@ in
           datasources = [ ];
         };
       };
+
+      settings = {
+        server.domain = "grafana.home.nicdumz.fr";
+        # Note to self, default is already:
+        # server.http_addr = "127.0.0.1";
+        # server.http_port = 3000
+        security.admin_password = "$__file{${config.sops.secrets.grafana-admin-password.path}}";
+      };
+    };
+
+    sops.secrets.grafana-admin-password = {
+      owner = "grafana";
+      sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
     };
   };
 }
