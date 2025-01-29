@@ -30,6 +30,7 @@ in
           "/var/lib/bluetooth"
           "/var/lib/NetworkManager"
           "/var/lib/nixos"
+          "/var/lib/systemd/timers"
           "/var/log"
           # NM networks.
           "/etc/NetworkManager/system-connections"
@@ -38,12 +39,22 @@ in
         ++ lib.lists.optionals config.${namespace}.docker.enable [
           "/var/lib/dockerstate"
         ]
+        ++ lib.lists.optionals config.${namespace}.prometheus.enable [
+          "/var/lib/prometheus2"
+        ]
         ++ lib.lists.optionals config.${namespace}.tailscale.enable [
           "/var/lib/tailscale" # maybe play without this to see what actually happens.
+        ]
+        ++ lib.lists.optionals config.${namespace}.traefik.enable [
+          "/var/lib/traefik"
+        ]
+        ++ lib.lists.optionals config.${namespace}.loki.enable [
+          "/var/lib/loki"
         ];
       files = [
         "/etc/machine-id"
         "/etc/nix/id_rsa"
+        "/var/lib/logrotate.status"
       ];
     };
 
