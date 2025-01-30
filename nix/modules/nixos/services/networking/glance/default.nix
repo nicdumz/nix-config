@@ -81,7 +81,6 @@ let
           icon = "prometheus";
         }
         "prometheus"
-        "portainer" # maybe this will / should go.
       ];
     };
   };
