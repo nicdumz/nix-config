@@ -20,10 +20,22 @@ let
       let
         # TODO: generate this from some property :-)
         hosts = {
-          alertmanager = 9093;
-          blackbox = 9115;
-          grafana = 3000;
-          prometheus = 9090;
+          alertmanager = {
+            port = 9093;
+          };
+          blackbox = {
+            port = 9115;
+          };
+          glance = {
+            port = 8081;
+            host = "home";
+          };
+          grafana = {
+            port = 3000;
+          };
+          prometheus = {
+            port = 9090;
+          };
         };
       in
       {
@@ -32,13 +44,13 @@ let
           # TODO: consider adding tailscale network?
         ];
 
-        routers = lib.attrsets.mapAttrs (n: _p: {
-          rule = "Host(`${n}.home.nicdumz.fr`)";
+        routers = lib.attrsets.mapAttrs (n: v: {
+          rule = "Host(`${v.host or "${n}.home"}.nicdumz.fr`)";
           service = n;
         }) hosts;
-        services = lib.attrsets.mapAttrs (_n: p: {
+        services = lib.attrsets.mapAttrs (_n: v: {
           loadBalancer.servers = [
-            { url = "http://127.0.0.1:${toString p}"; }
+            { url = "http://127.0.0.1:${toString v.port}"; }
           ];
         }) hosts;
       };
