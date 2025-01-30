@@ -13,7 +13,6 @@ let
   inherit (cfg.dataroot) fast;
   inherit (cfg.dataroot) slow;
   exposeLanIP = config.${namespace}.myipv4;
-  dockerSocket = builtins.head config.virtualisation.docker.listenOptions;
   bridgeSubnet = "172.20.0.0/16";
   bridgeGateway = "172.20.0.1";
 in
@@ -244,23 +243,6 @@ lib.mkIf config.${namespace}.docker.enable {
       #     "traefik.http.services.paperless.loadbalancer.server.port" = "8000";
       #   };
       # };
-      portainer = {
-        image = "portainer/portainer-ce:latest";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${fast}/portainer:/data:rw"
-          "${dockerSocket}:/var/run/docker.sock:ro"
-        ];
-        labels = {
-          "traefik.http.services.portainer.loadbalancer.server.port" = "9000";
-        };
-        extraOptions = [
-          "--network-alias=portainer"
-          "--network=infra_default"
-          "--security-opt=no-new-privileges:true"
-        ];
-      };
       qbittorrent = {
         image = "lscr.io/linuxserver/qbittorrent";
         environment = {
@@ -323,30 +305,6 @@ lib.mkIf config.${namespace}.docker.enable {
           "traefik.http.services.sonarr.loadbalancer.server.port" = "8989";
         };
       };
-      # Disable: I would prefer explicit updates.
-      # watchtower = {
-      #   image = "containrrr/watchtower";
-      #   environment = cfg.defaultEnvironment;
-      #   environmentFiles = [ secrets.watchtower_env.path ];
-      #   volumes = [
-      #     "/etc/localtime:/etc/localtime:ro"
-      #     "${dockerSocket}:/var/run/docker.sock:ro"
-      #   ];
-      #   cmd = [
-      #     "--schedule"
-      #     "0 5 3 * * *"
-      #     "--cleanup"
-      #     "--notifications-level"
-      #     "error"
-      #   ];
-      #   labels = {
-      #     "traefik.enable" = "false";
-      #   };
-      #   extraOptions = [
-      #     "--network-alias=watchtower"
-      #     "--network=infra_default"
-      #   ];
-      # };
     };
   };
 
