@@ -101,26 +101,7 @@ lib.mkIf config.${namespace}.docker.enable {
       #     "--network=infra_default"
       #   ];
       # };
-      homarr = {
-        image = "ghcr.io/ajnart/homarr:latest";
-        environment = {
-          DEFAULT_COLOR_SCHEME = "dark";
-        } // cfg.defaultEnvironment;
-        volumes = [
-          "${fast}/homarr/configs:/app/data/configs:rw"
-          "${fast}/homarr/data:/data:rw"
-          "${fast}/homarr/icons:/app/public/icons:rw"
-          "${dockerSocket}:/var/run/docker.sock:ro"
-        ];
-        labels = {
-          "traefik.http.routers.homarr.rule" = "Host(`home.nicdumz.fr`)";
-          "traefik.http.services.homarr.loadbalancer.server.port" = "7575";
-        };
-        extraOptions = [
-          "--network-alias=homarr"
-          "--network=infra_default"
-        ];
-      };
+
       # TODO: Include the following as /config/configuration.yaml
       /*
         # Loads default set of integrations. Do not remove.
