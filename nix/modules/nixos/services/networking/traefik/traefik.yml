@@ -27,3 +27,5 @@ certificatesResolvers:
       storage: "/var/lib/traefik/acme.json"
       dnsChallenge:
         provider: gandiv5
+        # Blocky otherwise would mask the actual Gandi record.
+        resolvers: 1.1.1.1:53, 8.8.8.8:53
