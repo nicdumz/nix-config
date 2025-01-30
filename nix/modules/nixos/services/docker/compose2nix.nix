@@ -121,6 +121,17 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network=infra_default"
         ];
       };
+      # TODO: Include the following as /config/configuration.yaml
+      /*
+        # Loads default set of integrations. Do not remove.
+        default_config:
+
+        api:
+        http:
+          use_x_forwarded_for: true
+          trusted_proxies:
+            - 172.20.0.0/24
+      */
       homeassistant = {
         image = "lscr.io/linuxserver/homeassistant:latest";
         environment = cfg.defaultEnvironment;
@@ -328,7 +339,7 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network=infra_default"
         ];
         labels = {
-          "traefik.http.services.sonarr.loadbalancer.server.port" = "7878";
+          "traefik.http.services.sonarr.loadbalancer.server.port" = "8989";
         };
       };
       # Disable: I would prefer explicit updates.
