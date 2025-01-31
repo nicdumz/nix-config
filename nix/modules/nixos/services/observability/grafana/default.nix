@@ -42,6 +42,8 @@ in
       };
     };
 
+    ${namespace}.motd.systemdServices = [ "grafana" ];
+
     sops.secrets.grafana-admin-password = {
       owner = "grafana";
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";

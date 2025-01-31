@@ -65,7 +65,10 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
-    ${namespace}.firewall.tcp = [ 443 ];
+    ${namespace} = {
+      firewall.tcp = [ 443 ];
+      motd.systemdServices = [ "traefik" ];
+    };
     users.groups.docker.members = [ "traefik" ];
 
     sops.secrets.gandi_token_env = {

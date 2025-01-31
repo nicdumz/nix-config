@@ -29,6 +29,7 @@ in
 
       systemd.services.vector.after = [ "loki.service" ];
       systemd.services.vector.requires = [ "loki.service" ];
+      ${namespace}.motd.systemdServices = [ "vector" ];
 
       services.vector = {
         enable = true;
