@@ -21,8 +21,8 @@ in
     hardware.nvidia = {
       # Modesetting is required, for wayland etc.
       modesetting.enable = true;
-      # TODO: if off, then screen-tearing appears when waking up from sleep. If it's on, random
-      # crashes happen when waking up. Not great.
+      # NOTE: if off, then screen-tearing appears when waking up from sleep. If it's on, random
+      # crashes happen when waking up. Nothing actually works :))
       powerManagement.enable = true; # Try that to avoid tearing?
       open = true; # required for RTX
     };

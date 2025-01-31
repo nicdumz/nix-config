@@ -23,7 +23,7 @@
 
     loader = {
       efi.canTouchEfiVariables = true;
-      # TODO: I would technically prefer refind (for prettiness), but no
+      # NOTE: I would technically prefer refind (for prettiness), but there is no
       # declarative way to expose generations for now, so use systemd-boot.
       grub.enable = false;
       systemd-boot = {
