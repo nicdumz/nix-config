@@ -1,4 +1,4 @@
-# Courtesy of truxnell.
+# Inspired by truxnell.
 {
   config,
   lib,
@@ -10,7 +10,7 @@ let
   motd = pkgs.writeShellScriptBin "motd" ''
     #! /usr/bin/env bash
     source /etc/os-release
-    service_status=$(systemctl list-units | grep -P "\s(podman|docker)-(?!network).*\.service" | sed 's/^[● ]\+//' | sort)
+    service_status=$(systemctl list-units ${services} | grep ".service" | sed -e 's/^[● ]\+//' -e 's/\(docker\|podman\)-//g' -e 's/.service//' | sort)
     RED="\e[31m"
     GREEN="\e[32m"
     BOLD="\e[1m"
@@ -49,7 +49,7 @@ let
       if [[ $line =~ ".scope" ]]; then
         continue
       fi
-      service_name=$(echo $line | awk '{print $1;}' | sed -e 's/\(docker\|podman\)-//g' -e 's/.service//')
+      service_name=$(echo $line | awk '{print $1;}')
       if echo "$line" | grep -q 'failed'; then
         printf "$RED• $ENDCOLOR%-50s $RED[failed]$ENDCOLOR\n" "$service_name"
       elif echo "$line" | grep -q 'running'; then
@@ -60,6 +60,7 @@ let
     done <<< "$service_status"
   '';
   cfg = config.${namespace}.motd;
+  services = lib.strings.concatMapStringsSep " " (s: s + ".service") cfg.systemdServices;
 in
 {
   options.${namespace}.motd = {
@@ -69,7 +70,11 @@ in
       type = lib.types.listOf lib.types.str;
       default = [ ];
     };
-
+    systemdServices = lib.mkOption {
+      description = "Systemd service units to watch for.";
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+    };
   };
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [

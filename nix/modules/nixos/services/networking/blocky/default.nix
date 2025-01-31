@@ -28,9 +28,13 @@ in
       serviceConfig.LogsDirectory = "blocky";
     };
 
-    nicdumz.firewall = {
-      udp = [ 53 ];
-      tcp = [ 53 ];
+    ${namespace} = {
+      motd.systemdServices = [ "blocky" ];
+
+      firewall = {
+        udp = [ 53 ];
+        tcp = [ 53 ];
+      };
     };
 
     services.blocky = {

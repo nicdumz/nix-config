@@ -23,17 +23,23 @@ lib.mkIf config.${namespace}.docker.enable {
     autoPrune.enable = true;
   };
 
-  ${namespace}.firewall = {
-    tcp = [
-      7359 # jellyfin
-      # TODO: this is incorrect and needs to be open on Wan
-      51413 # deluge
-      6881 # qbittorrent
-    ];
-    udp = [
-      51413
-      6881
-    ];
+  ${namespace} = {
+    firewall = {
+      tcp = [
+        7359 # jellyfin
+        # TODO: this is incorrect and needs to be open on Wan
+        51413 # deluge
+        6881 # qbittorrent
+      ];
+      udp = [
+        51413
+        6881
+      ];
+    };
+
+    motd.systemdServices = lib.attrsets.mapAttrsToList (
+      n: _v: "docker-" + n
+    ) config.virtualisation.oci-containers.containers;
   };
 
   virtualisation.oci-containers = {

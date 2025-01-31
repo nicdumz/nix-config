@@ -40,6 +40,12 @@ in
         };
       };
 
+    ${namespace}.motd.systemdServices = [
+      "prometheus"
+      "prometheus-blackbox-exporter"
+      "prometheus-node-exporter"
+    ];
+
     services.prometheus = {
       enable = true;
       retentionTime = "14d";
