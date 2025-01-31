@@ -48,6 +48,7 @@ in
           }
         ];
         upstreams.groups.default = [ "https://dns.quad9.net/dns-query" ];
+        upstreams.timeout = "10s";
         customDNS = {
           customTTL = "1m";
           mapping = {
