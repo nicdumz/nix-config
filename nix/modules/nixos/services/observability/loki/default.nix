@@ -33,6 +33,10 @@ in
         message = "Bind address must be set.";
       }
     ];
+    # Not persisting this directory would mean that we lose logs on reboots,
+    # which perhaps isn't the worst but for now I've decided to keep those
+    # across reboots.
+    ${namespace}.persistence.directories = [ config.services.loki.dataDir ];
 
     services.grafana.provision.datasources.settings.datasources = [
       {

@@ -40,11 +40,14 @@ in
         };
       };
 
-    ${namespace}.motd.systemdServices = [
-      "prometheus"
-      "prometheus-blackbox-exporter"
-      "prometheus-node-exporter"
-    ];
+    ${namespace} = {
+      persistence.directories = [ "/var/lib/${config.services.prometheus.stateDir}" ];
+      motd.systemdServices = [
+        "prometheus"
+        "prometheus-blackbox-exporter"
+        "prometheus-node-exporter"
+      ];
+    };
 
     services.prometheus = {
       enable = true;
