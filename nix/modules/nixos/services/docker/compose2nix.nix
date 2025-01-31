@@ -77,6 +77,9 @@ lib.mkIf config.${namespace}.docker.enable {
         extraOptions = [
           "--network-alias=deluge"
           "--network=infra_default"
+          # Aren't you RAM hungry sir.
+          "--memory=4g"
+          "--memory-reservation=3g"
         ];
       };
       # Not strictly necessary, but importantly no pretty way to pass the qb password through cleanly.
