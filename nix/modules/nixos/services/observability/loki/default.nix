@@ -47,6 +47,12 @@ in
       }
     ];
 
+    # 24.11 : fixed in unstable, remove in 25.05
+    systemd.services.loki = {
+      wants = [ "network-online.target" ];
+      after = [ "network-online.target" ];
+    };
+
     services.loki = {
       enable = true;
       configuration = {
@@ -54,6 +60,10 @@ in
 
         server.http_listen_port = cfg.port;
         server.http_listen_address = cfg.bindAddress;
+
+        # Tssk tssk you don't need to report "stats" centrally.
+        # See also https://github.com/NixOS/nixpkgs/issues/378277
+        analytics.reporting_enabled = false;
 
         common = {
           ring = {
