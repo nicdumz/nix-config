@@ -136,10 +136,21 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Enable ...";
+      description = "Enable Glance as a homepage";
     };
   };
   config = lib.mkIf cfg.enable {
+    ${namespace} = {
+      motd.systemdServices = [
+        "glance"
+      ];
+      traefik.webservices = {
+        glance = {
+          inherit (config.services.glance.settings.server) port;
+          host = "home"; # home.nicdumz.fr
+        };
+      };
+    };
     services.glance = {
       enable = true;
       settings = {

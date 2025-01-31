@@ -42,7 +42,16 @@ in
       };
     };
 
-    ${namespace}.motd.systemdServices = [ "grafana" ];
+    ${namespace} = {
+      motd.systemdServices = [
+        "grafana"
+      ];
+      traefik.webservices = {
+        grafana = {
+          port = config.services.grafana.settings.server.http_port;
+        };
+      };
+    };
 
     sops.secrets.grafana-admin-password = {
       owner = "grafana";
