@@ -31,6 +31,9 @@ in
       wants = [ "network-online.target" ];
     };
 
+    # Note: we could play with not persisting this to see what happens.
+    ${namespace}.persistence.directories = [ "/var/lib/tailscale" ];
+
     services.tailscale = {
       enable = true;
       openFirewall = true;

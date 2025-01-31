@@ -33,6 +33,7 @@ lib.mkIf config.${namespace}.docker.enable {
         6881
       ];
     };
+    persistence.directories = [ config.virtualisation.docker.daemon.settings.data-root ];
 
     motd.systemdServices = lib.attrsets.mapAttrsToList (
       n: _v: "docker-" + n
