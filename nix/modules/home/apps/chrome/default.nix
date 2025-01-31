@@ -19,9 +19,6 @@ in
   };
 
   config = lib.mkIf (cfg.enable && (osConfig.${namespace}.graphical or false)) {
-    # Due to Chrome in G's profile.
-    # TODO: move to unfree module.
-    nixpkgs.config.allowUnfree = true;
     home.packages = [
       pkgs.google-chrome
     ];

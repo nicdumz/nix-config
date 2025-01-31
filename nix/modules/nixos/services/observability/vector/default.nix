@@ -44,7 +44,6 @@ in
             systemlog = {
               type = "journald";
             };
-            # TODO: Docker?
           };
           transforms = {
             processed_journald = {

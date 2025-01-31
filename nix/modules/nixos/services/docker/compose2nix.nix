@@ -27,9 +27,6 @@ lib.mkIf config.${namespace}.docker.enable {
     firewall = {
       tcp = [
         7359 # jellyfin
-        # TODO: this is incorrect and needs to be open on Wan
-        51413 # deluge
-        6881 # qbittorrent
       ];
       udp = [
         51413
