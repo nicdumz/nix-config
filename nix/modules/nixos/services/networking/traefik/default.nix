@@ -16,44 +16,22 @@ let
   # provider / dependency on the socket entirely
   dynamicConf = lib.${namespace}.fromYAML pkgs ./dynamic.yml;
   additionalDynamicConfig = {
-    http =
-      let
-        # TODO: generate this from some property :-)
-        hosts = {
-          alertmanager = {
-            port = 9093;
-          };
-          blackbox = {
-            port = 9115;
-          };
-          glance = {
-            port = 8081;
-            host = "home";
-          };
-          grafana = {
-            port = 3000;
-          };
-          prometheus = {
-            port = 9090;
-          };
-        };
-      in
-      {
-        middlewares.allowlist.ipAllowList.sourceRange = [
-          "${exposeLanIP}/24"
-          # TODO: consider adding tailscale network?
-        ];
+    http = {
+      middlewares.allowlist.ipAllowList.sourceRange = [
+        "${exposeLanIP}/24"
+        # TODO: consider adding tailscale network?
+      ];
 
-        routers = lib.attrsets.mapAttrs (n: v: {
-          rule = "Host(`${v.host or "${n}.home"}.nicdumz.fr`)";
-          service = n;
-        }) hosts;
-        services = lib.attrsets.mapAttrs (_n: v: {
-          loadBalancer.servers = [
-            { url = "http://127.0.0.1:${toString v.port}"; }
-          ];
-        }) hosts;
-      };
+      routers = lib.attrsets.mapAttrs (n: v: {
+        rule = "Host(`${if v.host != "" then v.host else "${n}.home"}.nicdumz.fr`)";
+        service = n;
+      }) cfg.webservices;
+      services = lib.attrsets.mapAttrs (_n: v: {
+        loadBalancer.servers = [
+          { url = "http://127.0.0.1:${toString v.port}"; }
+        ];
+      }) cfg.webservices;
+    };
   };
 in
 {
@@ -63,7 +41,26 @@ in
       default = false;
       description = "Enable traefik reverse proxy.";
     };
+
+    webservices = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            host = lib.mkOption {
+              type = lib.types.strMatching "((.+\.)?home)?";
+              description = "Host to use. Unset/empty default means: use `<attrname>.home`.";
+              default = "";
+            };
+            port = lib.mkOption {
+              type = lib.types.port;
+            };
+          };
+        }
+      );
+      description = "web services to reverse proxy to. This is additional to auto-discovery via docker provider";
+    };
   };
+
   config = lib.mkIf cfg.enable {
     ${namespace} = {
       firewall.tcp = [ 443 ];

@@ -43,10 +43,23 @@ in
     ${namespace} = {
       persistence.directories = [ "/var/lib/${config.services.prometheus.stateDir}" ];
       motd.systemdServices = [
+        "alertmanager"
         "prometheus"
         "prometheus-blackbox-exporter"
         "prometheus-node-exporter"
       ];
+      traefik.webservices = {
+        alertmanager = {
+          inherit (config.services.prometheus.alertmanager) port;
+        };
+        blackbox = {
+          inherit (config.services.prometheus.exporters.blackbox) port;
+        };
+        prometheus = {
+          inherit (config.services.prometheus) port;
+        };
+        # Note: node-exporter doesn't need reverse-proxying
+      };
     };
 
     services.prometheus = {
