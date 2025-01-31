@@ -68,6 +68,11 @@ in
           path_prefix = "/var/lib/loki";
         };
 
+        # The following limits log history to 10d
+        compactor.retention_enabled = true;
+        compactor.delete_request_store = "filesystem";
+        limits_config.retention_period = "240h";
+
         schema_config.configs = [
           {
             from = "1970-01-01";
