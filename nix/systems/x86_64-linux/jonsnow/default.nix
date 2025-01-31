@@ -50,6 +50,7 @@ in
     docker.enable = true;
     traefik.enable = true;
     glance.enable = true;
+    grocy.enable = true;
     motd = {
       enable = true;
       networkInterfaces = [

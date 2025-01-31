@@ -41,6 +41,12 @@ let
           # https://github.com/simple-icons/simple-icons/issues/12673
           icon = "/assets/mealie.svg";
         }
+        {
+          name = "grocy";
+          # This was added in https://github.com/simple-icons/simple-icons/releases/tag/13.20.0 and
+          # is not yet in 24.11, check again for 25.05
+          icon = "https://cdnjs.cloudflare.com/ajax/libs/simple-icons/13.20.0/grocy.svg";
+        }
       ];
     };
     Home = {
@@ -101,7 +107,7 @@ let
       {
         title = (capitalize name) + title_suffix;
         url = "https://${name}.home.nicdumz.fr";
-        icon = if lib.strings.hasPrefix "/" icon then icon else "si:${icon}";
+        icon = if lib.strings.hasInfix "/" icon then icon else "si:${icon}";
       }
     ) v.sites;
   };
