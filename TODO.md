@@ -2,7 +2,8 @@
 
 - [x] create local VMs.
 - [x] test deployment via (remote) `colmena` to local VM.
-- [x] test nixos-anywhere install to a VM (reimage CUJ). https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md
+- [x] test nixos-anywhere install to a VM (reimage CUJ).
+  https://github.com/nix-community/nixos-anywhere/blob/main/docs/quickstart.md
 - [x] I want to have a nixos-anywhere workflow to create host ssh keys and provision new machines.
   Maybe https://github.com/nix-community/nixos-anywhere/blob/main/docs/howtos/secrets.md
 - Secret management ([sops-nix?](https://github.com/Mic92/sops-nix)):
@@ -36,7 +37,8 @@
   - ollama
   - role for a 'developer'
 - I'd like to configure Librewolf extensions, e.g. have canvas blocker always allow strava,linkedin.
-- I would love to have a "top" of vscode entry with nix things, how comes it seems to work on code on the laptop? :o
+- I would love to have a "top" of vscode entry with nix things, how comes it seems to work on code
+  on the laptop? :o
 - Play with other greeters e.g. `regreet`.
 
 ## Could be useful
@@ -46,7 +48,8 @@
 - https://nixery.dev/ for Docker?
 - https://taskfile.dev/ seems interesting for common tasks
 - https://github.com/mdlayher/homelab/blob/main/nixos/routnerr-3/networking.nix has a solid example
-  of a nixos router config, + tailscale etc. Found via https://francis.begyn.be/blog/nixos-home-router
+  of a nixos router config, + tailscale etc. Found via
+  https://francis.begyn.be/blog/nixos-home-router
 
 ## Postponed
 

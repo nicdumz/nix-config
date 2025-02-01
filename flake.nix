@@ -90,13 +90,16 @@
           programs = {
             deadnix.enable = true;
             fish_indent.enable = true;
-            mdformat.enable = true;
-            mdformat.package = channels.nixpkgs.mdformat.withPlugins (
-              p: with p; [
-                mdformat-gfm
-                mdformat-gfm-alerts
-              ]
-            );
+            mdformat = {
+              enable = true;
+              package = channels.nixpkgs.mdformat.withPlugins (
+                p: with p; [
+                  mdformat-gfm
+                  mdformat-gfm-alerts
+                ]
+              );
+              settings.wrap = 100;
+            };
             nixfmt.enable = true;
             statix.enable = true;
             yamlfmt.enable = true;
