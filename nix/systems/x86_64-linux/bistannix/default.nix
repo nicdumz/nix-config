@@ -47,9 +47,10 @@
       matchConfig.Name = "lan0";
       linkConfig.RequiredFamilyForOnline = "both";
       networkConfig = {
-        DHCP = "ipv4";
+        DHCP = "yes";
         IPv6AcceptRA = true;
       };
+      dhcpV6Config.WithoutRA = "solicit";
     };
 
     links."20-downed" = {
