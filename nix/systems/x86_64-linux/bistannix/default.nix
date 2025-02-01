@@ -28,6 +28,8 @@
   };
   snowfallorg.users.giulia.create = true;
 
+  networking.networkmanager.enable = false;
+  networking.useDHCP = false;
   # `networkctl` is nice, afterall.
   systemd.network = {
     enable = true;
@@ -50,7 +52,6 @@
         DHCP = "yes";
         IPv6AcceptRA = true;
       };
-      dhcpV6Config.WithoutRA = "solicit";
     };
 
     links."20-downed" = {
@@ -65,6 +66,13 @@
       linkConfig.ActivationPolicy = "always-down";
     };
 
-    wait-online.timeout = 20; # seconds
+    wait-online = {
+      timeout = 20; # seconds
+      extraArgs = [
+        "--ipv4"
+        "--ipv6"
+        "--interface=lan0"
+      ];
+    };
   };
 }

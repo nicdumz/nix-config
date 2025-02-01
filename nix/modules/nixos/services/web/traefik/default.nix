@@ -79,6 +79,7 @@ in
       enable = true;
       staticConfigOptions = lib.attrsets.recursiveUpdate staticConf {
         providers.docker.endpoint = "unix://${dockerSocket}";
+        # TODO: add Ipv6 ULA?
         entryPoints.websecure.address = "${exposeLanIP}:443";
       };
       dynamicConfigOptions = lib.attrsets.recursiveUpdate dynamicConf additionalDynamicConfig;
