@@ -207,6 +207,7 @@ in
           EmitDNS = true;
           EmitRouter = true;
           DNS = "_server_address";
+          # TODO: can i teach v4 server to only bind on the local address instead of 0.0.0.0?
         };
         dhcpServerStaticLeases =
           let

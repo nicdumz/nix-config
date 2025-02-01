@@ -17,6 +17,7 @@ in
 
     port = lib.mkOption {
       type = lib.types.port;
+      # TODO: fine but what is happening on port 9095, mm, what is this.
       default = 3100;
       readOnly = true;
     };
