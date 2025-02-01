@@ -91,7 +91,10 @@ in
                 # tracking
                 graph.instagram.com
                 # this is what M$ uses to phone home / check connectivity
-                dns.msftncsi.com''
+                dns.msftncsi.com
+                # OK -- can I configure analytics myself? Sigh.
+                analytics.google.com
+              ''
             ];
           };
           denylists = {
