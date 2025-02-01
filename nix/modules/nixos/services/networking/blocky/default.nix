@@ -65,7 +65,11 @@ in
           logRetentionDays = 7;
           target = "/var/log/blocky"; # created by systemd unit
         };
-        ports.http = 4000;
+        ports = {
+          # TODO: consider binding to an ULA instead of all ipv6
+          dns = "${config.${namespace}.myipv4}:53,127.0.0.1:53,[::1]:53";
+          http = "127.0.0.1:4000";
+        };
         prometheus.enable = true;
         blocking = {
           # NOTE: blocking was disabled for a while.

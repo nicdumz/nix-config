@@ -11,6 +11,9 @@ providers:
     # endpoint: # overriden in derivation
     defaultRule: "Host(`{{ .ContainerName }}.home.nicdumz.fr`)"
 entryPoints:
+  traefik:
+    # Overridden from :8080 which listens on all IPs.
+    address: "127.0.0.1:8080"
   websecure:
     address: "somehost:443" # also overriden in derivation
     http:
