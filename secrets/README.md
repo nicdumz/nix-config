@@ -1,5 +1,5 @@
-Encrypted secrets (using `sops` format via `sops-nix`) of keys that I want deployed
-on various machines.
+Encrypted secrets (using `sops` format via `sops-nix`) of keys that I want deployed on various
+machines.
 
 Run:
 

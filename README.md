@@ -23,14 +23,18 @@ recommend a read to understand their philosophy.
 
 ## Features
 
-- Secret management: integration with `sops`/`sops-nix` lets me check-in encrypted secrets. My FIDO2 keys allow for decryption/rewrapping for a new host's pubkey. After deployment to a new host, the host can decrypt its secrets, exposing them via `/run/...` to the correct application.
+- Secret management: integration with `sops`/`sops-nix` lets me check-in encrypted secrets. My FIDO2
+  keys allow for decryption/rewrapping for a new host's pubkey. After deployment to a new host, the
+  host can decrypt its secrets, exposing them via `/run/...` to the correct application.
   - TODO: actually not FIDO yet...
 - Multi-machine, multi-user by design.
 - `disko` handles partition layout for new installs.
 - Development on this repo:
   - I cannot commit to the `main` branch, instead I need to use feature branches, via Github PRs.
-    Each PR integrates with [Garnix](https://garnix.io/), building all the hosts, and validating configs.
-  - `direnv` integration: if you `cd` into the repo you should get a useable development environment.
+    Each PR integrates with [Garnix](https://garnix.io/), building all the hosts, and validating
+    configs.
+  - `direnv` integration: if you `cd` into the repo you should get a useable development
+    environment.
   - `nix fmt` in this repo just does the right thing.
   - A few git hooks enforcing best practices.
 
