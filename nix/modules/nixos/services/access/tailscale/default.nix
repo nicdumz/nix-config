@@ -38,9 +38,8 @@ in
       enable = true;
       openFirewall = true;
       useRoutingFeatures = if exitNode then "both" else "client";
-      extraUpFlags = [
-        "--ssh"
-      ] ++ lib.lists.optionals exitNode [ "--advertise-exit-node" ];
+      extraUpFlags = [ "--ssh" ];
+      extraSetFlags = lib.lists.optionals exitNode [ "--advertise-exit-node" ];
       # The key is a reusable key from https://login.tailscale.com/admin/settings/keys
       # It unfortunately expires after 90d ..
       authKeyFile = config.sops.secrets.tailscale_oauth_token.path;
