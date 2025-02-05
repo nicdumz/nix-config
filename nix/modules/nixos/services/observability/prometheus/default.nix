@@ -41,7 +41,13 @@ in
       };
 
     ${namespace} = {
-      persistence.directories = [ "/var/lib/${config.services.prometheus.stateDir}" ];
+      persistence.directories = [
+        {
+          directory = "/var/lib/${config.services.prometheus.stateDir}";
+          user = "prometheus";
+          group = "prometheus";
+        }
+      ];
       motd.systemdServices = [
         "alertmanager"
         "prometheus"
