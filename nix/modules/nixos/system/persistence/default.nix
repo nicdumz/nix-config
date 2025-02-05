@@ -7,6 +7,14 @@
 }:
 let
   cfg = config.${namespace}.persistence;
+
+  directoryWithPerms = lib.types.submodule {
+    options = {
+      directory = lib.mkOption { type = lib.types.str; };
+      user = lib.mkOption { type = lib.types.str; };
+      group = lib.mkOption { type = lib.types.str; };
+    };
+  };
 in
 {
   imports = [
@@ -17,7 +25,7 @@ in
     enable = lib.mkEnableOption "Enable persistence";
 
     directories = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
+      type = lib.types.listOf (lib.types.either lib.types.str directoryWithPerms);
       default = [ ];
       description = "Directories to persist.";
     };

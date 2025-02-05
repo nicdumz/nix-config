@@ -61,7 +61,13 @@ in
 
       ${namespace} = {
         motd.systemdServices = [ "grocy" ];
-        persistence.directories = [ config.services.grocy.dataDir ];
+        persistence.directories = [
+          {
+            directory = config.services.grocy.dataDir;
+            user = "grocy";
+            group = "nginx";
+          }
+        ];
         traefik.webservices = {
           grocy = {
             inherit (cfg) port;

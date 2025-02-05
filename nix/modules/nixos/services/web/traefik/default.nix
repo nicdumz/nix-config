@@ -65,7 +65,13 @@ in
     ${namespace} = {
       firewall.tcp = [ 443 ];
       motd.systemdServices = [ "traefik" ];
-      persistence.directories = [ config.services.traefik.dataDir ];
+      persistence.directories = [
+        {
+          directory = config.services.traefik.dataDir;
+          user = "traefik";
+          group = "traefik";
+        }
+      ];
     };
     users.groups.docker.members = [ "traefik" ];
 
