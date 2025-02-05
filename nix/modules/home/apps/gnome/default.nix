@@ -29,6 +29,9 @@
         font-name = rf;
         monospace-font-name = mf;
       };
+      "org/gnome/desktop/peripherals/touchpad" = {
+        natural-scroll = false;
+      };
       "org/gnome/desktop/wm/preferences" = {
         titlebar-font = rf;
       };
