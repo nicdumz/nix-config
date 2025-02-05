@@ -14,6 +14,10 @@
       mf = "${m.name} ${toString m.size}";
     in
     lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
+      # Fractional scaling.
+      "org/gnome/mutter" = {
+        experimental-features = [ "scale-monitor-framebuffer" ];
+      };
       "org/gnome/desktop/interface" = {
         scaling-factor = lib.home-manager.hm.gvariant.mkUint32 0;
         text-scaling-factor = lib.home-manager.hm.gvariant.mkDouble (
