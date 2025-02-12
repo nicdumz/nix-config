@@ -204,7 +204,7 @@ lib.mkIf config.${namespace}.docker.enable {
         };
       };
       mealie = {
-        image = "ghcr.io/mealie-recipes/mealie:v1.0.0-RC2";
+        image = "ghcr.io/mealie-recipes/mealie:v2.6.0";
         environment = {
           ALLOW_SIGNUP = "true";
           API_DOCS = "False";
