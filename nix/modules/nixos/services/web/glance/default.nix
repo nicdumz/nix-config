@@ -38,8 +38,9 @@ let
       sites = [
         {
           name = "mealie";
-          # https://github.com/simple-icons/simple-icons/issues/12673
-          icon = "/assets/mealie.svg";
+          # This was added in https://github.com/simple-icons/simple-icons/releases/tag/14.6.0 and
+          # is not yet in 24.11, check again for 25.05
+          icon = "https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/mealie.svg";
         }
         {
           name = "grocy";
