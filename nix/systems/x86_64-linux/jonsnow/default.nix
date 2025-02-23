@@ -153,15 +153,11 @@ in
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
         };
-        dhcpPrefixDelegationConfig = {
-          UplinkInterface = ":self";
-          SubnetId = 0;
-          Announce = "no";
-        };
         # Never accept ISP DNS or search domains for any DHCP/RA family.
         dhcpV4Config = {
           UseDNS = false;
           UseDomains = false;
+          UseHostname = false;
 
           # Don't release IPv4 address on restart/reboots to avoid churn.
           SendRelease = false;
