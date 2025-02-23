@@ -1,0 +1,59 @@
+site_name: Nicolas and NixOS
+site_url: https://nicdumz.fr/nix-config
+site_author: Nicolas Dumazet
+copyright: Copyright &copy; 2025 Nicolas Dumazet
+repo_name: nicdumz/nix-config
+repo_url: https://github.com/nicdumz/nix-config
+edit_uri: edit/main/docs/
+theme:
+  name: material
+  # Default themes, but support automatic dark theme.
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  features:
+    - header.autohide
+    - content.action.view # view in Github links
+    - content.code.annotate
+    - content.code.copy
+    - navigation.instant
+    - navigation.footer # link to next page
+    - navigation.tracking
+    - toc.follow
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    repo: simple/git
+    logo: simple/nixos
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      use_pygments: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+extra:
+  analytics:
+    provider: google
+    property: G-FT3XEHJ2DX

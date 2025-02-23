@@ -11,6 +11,14 @@
 let
   # Note: this refers to our checks/git-hooks module.
   check = inputs.self.checks.${system}.git-hooks;
+
+  myPython = pkgs.python312.withPackages (
+    p: with p; [
+      mkdocs-material
+      mkdocs-minify
+      pygments
+    ]
+  );
 in
 mkShell {
   # Note: this is cool. Would be a nativeBuildInput
@@ -35,9 +43,10 @@ mkShell {
     inputs.colmena.defaultPackage.${system}
     pkgs.age-plugin-fido2-hmac
   ];
-  buildInputs = check.enabledPackages;
+  buildInputs = check.enabledPackages ++ [ myPython ];
   shellHook = ''
     ${check.shellHook}
+    PYTHONPATH=${myPython}/${myPython.sitePackages}
     echo 🔨 default development shell activated.
 
   '';
