@@ -41,6 +41,7 @@ in
             catppuccin.catppuccin-vsc-icons
             golang.go
             mkhl.direnv
+            redhat.vscode-yaml
             stkb.rewrap
           ]
           ++ lib.optionals (osConfig.${namespace}.nvidia.enable or false) [
@@ -112,6 +113,21 @@ in
             "ui.semanticTokens" = true;
           };
           # END Catpuccin recs
+
+          # BEGIN recommended mkdocs settings, https://squidfunk.github.io/mkdocs-material/creating-your-site/#configuration
+          yaml.schemas = {
+            "https://squidfunk.github.io/mkdocs-material/schema.json" = "mkdocs.yml";
+          };
+          yaml.customTags = [
+            "!ENV scalar"
+            "!ENV sequence"
+            "!relative scalar"
+            "tag:yaml.org,2002:python/name:material.extensions.emoji.to_svg"
+            "tag:yaml.org,2002:python/name:material.extensions.emoji.twemoji"
+            "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format"
+            "tag:yaml.org,2002:python/object/apply:pymdownx.slugs.slugify mapping"
+          ];
+          # END mkdocs
         };
       };
     };
