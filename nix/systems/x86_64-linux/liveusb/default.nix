@@ -6,7 +6,7 @@
 }:
 {
   imports = [
-    "${modulesPath}/installer/cd-dvd/installation-cd-minimal-new-kernel.nix"
+    "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
   ];
   networking.wireless.enable = true;
   networking.wireless.userControlled.enable = true; # %wheel can setup
