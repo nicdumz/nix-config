@@ -73,6 +73,11 @@ let
         }
         "deluge"
         "qbittorrent"
+        {
+          name = "jackett";
+          check = "https://jackett.home.nicdumz.fr/UI/Dashboard";
+          icon = "/assets/jackett.png";
+        }
       ];
     };
     Observability = {
@@ -104,11 +109,13 @@ let
         name = if builtins.isString s then s else s.name;
         icon = if builtins.isString s then s else (s.icon or name);
         title_suffix = if s ? "suffix" then " ${s.suffix}" else "";
+        url = "https://${name}.home.nicdumz.fr";
       in
       {
+        inherit url;
         title = (capitalize name) + title_suffix;
-        url = "https://${name}.home.nicdumz.fr";
         icon = if lib.strings.hasInfix "/" icon then icon else "si:${icon}";
+        check-url = s.check or url;
       }
     ) v.sites;
   };
