@@ -160,7 +160,7 @@ lib.mkIf config.${namespace}.docker.enable {
           "--network=infra_default"
         ];
         labels = {
-          "traefik.http.services.jackett.loadbalancer.server.port" = "9127";
+          "traefik.http.services.jackett.loadbalancer.server.port" = "9117";
         };
       };
       jellyfin = {
