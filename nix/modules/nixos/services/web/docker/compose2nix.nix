@@ -134,20 +134,6 @@ lib.mkIf config.${namespace}.docker.enable {
           "traefik.http.services.homeassistant.loadbalancer.server.port" = "8123";
         };
       };
-      infra-redis-broker = {
-        image = "docker.io/library/redis:7";
-        volumes = [
-          "${fast}/redis:/data:rw"
-        ];
-        inherit (cfg) user;
-        extraOptions = [
-          "--network-alias=redis-broker"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.enable" = "false";
-        };
-      };
       jackett = {
         image = "ghcr.io/linuxserver/jackett";
         environment = cfg.defaultEnvironment;
@@ -224,32 +210,6 @@ lib.mkIf config.${namespace}.docker.enable {
           "traefik.http.services.mealie.loadbalancer.server.port" = "9000";
         };
       };
-      # TODO: reenable and fix. Currently it prevents pushes because it's toasted.
-      # paperless = {
-      #   image = "ghcr.io/paperless-ngx/paperless-ngx:latest";
-      #   environment = {
-      #     PAPERLESS_DATA_DIR = "/config";
-      #     PAPERLESS_MEDIA_ROOT = "/data/media";
-      #     PAPERLESS_REDIS = "redis://redis-broker:6379";
-      #     PAPERLESS_TIME_ZONE = config.time.timeZone;
-      #     PAPERLESS_URL = "https://paperless.home.nicdumz.fr";
-      #   } // cfg.defaultEnvironment;
-      #   volumes = [
-      #     "${fast}/config/paperless:/config:rw"
-      #     "${slow}/paperless:/data:rw"
-      #   ];
-      #   dependsOn = [
-      #     "infra-redis-broker"
-      #   ];
-      #   inherit (cfg) user;
-      #   extraOptions = [
-      #     "--network-alias=paperless"
-      #     "--network=infra_default"
-      #   ];
-      #   labels = {
-      #     "traefik.http.services.paperless.loadbalancer.server.port" = "8000";
-      #   };
-      # };
       qbittorrent = {
         image = "lscr.io/linuxserver/qbittorrent";
         environment = {
