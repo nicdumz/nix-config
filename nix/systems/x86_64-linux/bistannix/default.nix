@@ -49,8 +49,14 @@
       matchConfig.Name = "lan0";
       linkConfig.RequiredFamilyForOnline = "both";
       networkConfig = {
-        DHCP = "yes";
+        DHCP = "ipv4";
         IPv6AcceptRA = true;
+      };
+      dhcpV4Config = {
+        UseHostname = false;
+        UseNTP = false;
+        UseSIP = false;
+        ClientIdentifier = "mac";
       };
     };
 
@@ -69,8 +75,6 @@
     wait-online = {
       timeout = 20; # seconds
       extraArgs = [
-        "--ipv4"
-        "--ipv6"
         "--interface=lan0"
       ];
     };
