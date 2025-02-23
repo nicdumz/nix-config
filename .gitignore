@@ -3,3 +3,4 @@
 result
 qemu*.qcow2
 qemu*efi-vars.fd
+site/
