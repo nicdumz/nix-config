@@ -68,11 +68,7 @@ in
             group = "nginx";
           }
         ];
-        traefik.webservices = {
-          grocy = {
-            inherit (cfg) port;
-          };
-        };
+        traefik.webservices.grocy.port = cfg.port;
       };
     };
 }

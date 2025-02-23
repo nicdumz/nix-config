@@ -51,6 +51,7 @@ in
     traefik.enable = true;
     glance.enable = true;
     grocy.enable = true;
+    paperless.enable = true;
     motd = {
       enable = true;
       networkInterfaces = [
