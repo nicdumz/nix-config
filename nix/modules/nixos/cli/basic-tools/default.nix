@@ -5,6 +5,7 @@
   environment.systemPackages = with pkgs; [
     colordiff
     git
+    git-crypt
     htop
     killall
     kitty.terminfo
