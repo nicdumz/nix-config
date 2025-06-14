@@ -89,7 +89,9 @@
           ];
           programs = {
             deadnix.enable = true;
-            fish_indent.enable = true;
+            # disable until https://github.com/numtide/treefmt-nix/issues/368
+            # gets fixed.
+            # fish_indent.enable = true;
             mdformat = {
               enable = true;
               package = channels.nixpkgs.mdformat.withPlugins (
