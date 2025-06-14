@@ -36,18 +36,8 @@ let
     Food = {
       order = 2;
       sites = [
-        {
-          name = "mealie";
-          # This was added in https://github.com/simple-icons/simple-icons/releases/tag/14.6.0 and
-          # is not yet in 24.11, check again for 25.05
-          icon = "https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/mealie.svg";
-        }
-        {
-          name = "grocy";
-          # This was added in https://github.com/simple-icons/simple-icons/releases/tag/13.20.0 and
-          # is not yet in 24.11, check again for 25.05
-          icon = "https://cdnjs.cloudflare.com/ajax/libs/simple-icons/13.20.0/grocy.svg";
-        }
+        "grocy"
+        "mealie"
       ];
     };
     Home = {

@@ -1,5 +1,4 @@
 # https://awesome-prometheus-alerts.grep.to/rules.html
-
 groups:
   - name: Presence
     rules:

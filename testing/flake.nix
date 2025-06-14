@@ -2,7 +2,7 @@
 # nixos-rebuild build-vm-with-bootloader --flake ./testing#qemu && ./result/bin/run-qemu-vm-vm
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
   };
 
   outputs = inputs: {
@@ -43,7 +43,7 @@
             # NOTE: sharedDirectories = is useful if I need to share with the host.
           };
           nixpkgs.hostPlatform = "x86_64-linux";
-          system.stateVersion = "24.11";
+          system.stateVersion = "25.05";
           networking.hostName = "qemu-vm";
         }
       ];

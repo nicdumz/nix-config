@@ -2,7 +2,7 @@
 
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Has no releases so far, and not using nixpkgs.
@@ -15,7 +15,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager?ref=release-24.11";
+      url = "github:nix-community/home-manager?ref=release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -89,15 +89,14 @@
           ];
           programs = {
             deadnix.enable = true;
-            # disable until https://github.com/numtide/treefmt-nix/issues/368
-            # gets fixed.
-            # fish_indent.enable = true;
+            fish_indent.enable = true;
             mdformat = {
               enable = true;
               package = channels.nixpkgs.mdformat.withPlugins (
                 p: with p; [
                   mdformat-gfm
-                  mdformat-gfm-alerts
+                  # TODO: broken in 25.05
+                  # mdformat-gfm-alerts
                 ]
               );
               settings.wrap = 100;
