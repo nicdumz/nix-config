@@ -130,8 +130,9 @@
       qemu-vm = inputs.self.nixosConfigurations.qemu.config.system.build.vm;
 
       templates = {
-        homemodule.description = "Simple Snowfall lib Home module template";
-        nixosmodule.description = "Simple Snowfall lib NixOS module template";
+        # Sigh somehow templates were never added to git, https://snowfall.org/guides/lib/templates/
+        # homemodule.description = "Simple Snowfall lib Home module template";
+        # nixosmodule.description = "Simple Snowfall lib NixOS module template";
       };
     };
 }
