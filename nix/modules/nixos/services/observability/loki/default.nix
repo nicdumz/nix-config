@@ -54,12 +54,6 @@ in
       }
     ];
 
-    # 24.11 : fixed in unstable, remove in 25.05
-    systemd.services.loki = {
-      wants = [ "network-online.target" ];
-      after = [ "network-online.target" ];
-    };
-
     services.loki = {
       enable = true;
       configuration = {

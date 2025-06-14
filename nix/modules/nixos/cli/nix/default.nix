@@ -6,7 +6,7 @@
   ...
 }:
 {
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
   nixpkgs.hostPlatform = system;
 
   # https://nixos.wiki/wiki/Automatic_system_upgrades

@@ -5,8 +5,7 @@
     aggressiveResize = true;
     baseIndex = 1;
     clock24 = true;
-    # TODO: 25.05: does not exist in 24.11
-    # focusEvents = true;
+    focusEvents = true;
     historyLimit = 262144;
     keyMode = "vi";
     mouse = true;
