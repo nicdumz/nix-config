@@ -17,7 +17,7 @@ jobs:
       - name: Add cache
         uses: DeterminateSystems/magic-nix-cache-action@v11
       - name: Check flake
-        uses: DeterminateSystems/flake-checker-action@v10
+        uses: DeterminateSystems/flake-checker-action@v11
       - name: Update flake.lock
         uses: DeterminateSystems/update-flake-lock@v25
         with:
