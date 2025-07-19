@@ -24,6 +24,7 @@ in
       address = "127.0.0.1";
       passwordFile = config.sops.secrets.paperless-admin-password.path;
       settings.PAPERLESS_ADMIN_USER = "ndumazet";
+      settings.PAPERLESS_URL = "https://paperless.home.nicdumz.fr";
     };
 
     sops.secrets.paperless-admin-password = {
