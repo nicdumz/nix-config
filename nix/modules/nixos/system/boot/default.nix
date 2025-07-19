@@ -28,7 +28,7 @@
       grub.enable = false;
       systemd-boot = {
         enable = true;
-        configurationLimit = 10;
+        configurationLimit = 7;
         editor = false;
         # highlight last booted
         extraInstallCommands = ''
