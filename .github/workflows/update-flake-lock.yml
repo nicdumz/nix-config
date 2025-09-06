@@ -13,13 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v19
-      - name: Add cache
-        uses: DeterminateSystems/magic-nix-cache-action@v13
+        uses: cachix/install-nix-action@v31
+      - name: Flake update
+        run: nix flake update
+      - name: Format repo
+        run: nix fmt
       - name: Check flake
         uses: DeterminateSystems/flake-checker-action@v12
-      - name: Update flake.lock
-        uses: DeterminateSystems/update-flake-lock@v27
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
         with:
-          pr-labels: | # Labels to be set on the PR
-            merge-queue
+          commit-message: "flake.lock: automatic update"
+          title: "flake.lock: automatic update"
+          labels: merge-queue
+          branch: update_flake_lock_action
