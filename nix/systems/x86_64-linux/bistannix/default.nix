@@ -26,7 +26,6 @@
       factor = 1.25;
     };
   };
-  snowfallorg.users.giulia.create = true;
 
   networking.networkmanager.enable = false;
   networking.useDHCP = false;
