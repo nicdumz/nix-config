@@ -10,16 +10,10 @@
       create = lib.mkDefault true;
       admin = true;
     };
-    giulia = {
-      # Do not enable by default, opt-in.
-      create = lib.mkDefault false;
-      admin = false;
-    };
   };
 
   sops.secrets = {
     ndumazet_hashed_password.neededForUsers = true;
-    giulia_hashed_password.neededForUsers = true;
   };
 
   users = {
@@ -40,11 +34,6 @@
           uid = 1000; # Debian defaults.
           openssh.authorizedKeys.keys = ndumazetKeys;
           hashedPasswordFile = config.sops.secrets.ndumazet_hashed_password.path;
-        };
-
-        giulia = {
-          isNormalUser = true;
-          hashedPasswordFile = config.sops.secrets.giulia_hashed_password.path;
         };
 
         root = {

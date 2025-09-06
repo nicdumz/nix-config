@@ -24,5 +24,4 @@
       factor = 0.8;
     };
   };
-  snowfallorg.users.giulia.create = true;
 }
