@@ -155,7 +155,8 @@ lib.mkIf config.${namespace}.docker.enable {
           DOCKER_MODS = "linuxserver/mods:jellyfin-opencl-intel";
           JELLYFIN_PublishedServerUrl = "http://jellyfin.lethargy/";
           VERSION = "latest";
-        } // cfg.defaultEnvironment;
+        }
+        // cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${slow}:/data:ro"
@@ -197,7 +198,8 @@ lib.mkIf config.${namespace}.docker.enable {
           BASE_URL = "https://mealie.home.nicdumz.fr";
           MAX_WORKERS = "1";
           WEB_CONCURRENCY = "1";
-        } // cfg.defaultEnvironment;
+        }
+        // cfg.defaultEnvironment;
         volumes = [
           "${fast}/mealie:/app/data:rw"
         ];
@@ -214,7 +216,8 @@ lib.mkIf config.${namespace}.docker.enable {
         image = "lscr.io/linuxserver/qbittorrent";
         environment = {
           WEBUI_PORT = "9092";
-        } // cfg.defaultEnvironment;
+        }
+        // cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
           "${fast}/config/qbittorrent:/config:rw"

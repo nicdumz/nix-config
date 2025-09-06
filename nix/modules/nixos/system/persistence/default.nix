@@ -49,7 +49,8 @@ in
         "/var/log"
         # NM networks.
         "/etc/NetworkManager/system-connections"
-      ] ++ cfg.directories;
+      ]
+      ++ cfg.directories;
       files = [
         "/etc/machine-id"
         "/etc/nix/id_rsa"
