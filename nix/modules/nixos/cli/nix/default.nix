@@ -1,23 +1,51 @@
 {
   lib,
+  config,
   inputs,
   pkgs,
   system,
   ...
 }:
 {
-  system.stateVersion = "25.05";
   nixpkgs.hostPlatform = system;
 
-  # https://nixos.wiki/wiki/Automatic_system_upgrades
-  system.autoUpgrade = {
-    enable = true;
-    flake = "github:nicdumz/nix-config";
-    flags = [
-      "-L" # print build logs
-    ];
-    dates = "02:00";
-    randomizedDelaySec = "45min";
+  system = {
+    stateVersion = "25.05";
+
+    # Add git flake version to nixos label -- shown in boot entries.
+    nixos.label =
+      let
+        s = inputs.self.sourceInfo;
+        inherit (builtins) substring;
+        version =
+          if s ? lastModifiedDate && (s ? dirtyShortRev || s ? shortRev) then
+            "flake.${substring 0 8 s.lastModifiedDate}.${s.dirtyShortRev or s.shortRev}"
+          else
+            "unknown";
+      in
+      lib.concatStringsSep ":" (
+        (lib.sort (x: y: x < y) config.system.nixos.tags)
+        ++ [
+          # looks like "25.05.20250904.fe83bbd"
+          config.system.nixos.version
+          # either:
+          #  - "flake.20250904.deadbeef"
+          #  - "flake.20250904.deadbeef-dirty"
+          #  - "unknown"
+          version
+        ]
+      );
+
+    # https://nixos.wiki/wiki/Automatic_system_upgrades
+    autoUpgrade = {
+      enable = true;
+      flake = "github:nicdumz/nix-config";
+      flags = [
+        "-L" # print build logs
+      ];
+      dates = "02:00";
+      randomizedDelaySec = "45min";
+    };
   };
 
   ## Below is to align shell/system to flake's nixpkgs
