@@ -13,7 +13,6 @@ let
   check = inputs.self.checks.${system}.git-hooks;
 in
 mkShell {
-  inherit (check) shellHook;
   # Note: this is cool. Would be a nativeBuildInput
   # pkgs.writeTextFile
   # {
@@ -37,4 +36,9 @@ mkShell {
     pkgs.age-plugin-fido2-hmac
   ];
   buildInputs = check.enabledPackages;
+  shellHook = ''
+    ${check.shellHook}
+    echo 🔨 default development shell activated.
+
+  '';
 }
