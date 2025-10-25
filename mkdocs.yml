@@ -69,6 +69,7 @@ nav:
   - The journey: index.md
   - Model: model.md
   - Requirements: requirements.md
+  - Solution: solution.md
 extra:
   analytics:
     provider: google
