@@ -65,6 +65,10 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - toc:
       permalink: true
+nav:
+  - The journey: index.md
+  - Model: model.md
+  - Requirements: requirements.md
 extra:
   analytics:
     provider: google
