@@ -125,7 +125,7 @@ Versioned configuration, leading to **reproducible** system-wide configurations.
 
 Taken to an extreme: I can take my Laptop, completely wipe its state or replace its disks with new
 disks, deploy again the OS configuration to this fresh hardware, and I will obtain an identical
-system. I don't have to worry about the hard drive failing of the hardware melting, because my
+system. I don't have to worry about the hard drive failing or about the hardware melting, because my
 systems are configured in such a way that I can _assume_ these things will fail or will need
 re-imaging.
 
