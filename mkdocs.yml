@@ -34,7 +34,7 @@ theme:
         name: Switch to system preference
   features:
     - header.autohide
-    - content.action.view # view in Github links
+    - content.action.edit # edit in Github links
     - content.code.annotate
     - content.code.copy
     - navigation.instant
