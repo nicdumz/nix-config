@@ -21,5 +21,5 @@ A brief list of requirements so we understand what the solution will look like:
 
 Non-functional:
 
-- It's easy for me to adhere to my philosophy and [modeling](model.md) principles, separating
-  data/state into one of my 6 pre-defined categories.
+- It SHOULD be easy for me to adhere to my philosophy and [modeling](model.md) principles,
+  separating data/state into one of my 6 pre-defined categories.

@@ -65,6 +65,9 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - toc:
       permalink: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.critic
 nav:
   - The journey: index.md
   - Model: model.md
