@@ -38,7 +38,7 @@ Examples:
   modeled as Cache: one "only" has to recompile them or to re-execute the transformation to rebuild
   state.
 
-## Data
+## (Original) Data {#data}
 
 :memo: **Back it up** or you'll lose it.
 
@@ -46,7 +46,14 @@ Your family photos? The output of a very expensive to train ML model? Anytime yo
 data, you are responsible for adequately organizing backups, from the source of the data, to
 reasonable redundant replicas, depending on the importance of this data.
 
-If you don't back this up or don't test your recovery story? You lose this data.
+If you don't back this up or don't test your recovery story? You lose this information.
+
+In modern systems with many "Cloud Sync" options, you have surprisingly little original data with your
+systems as primary hosts. Aside: it might be worth questioning if you _really_ need or want to be the
+main stakeholder for this data or if a service may do this better for you.
+
+Note: in the case of Cloud backed-up data, I consider the local copies of this data "cache" and not
+"data".
 
 ## Provisioning state
 
