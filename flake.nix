@@ -86,6 +86,8 @@
             ".editorconfig"
             ".envrc"
             "LICENSE"
+            # TODO: fix me
+            "docs/*.md"
           ];
           programs = {
             deadnix.enable = true;
@@ -94,9 +96,7 @@
               enable = true;
               package = channels.nixpkgs.mdformat.withPlugins (
                 p: with p; [
-                  mdformat-gfm
-                  # TODO: broken in 25.05
-                  # mdformat-gfm-alerts
+                  mdformat-mkdocs
                 ]
               );
               settings.wrap = 100;
