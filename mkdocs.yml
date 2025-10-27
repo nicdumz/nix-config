@@ -73,6 +73,8 @@ nav:
   - Model: model.md
   - Requirements: requirements.md
   - Solution: solution.md
+  - Details: details.md
+  - Conclusion: conclusion.md
 extra:
   analytics:
     provider: google
