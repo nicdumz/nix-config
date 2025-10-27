@@ -1,8 +1,9 @@
 # Welcome
 
-Hi. I've had a little bit too much fun in the past few months: I've been upgrading the various
-machines that I own to a new configuration model, and I'm quite excited about where I'm landing.
-I've created this mini-site to share why I'm so excited, and what I've found along the way.
+Over the 2024 end of year break, I completed a project to migrate my personal computing environments
+to a modern, declarative configuration model. I'm quite excited about where I've landed. I've
+created this mini-site to document the 'why' and 'how,' focusing on the gains in reliability,
+security, and velocity.
 
 The short version is that I've moved to a _declarative_
 [Infrastructure as Code](https://en.wikipedia.org/wiki/Infrastructure_as_code) setup for all of my
@@ -33,11 +34,11 @@ colleagues dreading and pushing back their workstation or VM upgrades, or having
 work until they fix a particular aspect of their developer workflow...
 
 This was in my opinion a small long-term investment which very quickly paid off. I spent perhaps a
-dozen of days on this topic (cumulated), and this started yielding returns long ago.
+dozen days on this topic (cumulated), and this started yielding returns long ago.
 
 This is often referred to a "dotfiles" management, with https://dotfiles.github.io/ giving you a
-great primer. By now this concept is popular enough and I'd assume that perhaps the majority of
-professional software developers have comparable setups.
+great primer. By now this concept is popular enough and I'd assume that the majority of professional
+software developers have comparable setups.
 
 ### Wishing to extend this to the OS layers
 
@@ -49,7 +50,7 @@ legacy) [nicdumz/dotfiles](https://github.com/nicdumz/dotfiles) setup, I did ext
 basic functionality, and added a couple of scripts to install Debian packages automatically, to,
 again, be as close as possible to a "single script to setup my environment" workflow.
 
-This however quickly gets complicated if you own machines with diverse setups (Mac laptop vs Debian
+However, this quickly gets complicated if you own machines with diverse setups (Mac laptop vs Debian
 workstation?), and in general doesn't take care of operating system level settings.
 
 Linux sysadmins sometimes use or tout [etckeeper](https://wiki.archlinux.org/title/Etckeeper) to
@@ -76,7 +77,9 @@ Docker Compose, Ansible, and similar tools would get close to what I seemed to n
 experience with Docker Compose to maintain my media server, and it was really useful to setup N
 images and configure them in a versioned repository.
 
-This still left open the base OS level configuration up to the system administrator.
+While these tools manage services effectively, they don't typically manage the entire operating
+system with the same granular, reproducible control. This still left open the base OS level
+configuration up to the system administrator, meaning "configuration drift" was still a risk.
 
 ### My every business day: IaC at work
 

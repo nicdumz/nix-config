@@ -1,12 +1,15 @@
 # Model
 
-I personally find that my systems configuration have been difficult to model and maintain in part
-because we don't spend time separating and defining what belongs where. So let's try to do this a
-bit formally for once.
+I personally find that my personal systems configurations have been difficult to model and maintain
+in part because I didn't spend time separating and defining what belongs where, or being as rigorous
+as what I would have to be in a professional / production environment.
 
-I claim that on a system, you should only have 6 categories of state: Configuration, Cache, Data,
-Provisioning state, Telemetry, and Ephemeral. You should always be aware of what category you're
-working with, and act accordingly -- it'll make your life a lot easier in the long run.
+For once, I will formalize a model for system state. I claim that effective system maintenance
+requires strictly separating concerns into 6 categories:
+
+Configuration, Cache, Data, Provisioning state, Telemetry, and Ephemeral. You should always be aware
+of what category you're working with, and act accordingly -- it'll make your life a lot easier in
+the long run.
 
 Let's get into it.
 
@@ -75,7 +78,7 @@ should collect this data, aggregate it, and process it outside of the originatin
 [Vector](https://vector.dev/) or whichever Observability suite you like). In an idealized system I
 should even use this to build monitoring and alerting.
 
-On the other hand, losing this state "only" removes understanding on my system. Depending on
+On the other hand, losing this state "only" removes understanding of my system. Depending on
 tradeoffs, I sometimes keep this data local to machines, do not necessarily back it up, and
 sometimes this data does not even survive a reboot.
 
