@@ -48,7 +48,7 @@ lib.mkIf config.${namespace}.docker.enable {
     # Containers
     containers = {
       bazarr = {
-        image = "lscr.io/linuxserver/bazarr";
+        image = "lscr.io/linuxserver/bazarr:latest";
         environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
@@ -64,7 +64,7 @@ lib.mkIf config.${namespace}.docker.enable {
         };
       };
       deluge = {
-        image = "lscr.io/linuxserver/deluge";
+        image = "lscr.io/linuxserver/deluge:latest";
         environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
@@ -135,7 +135,7 @@ lib.mkIf config.${namespace}.docker.enable {
         };
       };
       jackett = {
-        image = "ghcr.io/linuxserver/jackett";
+        image = "lscr.io/linuxserver/jackett:latest";
         environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
@@ -150,7 +150,7 @@ lib.mkIf config.${namespace}.docker.enable {
         };
       };
       jellyfin = {
-        image = "ghcr.io/linuxserver/jellyfin";
+        image = "lscr.io/linuxserver/jellyfin:latest";
         environment = {
           DOCKER_MODS = "linuxserver/mods:jellyfin-opencl-intel";
           JELLYFIN_PublishedServerUrl = "http://jellyfin.lethargy/";
@@ -191,7 +191,7 @@ lib.mkIf config.${namespace}.docker.enable {
         };
       };
       mealie = {
-        image = "ghcr.io/mealie-recipes/mealie:v2.6.0";
+        image = "ghcr.io/mealie-recipes/mealie:v3.4.0";
         environment = {
           ALLOW_SIGNUP = "true";
           API_DOCS = "False";
@@ -213,7 +213,7 @@ lib.mkIf config.${namespace}.docker.enable {
         };
       };
       qbittorrent = {
-        image = "lscr.io/linuxserver/qbittorrent";
+        image = "lscr.io/linuxserver/qbittorrent:latest";
         environment = {
           WEBUI_PORT = "9092";
         }
@@ -236,7 +236,7 @@ lib.mkIf config.${namespace}.docker.enable {
         ];
       };
       radarr = {
-        image = "ghcr.io/linuxserver/radarr";
+        image = "lscr.io/linuxserver/radarr:latest";
         environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
@@ -256,7 +256,7 @@ lib.mkIf config.${namespace}.docker.enable {
         };
       };
       sonarr = {
-        image = "ghcr.io/linuxserver/sonarr";
+        image = "lscr.io/linuxserver/sonarr:latest";
         environment = cfg.defaultEnvironment;
         volumes = [
           "/etc/localtime:/etc/localtime:ro"
