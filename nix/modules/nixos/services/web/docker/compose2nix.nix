@@ -275,6 +275,19 @@ lib.mkIf config.${namespace}.docker.enable {
           "traefik.http.services.sonarr.loadbalancer.server.port" = "8989";
         };
       };
+      watchtower = {
+        image = "containrrr/watchtower";
+        environment = cfg.defaultEnvironment;
+        extraOptions = [
+          "--network-alias=watchtower"
+          "--network=infra_default"
+        ];
+        volumes = [
+          "${builtins.head config.virtualisation.docker.listenOptions}:/var/run/docker.sock"
+        ];
+        # Update every 8 hours.
+        cmd = [ "--interval=21600" ];
+      };
     };
   };
 
