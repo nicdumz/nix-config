@@ -3,10 +3,31 @@
   inputs,
   lib,
   namespace,
+  pkgs,
   ...
 }:
 let
   cfg = config.${namespace}.prometheus;
+  yamlFormat = pkgs.formats.yaml { };
+
+  blackBoxSettings = {
+    modules = {
+      http_2xx_v4 = {
+        prober = "http";
+        http = {
+          preferred_ip_protocol = "ip4";
+          ip_protocol_fallback = false;
+        };
+      };
+      http_2xx_v6 = {
+        prober = "http";
+        http = {
+          preferred_ip_protocol = "ip6";
+          ip_protocol_fallback = false;
+        };
+      };
+    };
+  };
 in
 {
   options.${namespace}.prometheus = {
@@ -163,7 +184,7 @@ in
           listenAddress = "127.0.0.1";
           # port = 9115; # default
           enable = true;
-          configFile = ./blackbox.yml;
+          configFile = yamlFormat.generate "blackbox.yml" blackBoxSettings;
         };
       };
 
