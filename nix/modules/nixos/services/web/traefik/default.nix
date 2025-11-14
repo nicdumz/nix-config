@@ -11,10 +11,10 @@ let
 
   exposeLanIP = config.${namespace}.myipv4;
   dockerSocket = builtins.head config.virtualisation.docker.listenOptions;
-  staticConf = lib.${namespace}.fromYAML pkgs ./traefik.yml;
+  staticConf = lib.${namespace}.readYAML pkgs ./traefik.yml;
   # TODO: the entirety of the config could be in nix, allowing me to remove the docker
   # provider / dependency on the socket entirely
-  dynamicConf = lib.${namespace}.fromYAML pkgs ./dynamic.yml;
+  dynamicConf = lib.${namespace}.readYAML pkgs ./dynamic.yml;
   additionalDynamicConfig = {
     http = {
       middlewares.allowlist.ipAllowList.sourceRange = [

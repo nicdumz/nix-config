@@ -1,15 +1,27 @@
-{
+let
   fromYAML =
-    pkgs: f:
-    let
-      jsonFile =
-        pkgs.runCommand "in.json"
+    pkgs: yaml:
+    builtins.fromJSON (
+      builtins.readFile (
+        pkgs.runCommand "from-yaml"
           {
-            nativeBuildInputs = [ pkgs.jc ];
+            inherit yaml;
+            allowSubstitutes = false;
+            preferLocalBuild = true;
           }
           ''
-            jc --yaml < "${f}" > "$out"
-          '';
-    in
-    builtins.elemAt (builtins.fromJSON (builtins.readFile jsonFile)) 0;
+            ${pkgs.remarshal}/bin/remarshal  \
+              -if yaml \
+              -i <(echo "$yaml") \
+              -of json \
+              -o $out
+          ''
+      )
+    );
+
+  readYAML = pkgs: path: fromYAML pkgs (builtins.readFile path);
+
+in
+{
+  inherit fromYAML readYAML;
 }
