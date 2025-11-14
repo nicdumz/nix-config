@@ -295,7 +295,11 @@ in
         }
       ];
 
-      ruleFiles = [ ./alert_rules.yml ];
+      ruleFiles =
+        let
+          config = import ./alert-rules.nix { inherit lib; };
+        in
+        [ (pkgs.writeText "alert-rules.yml" (builtins.toJSON config)) ];
 
       remoteWrite = [
         {
