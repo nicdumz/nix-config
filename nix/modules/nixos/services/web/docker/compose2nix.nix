@@ -15,6 +15,7 @@ let
   exposeLanIP = config.${namespace}.myipv4;
   bridgeSubnet = "172.20.0.0/16";
   bridgeGateway = "172.20.0.1";
+  calibreIngest = "${slow}/downloads/calibre";
 in
 lib.mkIf config.${namespace}.docker.enable {
   # Runtime
@@ -61,6 +62,45 @@ lib.mkIf config.${namespace}.docker.enable {
         ];
         labels = {
           "traefik.http.services.bazarr.loadbalancer.server.port" = "6767";
+        };
+      };
+      # Technically this is calibre-web-automated.
+      calibreweb = {
+        image = "crocodilestick/calibre-web-automated:latest";
+        environment = cfg.defaultEnvironment;
+        # may need as well:
+        # HARDCOVER_TOKEN=your_hardcover_api_key_here
+        volumes = [
+          "/etc/localtime:/etc/localtime:ro"
+          "${fast}/config/calibre-web:/config:rw"
+          "${calibreIngest}:/cwa-book-ingest"
+          "${slow}/books:/calibre-library"
+        ];
+        extraOptions = [
+          "--network-alias=calibreweb"
+          "--network=infra_default"
+        ];
+        labels = {
+          "traefik.http.services.calibreweb.loadbalancer.server.port" = "8083";
+        };
+      };
+      calibredownloader = {
+        image = "ghcr.io/calibrain/calibre-web-automated-book-downloader:latest";
+        environment = {
+          USE_BOOK_TITLE = "true";
+          APP_ENV = "prod";
+        }
+        // cfg.defaultEnvironment;
+        volumes = [
+          "/etc/localtime:/etc/localtime:ro"
+          "${calibreIngest}:/cwa-book-ingest"
+        ];
+        extraOptions = [
+          "--network-alias=calibredownloader"
+          "--network=infra_default"
+        ];
+        labels = {
+          "traefik.http.services.calibredownloader.loadbalancer.server.port" = "8084";
         };
       };
       deluge = {
