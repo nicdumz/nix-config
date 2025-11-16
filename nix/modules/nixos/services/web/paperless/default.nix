@@ -28,7 +28,7 @@ in
     };
 
     sops.secrets.paperless-admin-password = {
-      owner = config.users.users.grafana.name;
+      owner = config.users.users.paperless.name;
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
     };
 
@@ -38,8 +38,8 @@ in
         {
           # TODO: db.sqlite3 in this directory is the file needing backup.
           directory = config.services.paperless.dataDir;
-          user = config.users.users.grafana.name;
-          inherit (config.users.users.grafana) group;
+          user = config.users.users.paperless.name;
+          inherit (config.users.users.paperless) group;
         }
       ];
       traefik.webservices.paperless.port = config.services.paperless.port;
