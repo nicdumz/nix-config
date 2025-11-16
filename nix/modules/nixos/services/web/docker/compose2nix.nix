@@ -12,7 +12,6 @@ let
   cfg = config.${namespace}.containers;
   inherit (cfg.dataroot) fast;
   inherit (cfg.dataroot) slow;
-  exposeLanIP = config.${namespace}.myipv4;
   bridgeSubnet = "172.20.0.0/16";
   bridgeGateway = "172.20.0.1";
   calibreIngest = "${slow}/downloads/calibre";
@@ -25,15 +24,6 @@ lib.mkIf config.${namespace}.docker.enable {
   };
 
   ${namespace} = {
-    firewall = {
-      tcp = [
-        7359 # jellyfin
-      ];
-      udp = [
-        51413
-        6881
-      ];
-    };
     persistence.directories = [ config.virtualisation.docker.daemon.settings.data-root ];
 
     motd.systemdServices = lib.attrsets.mapAttrsToList (
@@ -48,22 +38,6 @@ lib.mkIf config.${namespace}.docker.enable {
 
     # Containers
     containers = {
-      bazarr = {
-        image = "lscr.io/linuxserver/bazarr:latest";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${slow}:/data:rw"
-          "${fast}/config/bazarr:/config:rw"
-        ];
-        extraOptions = [
-          "--network-alias=bazarr"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.bazarr.loadbalancer.server.port" = "6767";
-        };
-      };
       # Technically this is calibre-web-automated.
       calibreweb = {
         image = "crocodilestick/calibre-web-automated:latest";
@@ -103,51 +77,6 @@ lib.mkIf config.${namespace}.docker.enable {
           "traefik.http.services.calibredownloader.loadbalancer.server.port" = "8084";
         };
       };
-      deluge = {
-        image = "lscr.io/linuxserver/deluge:latest";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${fast}/config/deluge:/config:rw"
-          "${slow}/downloads:/downloads:rw"
-        ];
-        ports = [
-          "51413:6881/tcp"
-          "51413:6881/udp"
-        ];
-        labels = {
-          "traefik.http.services.deluge.loadbalancer.server.port" = "8112";
-        };
-        extraOptions = [
-          "--network-alias=deluge"
-          "--network=infra_default"
-          # Aren't you RAM hungry sir.
-          "--memory=4g"
-          "--memory-reservation=3g"
-        ];
-      };
-      # Not strictly necessary, but importantly no pretty way to pass the qb password through cleanly.
-      # flood = {
-      #   image = "jesec/flood";
-      #   environment = cfg.defaultEnvironment;
-      #   volumes = [
-      #     "/etc/localtime:/etc/localtime:ro"
-      #   ];
-      #   cmd = [
-      #     "--auth=none"
-      #     "--qburl=http://qbittorrent:9092"
-      #     "--qbuser=admin"
-      #     "--qbpass=qbpass"
-      #   ];
-      #   dependsOn = [
-      #     "qbittorrent"
-      #   ];
-      #   extraOptions = [
-      #     "--network-alias=flood"
-      #     "--network=infra_default"
-      #   ];
-      # };
-
       # TODO: Include the following as /config/configuration.yaml
       /*
         # Loads default set of integrations. Do not remove.
@@ -174,62 +103,6 @@ lib.mkIf config.${namespace}.docker.enable {
           "traefik.http.services.homeassistant.loadbalancer.server.port" = "8123";
         };
       };
-      jackett = {
-        image = "lscr.io/linuxserver/jackett:latest";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${fast}/config/jackett:/config:rw"
-        ];
-        extraOptions = [
-          "--network-alias=jackett"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.jackett.loadbalancer.server.port" = "9117";
-        };
-      };
-      jellyfin = {
-        image = "lscr.io/linuxserver/jellyfin:latest";
-        environment = {
-          DOCKER_MODS = "linuxserver/mods:jellyfin-opencl-intel";
-          JELLYFIN_PublishedServerUrl = "http://jellyfin.lethargy/";
-          VERSION = "latest";
-        }
-        // cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${slow}:/data:ro"
-          "${fast}/config/jellyfin:/config:rw"
-          "${slow}/transcodes:/config/data/transcodes:rw"
-        ];
-        ports = [
-          "${exposeLanIP}:7359:7359/udp" # service auto-discovery on LAN
-        ];
-        labels = {
-          "traefik.http.services.jellyfin.loadbalancer.server.port" = "8096";
-        };
-        extraOptions = [
-          "--device=/dev/dri/renderD128:/dev/dri/renderD128:rwm"
-          "--network-alias=jellyfin"
-          "--network=infra_default"
-        ];
-      };
-      jellyseerr = {
-        image = "fallenbagel/jellyseerr:latest";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "${fast}/config/jellyseerr:/app/config:rw"
-        ];
-        inherit (cfg) user;
-        extraOptions = [
-          "--network-alias=jellyseerr"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.jellyseerr.loadbalancer.server.port" = "5055";
-        };
-      };
       mealie = {
         # Note: do not upgrade further, we're looking for compatibility with
         # https://search.nixos.org/packages?channel=unstable&show=mealie&query=mealie
@@ -253,69 +126,6 @@ lib.mkIf config.${namespace}.docker.enable {
         ];
         labels = {
           "traefik.http.services.mealie.loadbalancer.server.port" = "9000";
-        };
-      };
-      qbittorrent = {
-        image = "lscr.io/linuxserver/qbittorrent:latest";
-        environment = {
-          WEBUI_PORT = "9092";
-        }
-        // cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${fast}/config/qbittorrent:/config:rw"
-          "${slow}/downloads:/downloads:rw"
-        ];
-        ports = [
-          "6881:6881/tcp"
-          "6881:6881/udp"
-        ];
-        labels = {
-          "traefik.http.services.qbittorrent.loadbalancer.server.port" = "9092";
-        };
-        extraOptions = [
-          "--network-alias=qbittorrent"
-          "--network=infra_default"
-        ];
-      };
-      radarr = {
-        image = "lscr.io/linuxserver/radarr:latest";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${slow}:/data:rw"
-          "${fast}/config/radarr:/config:rw"
-        ];
-        dependsOn = [
-          "jackett"
-          "qbittorrent"
-        ];
-        extraOptions = [
-          "--network-alias=radarr"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.radarr.loadbalancer.server.port" = "7878";
-        };
-      };
-      sonarr = {
-        image = "lscr.io/linuxserver/sonarr:latest";
-        environment = cfg.defaultEnvironment;
-        volumes = [
-          "/etc/localtime:/etc/localtime:ro"
-          "${slow}:/data:rw"
-          "${fast}/config/sonarr:/config:rw"
-        ];
-        dependsOn = [
-          "jackett"
-          "qbittorrent"
-        ];
-        extraOptions = [
-          "--network-alias=sonarr"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.sonarr.loadbalancer.server.port" = "8989";
         };
       };
       watchtower = {
