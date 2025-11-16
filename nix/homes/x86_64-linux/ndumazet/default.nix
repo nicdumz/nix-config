@@ -12,6 +12,7 @@
     irc.enable = true;
     kitty.enable = true;
     librewolf.enable = true;
+    chrome.enable = true;
     vscode.enable = true;
     wallpaper.path = ./nixos-wallpaper.png;
   };
