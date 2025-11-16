@@ -54,7 +54,7 @@ in
     };
 
     sops.secrets.grafana-admin-password = {
-      owner = "grafana";
+      owner = config.users.users.grafana.name;
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
     };
   };
