@@ -46,27 +46,30 @@ in
       {
         deadmanssnitch_url = {
           inherit sopsFile;
-          owner = "alertmanager";
-          group = "nogroup";
+          restartUnits = [ "alermanager.service" ];
         };
         telegram_token = {
           inherit sopsFile;
-          owner = "alertmanager";
-          group = "nogroup";
+          restartUnits = [ "alermanager.service" ];
         };
         prometheus_password = {
           inherit sopsFile;
-          owner = "prometheus";
-          group = "nogroup";
+          owner = config.users.users.prometheus.name;
+          inherit (config.users.users.nobody) group;
         };
       };
+    # alertmanager users DynamicUser=true and no static alertmanager user is available to use.
+    systemd.services.alertmanager.serviceConfig.LoadCredential = [
+      "${config.sops.secrets.telegram_token.name}:${config.sops.secrets.telegram_token.path}"
+      "${config.sops.secrets.deadmanssnitch_url.name}:${config.sops.secrets.deadmanssnitch_url.path}"
+    ];
 
     ${namespace} = {
       persistence.directories = [
         {
           directory = "/var/lib/${config.services.prometheus.stateDir}";
-          user = "prometheus";
-          group = "prometheus";
+          user = config.users.users.prometheus.name;
+          inherit (config.users.users.prometheus) group;
         }
       ];
       motd.systemdServices = [
@@ -118,7 +121,7 @@ in
               name = "telegram";
               telegram_configs = [
                 {
-                  bot_token_file = config.sops.secrets.telegram_token.path;
+                  bot_token_file = "/run/credentials/alertmanager.service/${config.sops.secrets.telegram_token.name}";
                   chat_id = -797768186;
                   api_url = "https://api.telegram.org";
                   send_resolved = true;
@@ -150,7 +153,9 @@ in
             {
               name = "dead-man-snitch";
               webhook_configs = [
-                { url_file = config.sops.secrets.deadmanssnitch_url.path; }
+                {
+                  url_file = "/run/credentials/alertmanager.service/${config.sops.secrets.deadmanssnitch_url.name}";
+                }
               ];
             }
           ];

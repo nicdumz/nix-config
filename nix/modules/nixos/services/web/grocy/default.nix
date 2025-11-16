@@ -64,8 +64,8 @@ in
         persistence.directories = [
           {
             directory = config.services.grocy.dataDir;
-            user = "grocy";
-            group = "nginx";
+            user = config.users.users.grocy.name;
+            inherit (config.users.users.grocy) group;
           }
         ];
         traefik.webservices.grocy.port = cfg.port;

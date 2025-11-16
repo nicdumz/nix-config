@@ -68,8 +68,8 @@ in
       persistence.directories = [
         {
           directory = config.services.traefik.dataDir;
-          user = "traefik";
-          group = "traefik";
+          user = config.users.users.traefik.name;
+          inherit (config.users.users.traefik) group;
         }
       ];
     };
@@ -77,8 +77,8 @@ in
 
     sops.secrets.gandi_token_env = {
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
-      owner = "traefik";
-      group = "nogroup";
+      owner = config.users.users.traefik.name;
+      inherit (config.users.users.nobody) group;
     };
 
     services.traefik = {
