@@ -58,6 +58,13 @@ in
     # Note: remember to disable the docker container later.
     # mealie.enable = true;
     paperless.enable = true;
+    qbittorrent.enable = true;
+    bazarr.enable = true;
+    radarr.enable = true;
+    sonarr.enable = true;
+    jackett.enable = true;
+    jellyseerr.enable = true;
+    jellyfin.enable = true;
     motd = {
       enable = true;
       networkInterfaces = [
@@ -109,14 +116,6 @@ in
       ip46tables -A DOCKER-USER -j ts-forward
       # Forward already open.
       ip46tables -A DOCKER-USER -m state --state RELATED,ESTABLISHED -j ACCEPT
-
-      ## Am a bit confused as to why those rules are required. Technically Docker should port
-      ## forward to the local host which should remove routing/fw needs; this needs more work.
-      # Wan to Deluge, qBittorrent
-      ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p udp -m udp --dport 6881 -j ACCEPT
-      ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p tcp -m tcp --dport 6881 -j ACCEPT
-      ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p udp -m udp --dport 51413 -j ACCEPT
-      ip46tables -A DOCKER-USER -i ${wan} -o docker-bridge -p tcp -m tcp --dport 51413 -j ACCEPT
 
       # Anything !wan can open to the outside.
       ip46tables -A DOCKER-USER ! -i ${wan} -o ${wan} -j ACCEPT

@@ -62,7 +62,6 @@ let
           name = "bazarr";
           icon = "/assets/bazarr.png";
         }
-        "deluge"
         "qbittorrent"
         {
           name = "jackett";
