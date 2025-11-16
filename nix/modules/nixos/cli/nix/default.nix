@@ -70,7 +70,8 @@
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 21d";
+      # also remove old generations
+      options = "--delete-old";
     };
 
     ###
