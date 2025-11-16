@@ -231,7 +231,10 @@ lib.mkIf config.${namespace}.docker.enable {
         };
       };
       mealie = {
-        image = "ghcr.io/mealie-recipes/mealie:v3.4.0";
+        # Note: do not upgrade further, we're looking for compatibility with
+        # https://search.nixos.org/packages?channel=unstable&show=mealie&query=mealie
+        # to allow migrations
+        image = "ghcr.io/mealie-recipes/mealie:v3.5.0";
         environment = {
           ALLOW_SIGNUP = "true";
           API_DOCS = "False";
