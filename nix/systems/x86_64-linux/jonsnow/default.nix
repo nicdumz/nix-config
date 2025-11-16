@@ -51,6 +51,12 @@ in
     traefik.enable = true;
     glance.enable = true;
     grocy.enable = true;
+    # TODO: 25.11: when 25.11 lands I should be able to move to an out-of-docker solution for
+    # mealie.
+    # This requires grabbing a backup of data and reimporting it (keeping v3 -> v3)
+    # Note that this serves on mealie2.nicdumz.fr for ease of migration, to be fixed later.
+    # Note: remember to disable the docker container later.
+    # mealie.enable = true;
     paperless.enable = true;
     motd = {
       enable = true;
