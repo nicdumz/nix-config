@@ -109,11 +109,6 @@
 
       };
 
-      # Note: due to https://github.com/zhaofengli/colmena/issues/202 /
-      # Note: due to https://github.com/zhaofengli/colmena/issues/60 /
-      #   https://github.com/zhaofengli/colmena/pull/228, in order to work from a dirty flake dir,
-      #   I have to pass
-      #     `colmena --experimental-flake-eval build` and friends.
       colmenaHive = lib.mkColmenaHive inputs.self.pkgs.x86_64-linux.nixpkgs {
         bistannix = {
           allowLocalDeployment = true;
