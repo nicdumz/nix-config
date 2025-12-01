@@ -1,7 +1,7 @@
 {
   mkShell,
   inputs,
-  system,
+  stdenv,
   pkgs,
   ...
 }:
@@ -10,7 +10,7 @@
 # automatically loads the relevant development shell + helpful tools.
 let
   # Note: this refers to our checks/git-hooks module.
-  check = inputs.self.checks.${system}.git-hooks;
+  check = inputs.self.checks.${stdenv.hostPlatform.system}.git-hooks;
 
   myPython = pkgs.python312.withPackages (
     p: with p; [
@@ -39,8 +39,8 @@ mkShell {
     pkgs.sops
     pkgs.ssh-to-age
     pkgs.yq-go
-    # Note: pgs.colmena below would be too old
-    inputs.colmena.defaultPackage.${system}
+    # Note: pkgs.colmena below would be too old
+    inputs.colmena.defaultPackage.${stdenv.hostPlatform.system}
     pkgs.age-plugin-fido2-hmac
   ];
   buildInputs = check.enabledPackages ++ [ myPython ];

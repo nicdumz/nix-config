@@ -1,9 +1,9 @@
 {
   inputs,
-  system,
+  pkgs,
   ...
 }:
-inputs.git-hooks-nix.lib.${system}.run {
+inputs.git-hooks-nix.lib.${pkgs.stdenv.hostPlatform.system}.run {
   src = inputs.self.outPath;
   hooks = {
     actionlint.enable = true;
@@ -15,7 +15,7 @@ inputs.git-hooks-nix.lib.${system}.run {
     statix.enable = true;
     treefmt = {
       enable = true;
-      packageOverrides.treefmt = inputs.self.formatter.${system};
+      packageOverrides.treefmt = inputs.self.formatter.${pkgs.stdenv.hostPlatform.system};
     };
   };
 }
