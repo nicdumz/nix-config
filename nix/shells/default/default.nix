@@ -15,7 +15,7 @@ let
   myPython = pkgs.python312.withPackages (
     p: with p; [
       mkdocs-material
-      mkdocs-minify
+      mkdocs-minify-plugin
       pygments
     ]
   );
