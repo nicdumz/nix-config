@@ -34,6 +34,9 @@ in
         scrollback_lines = 20000;
         cursor_stop_blinking_after = 0;
 
+        # TODO: 25.11 this otherwise breaks in Wayland why :-S
+        linux_display_server = "x11";
+
         # TODO: missing
         # -open_url_modifiers ctrl
         # -remember_window_size  no
