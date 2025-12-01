@@ -25,6 +25,7 @@
       defaultFontSize = 18;
       factor = 1.25;
     };
+    nvidia.enable = true;
   };
 
   networking.networkmanager.enable = false;
