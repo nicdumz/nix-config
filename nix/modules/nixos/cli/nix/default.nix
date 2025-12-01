@@ -10,7 +10,7 @@
   nixpkgs.hostPlatform = system;
 
   system = {
-    stateVersion = "25.05";
+    stateVersion = "25.11";
 
     # Add git flake version to nixos label -- shown in boot entries.
     nixos.label =
