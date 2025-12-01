@@ -36,18 +36,5 @@ in
           "font.minimum-size.x-western" = config.fontProfiles.monospace.size - 2;
         };
     };
-
-    xdg = {
-      mimeApps = {
-        enable = true;
-        defaultApplications = {
-          "text/html" = "librewolf.desktop";
-          "x-scheme-handler/http" = "librewolf.desktop";
-          "x-scheme-handler/https" = "librewolf.desktop";
-          "x-scheme-handler/about" = "librewolf.desktop";
-          "x-scheme-handler/unknown" = "librewolf.desktop";
-        };
-      };
-    };
   };
 }
