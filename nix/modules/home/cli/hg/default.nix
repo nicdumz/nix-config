@@ -2,8 +2,8 @@
 {
   programs.mercurial = {
     enable = true;
-    inherit (config.programs.git) userEmail;
-    inherit (config.programs.git) userName;
+    userEmail = config.programs.git.settings.user.email;
+    userName = config.programs.git.settings.user.name;
     extraConfig = {
       ui.editor = "nvim -c 'set ft=hgs'";
       color = {

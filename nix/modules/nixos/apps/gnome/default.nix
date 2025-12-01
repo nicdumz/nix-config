@@ -7,13 +7,9 @@
 {
   config = lib.mkIf config.nicdumz.graphical {
     services = {
-      # NOTE: this actually is using wayland.
-      # NOTE: Remember to add gammastep, redshift or similar if moving away from gnome.
-      xserver = {
-        enable = true;
-        displayManager.gdm.enable = true;
-        desktopManager.gnome.enable = true;
-      };
+      # TODO: 25.05: Remember to add gammastep, redshift or similar if moving away from gnome.
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
       udev.packages = [ pkgs.gnome-settings-daemon ];
     };
 

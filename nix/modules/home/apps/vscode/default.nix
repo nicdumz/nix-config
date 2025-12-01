@@ -43,6 +43,7 @@ in
             mkhl.direnv
             redhat.vscode-yaml
             stkb.rewrap
+            visualjj.visualjj
           ]
           ++ lib.optionals (osConfig.${namespace}.nvidia.enable or false) [
             continue.continue # Continue needs ollama and nvidia

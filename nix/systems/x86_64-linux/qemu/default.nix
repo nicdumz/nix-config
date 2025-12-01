@@ -41,7 +41,7 @@
     # NOTE: sharedDirectories = is useful if I need to share with the host.
   };
   nixpkgs.hostPlatform = "x86_64-linux";
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
   # networking.hostName = "qemu-vm";
   snowfallorg.users.ndumazet.create = false;
 }

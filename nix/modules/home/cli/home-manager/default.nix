@@ -10,7 +10,7 @@
   nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 
   home = {
-    stateVersion = "25.05";
+    stateVersion = "25.11";
     preferXdgDirectories = true;
     # https://github.com/NixOS/nixpkgs/issues/12757
     activation.linkDesktopFiles = config.lib.dag.entryAfter [ "installPackages" ] ''
