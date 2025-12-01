@@ -1,17 +1,12 @@
 {
   lib,
   modulesPath,
-  pkgs,
   ...
 }:
 {
   imports = [
     "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
   ];
-  networking.wireless.enable = true;
-  networking.wireless.userControlled.enable = true; # %wheel can setup
-
-  environment.systemPackages = [ pkgs.wpa_supplicant ];
   users.users.root.password = "installer";
 
   # Keep it simpler
