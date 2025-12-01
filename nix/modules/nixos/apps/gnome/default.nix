@@ -7,9 +7,16 @@
 {
   config = lib.mkIf config.nicdumz.graphical {
     services = {
-      # TODO: 25.05: Remember to add gammastep, redshift or similar if moving away from gnome.
       displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
+      desktopManager.gnome = {
+        enable = true;
+        extraGSettingsOverrides = ''
+          [org.gnome.settings-daemon.plugins.color]
+          night-light-enabled=true
+        '';
+        # Maybe:
+        # night-light-schedule-automatic=true
+      };
       udev.packages = [ pkgs.gnome-settings-daemon ];
     };
 
