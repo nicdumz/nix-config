@@ -38,10 +38,11 @@
         type = "lua";
         config = # lua
           ''
-            local capabilities = require('cmp_nvim_lsp').default_capabilities()
+            vim.lsp.enable('nixd');
             -- note that ./. below works because nixd starts in root_dir() (where .git or flake.nix is)
-            require('lspconfig').nixd.setup({
-              capabilities = capabilities,
+            vim.lsp.config('nixd', {
+              capabilities = require('cmp_nvim_lsp').default_capabilities(),
+              filetypes = { 'nix', 'in.nix' },
               settings = {
                 nixd = {
                   options = {
@@ -54,7 +55,7 @@
                   },
                 },
               },
-            })
+            });
           '';
       }
       nvim-lspconfig
