@@ -40,7 +40,7 @@ in
           inherit (config.users.users.mealie) group;
         }
       ];
-      traefik.webservices.mealie2.port = config.services.mealie.port;
+      traefik.webservices.mealie.port = config.services.mealie.port;
     };
   };
 }

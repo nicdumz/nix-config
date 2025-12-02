@@ -103,31 +103,6 @@ lib.mkIf config.${namespace}.docker.enable {
           "traefik.http.services.homeassistant.loadbalancer.server.port" = "8123";
         };
       };
-      mealie = {
-        # Note: do not upgrade further, we're looking for compatibility with
-        # https://search.nixos.org/packages?channel=unstable&show=mealie&query=mealie
-        # to allow migrations
-        image = "ghcr.io/mealie-recipes/mealie:v3.5.0";
-        environment = {
-          ALLOW_SIGNUP = "true";
-          API_DOCS = "False";
-          BASE_URL = "https://mealie.home.nicdumz.fr";
-          MAX_WORKERS = "1";
-          WEB_CONCURRENCY = "1";
-        }
-        // cfg.defaultEnvironment;
-        volumes = [
-          "${fast}/mealie:/app/data:rw"
-        ];
-        extraOptions = [
-          "--memory=1048576000b" # Python unhappy otherwise
-          "--network-alias=mealie"
-          "--network=infra_default"
-        ];
-        labels = {
-          "traefik.http.services.mealie.loadbalancer.server.port" = "9000";
-        };
-      };
       watchtower = {
         image = "containrrr/watchtower";
         environment = cfg.defaultEnvironment;
