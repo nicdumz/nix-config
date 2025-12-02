@@ -33,36 +33,18 @@ in
       profiles.default = {
         enableExtensionUpdateCheck = false;
         enableUpdateCheck = false;
-        extensions =
-          with pkgs.vscode-extensions;
-          [
-            asvetliakov.vscode-neovim
-            catppuccin.catppuccin-vsc
-            catppuccin.catppuccin-vsc-icons
-            golang.go
-            mkhl.direnv
-            redhat.vscode-yaml
-            stkb.rewrap
-            visualjj.visualjj
-          ]
-          ++ lib.optionals (osConfig.${namespace}.nvidia.enable or false) [
-            continue.continue # Continue needs ollama and nvidia
-          ]
-          ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-            {
-              name = "vscode-markdown-alert";
-              publisher = "yahyabatulu";
-              version = "0.0.4";
-              sha256 = "sha256-dCaSMPSntYo0QLr2pcs9GfJxOshfyeXbs8IMCwd+lqw=";
-            }
-            # The one bundled with nixpkgs is way too old and buggy.
-            {
-              name = "nix-ide";
-              publisher = "jnoortheen";
-              version = "0.4.11";
-              sha256 = "sha256-Z+e4s+fcpPqxG7IU2E48Jq21FPU+DHHa+VwTEXKiznw=";
-            }
-          ];
+        extensions = with pkgs.vscode-extensions; [
+          asvetliakov.vscode-neovim
+          bierner.github-markdown-preview
+          catppuccin.catppuccin-vsc
+          catppuccin.catppuccin-vsc-icons
+          golang.go
+          jnoortheen.nix-ide
+          mkhl.direnv
+          redhat.vscode-yaml
+          stkb.rewrap
+          visualjj.visualjj
+        ];
         userSettings = {
           # Tricky to get enough information density and not tiny fonts.
           "editor.fontSize" = config.fontProfiles.monospace.size - 2;
