@@ -30,6 +30,10 @@
           inherit (config.programs.git.settings.user) email;
           inherit (config.programs.git.settings.user) name;
         };
+        ui = {
+          default-command = "log";
+          pager = ":builtin";
+        };
       };
     };
   };
