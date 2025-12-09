@@ -3,6 +3,7 @@
   inputs,
   lib,
   namespace,
+  pkgs,
   ...
 }:
 let
@@ -33,6 +34,7 @@ in
     # Take no chances and refer to the precise part.
     device = "/dev/disk/by-id/nvme-KINGSTON_SKC2500M8500G_50026B76853C3655";
   };
+  hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
 
   ${namespace} = {
     persistence.enable = true;
