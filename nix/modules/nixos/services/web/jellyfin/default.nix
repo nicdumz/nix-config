@@ -8,7 +8,6 @@ let
   cfg = config.${namespace}.jellyfin;
 in
 {
-  # TODO: acceleration / rendering?
   options.${namespace}.jellyfin = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -17,6 +16,8 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
+    hardware.graphics.enable = true;
+
     services.jellyfin = {
       enable = true;
       group = "media";
