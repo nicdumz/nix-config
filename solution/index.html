@@ -1,0 +1,935 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Nicolas Dumazet">
+      
+      
+        <link rel="canonical" href="https://nicdumz.fr/nix-config/solution/">
+      
+      
+        <link rel="prev" href="../requirements/">
+      
+      
+        <link rel="next" href="../details/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Solution - Nicolas and NixOS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-FT3XEHJ2DX"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-FT3XEHJ2DX",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-FT3XEHJ2DX",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#solution" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Nicolas and NixOS" class="md-header__button md-logo" aria-label="Nicolas and NixOS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m7.352 1.592-1.364.002L5.32 2.75l1.557 2.713-3.137-.008-1.32 2.34h11.69l-1.353-2.332-3.192-.006-2.214-3.865zm6.175 0-2.687.025 5.846 10.127 1.341-2.34-1.59-2.765 2.24-3.85-.683-1.182h-1.336l-1.57 2.705-1.56-2.72zm6.887 4.195-5.846 10.125 2.696-.008 1.601-2.76 4.453.016.682-1.183-.666-1.157-3.13-.008L21.778 8.1l-1.365-2.313zM9.432 8.086l-2.696.008-1.601 2.76-4.453-.016L0 12.02l.666 1.157 3.13.008-1.575 2.71 1.365 2.315zM7.33 12.25l-.006.01-.002-.004-1.342 2.34 1.59 2.765-2.24 3.85.684 1.182H7.35l.004-.006h.001l1.567-2.698 1.558 2.72 2.688-.026-.004-.006h.01zm2.55 3.93 1.354 2.332 3.192.006 2.215 3.865 1.363-.002.668-1.156-1.557-2.713 3.137.008 1.32-2.34z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Nicolas and NixOS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Solution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/nicdumz/nix-config" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.546 10.93 13.067.452a1.55 1.55 0 0 0-2.188 0L8.708 2.627l2.76 2.76a1.838 1.838 0 0 1 2.327 2.341l2.658 2.66a1.838 1.838 0 0 1 1.9 3.039 1.837 1.837 0 0 1-2.6 0 1.85 1.85 0 0 1-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348a1.85 1.85 0 0 1 0 2.6 1.844 1.844 0 0 1-2.609 0 1.834 1.834 0 0 1 0-2.598c.182-.18.387-.316.605-.406V8.835a1.834 1.834 0 0 1-.996-2.41L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477a1.545 1.545 0 0 0 2.186 0l10.43-10.43a1.544 1.544 0 0 0 0-2.187"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nicdumz/nix-config
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Nicolas and NixOS" class="md-nav__button md-logo" aria-label="Nicolas and NixOS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m7.352 1.592-1.364.002L5.32 2.75l1.557 2.713-3.137-.008-1.32 2.34h11.69l-1.353-2.332-3.192-.006-2.214-3.865zm6.175 0-2.687.025 5.846 10.127 1.341-2.34-1.59-2.765 2.24-3.85-.683-1.182h-1.336l-1.57 2.705-1.56-2.72zm6.887 4.195-5.846 10.125 2.696-.008 1.601-2.76 4.453.016.682-1.183-.666-1.157-3.13-.008L21.778 8.1l-1.365-2.313zM9.432 8.086l-2.696.008-1.601 2.76-4.453-.016L0 12.02l.666 1.157 3.13.008-1.575 2.71 1.365 2.315zM7.33 12.25l-.006.01-.002-.004-1.342 2.34 1.59 2.765-2.24 3.85.684 1.182H7.35l.004-.006h.001l1.567-2.698 1.558 2.72 2.688-.026-.004-.006h.01zm2.55 3.93 1.354 2.332 3.192.006 2.215 3.865 1.363-.002.668-1.156-1.557-2.713 3.137.008 1.32-2.34z"/></svg>
+
+    </a>
+    Nicolas and NixOS
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/nicdumz/nix-config" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.546 10.93 13.067.452a1.55 1.55 0 0 0-2.188 0L8.708 2.627l2.76 2.76a1.838 1.838 0 0 1 2.327 2.341l2.658 2.66a1.838 1.838 0 0 1 1.9 3.039 1.837 1.837 0 0 1-2.6 0 1.85 1.85 0 0 1-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348a1.85 1.85 0 0 1 0 2.6 1.844 1.844 0 0 1-2.609 0 1.834 1.834 0 0 1 0-2.598c.182-.18.387-.316.605-.406V8.835a1.834 1.834 0 0 1-.996-2.41L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477a1.545 1.545 0 0 0 2.186 0l10.43-10.43a1.544 1.544 0 0 0 0-2.187"/></svg>
+  </div>
+  <div class="md-source__repository">
+    nicdumz/nix-config
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The journey
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requirements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#nix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration language: Nix expression language
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nix-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nix packages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package outputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nixos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NixOS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#is-mostly-a-tmpfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        / is mostly a tmpfs
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../details/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Details
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../conclusion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conclusion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#nix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration language: Nix expression language
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nix-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nix packages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package outputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#package-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Package manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nixos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NixOS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#is-mostly-a-tmpfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        / is mostly a tmpfs
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/nicdumz/nix-config/edit/main/docs/solution.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="solution">Solution<a class="headerlink" href="#solution" title="Permanent link">&para;</a></h1>
+<p>I'm using NixOS on all of my machines since end of 2024. An explanation of the involved pieces and
+how they all fit together.</p>
+<p>I've asked AI to write a teaser on why NixOS is cool, and I believe it did a pretty good job:</p>
+<mark class="critic block">
+<p>What if you could try a massive system update, and if it broke anything—your Wi-Fi, your monitor, a
+key app—you could roll back your entire operating system to its previous, perfect state with a
+single reboot?</p>
+<p>That's the magic of NixOS.</p>
+<p>It treats your whole OS as a single "package." This means:</p>
+<ul>
+<li>
+<p>Atomic Updates &amp; Rollbacks: Every upgrade creates a new "generation" of your system. If you don't
+  like it, your old one is still there, ready to be booted.</p>
+</li>
+<li>
+<p>No More "Configuration Drift": Your system is built only from your versioned config files. You
+  can't just temporarily hack a file in <code>/etc/</code> and forget about it. This ends the "what did I
+  change to make this work?" nightmare. Your versioned configuration is your system's single source
+  of truth.</p>
+</li>
+</ul>
+</mark>
+<h2 id="nix">Configuration language: Nix expression language<a class="headerlink" href="#nix" title="Permanent link">&para;</a></h2>
+<p>I believe that most configuration languages are created equal. Some syntax to produce key-value
+pairs, more or less. Syntactic sugar to avoid repetitions, but that's it.</p>
+<p>There's a 101 blog entry <a href="https://www.christophercoverdale.com/blog/nix-101-part-1/">here</a>, but that
+part in my opinion is quite boring.</p>
+<p>Nonetheless, all of the configurations are written in a collection of versioned <code>.nix</code> files, and
+that are various ways to organize your configuration in a modular fashion.</p>
+<p>Some examples from my configuration:</p>
+<ul>
+<li><a href="https://github.com/nicdumz/nix-config/blob/main/nix/modules/home/apps/vscode/default.nix">How I configure VSCode</a>
+  (only enabled on headful machines).</li>
+<li><a href="https://github.com/nicdumz/nix-config/blob/main/nix/modules/nixos/services/observability/grafana/default.nix">How I configure Grafana</a>
+  (only enabled on the router machine).</li>
+</ul>
+<h2 id="nix-packages">Nix packages<a class="headerlink" href="#nix-packages" title="Permanent link">&para;</a></h2>
+<p>Using the Nix language, one can define "derivations", which are recipes for reproducible
+transformations. Each derivation describes "build steps" which takes a set of inputs and transforms
+them into outputs.</p>
+<p>Derivations are then used to build "packages", very similarly to software packages in a regular
+distribution, e.g. Debian.</p>
+<p>I think it's easier to look at an existing package to understand what happens.
+<a href="https://github.com/NixOS/nixpkgs/blob/4ea513ffb46058baad9cd921c5cee04fea30944c/pkgs/applications/editors/kakoune/default.nix">This</a>
+package would fetch the source, via Github, of the <code>kakoune</code> editor, and <code>make; make install</code> for
+that package, producing an expected <code>kakoune</code> binary.</p>
+<p><strong>I never have to write my own packages</strong>. The NixOS community maintains a central repository of
+packages at <a href="https://github.com/NixOS/nixpkgs">NixOS/nixpkgs</a>. All put together, this makes a kind
+of "Source distribution", not too different from Gentoo where users have to recompile binaries on
+each update.</p>
+<p>Unlike Gentoo however, you rarely have to recompile packages, because the language around
+derivations forces output to be reproducible and deterministic:</p>
+<h2 id="package-outputs">Package outputs<a class="headerlink" href="#package-outputs" title="Permanent link">&para;</a></h2>
+<p>All of my systems have a <code>/nix/store</code> folder, the "Nix Store":</p>
+<div class="language-sh highlight"><span class="filename">Inside the Nix Store</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>$<span class="w"> </span>ls<span class="w"> </span>/nix/store/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>0a1yz9lgzly1qdj2464gr1lmz2zpnxkl-libtool-2.4.7.drv
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>0a2kbdrcsnmll5jndv98g63y83jzwhzi-gvfs-1.57.2
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>0a2yia3avaw4n7sq9blfhjkw9bwaz845-umockdev-0.19.1.drv
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>0a3facj8mq31kmazfh1ys00vwsqmwk7a-mdbook-linkcheck-0.7.7-vendor.tar.gz.drv
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>0a4di192p2vbkvvq1skin6bx211vidrx-libXfont-1.5.4.drv
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>0a4wbzik10grldjx3hcadzg337anzk5b-home-manager-path
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>0a5m3qldpclgpbak4mkwlv5182sd1ax7-skylighting-core-0.14.5.drv
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>0a7ddzdi7l58ay9vix4xzmvslnp31my9-Module-Runtime-0.016.tar.gz.drv
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>0a7mfnca025rzk58ws0n7q47qpvjpcy3-libdvdread-6.1.3.drv
+</span></code></pre></div>
+<p>Those are outputs of derivations, using content-based path prefixes. The output of a derivation can
+be predicted from a nix package definition, meaning that:</p>
+<ul>
+<li>Users needing to depend on a package's output can simply link to the expected nix store path
+  output.</li>
+<li><strong>Local caching</strong>: When deploying a new version of the system, if the derivation output already
+  exists in the Nix Store, then there is no need to recreate it ("re-compile it").</li>
+<li><strong>Distributed remote caching</strong>: Users of Nix can share the output of computations on a networked
+  cache (<a href="https://cache.nixos.org/">https://cache.nixos.org/</a>)</li>
+</ul>
+<p>The Nix store is essentially immutable -- paths are read-only to all users, and a path is only
+garbage collected if nothing refers to it.</p>
+<h2 id="package-manager">Package manager<a class="headerlink" href="#package-manager" title="Permanent link">&para;</a></h2>
+<p>Let's start simple, imagine that you want to use the output of Nix packages in your $PATH. We know
+that the outputs are in the Nix store and can be content-addressed. You could then... simply add the
+raw paths to your $PATH. In fact, the Nix package manager does something similar. It sets up
+symlinks against Store paths in a "profile":</p>
+<div class="language-sh highlight"><span class="filename">User (PATH) profiles</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/etc/profiles/per-user/ndumazet/bin/
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>...
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>lrwxrwxrwx<span class="w"> </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>git<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/7kh7s643w6brdzmbk28pzk5z13zgcbax-home-manager-path/bin/git
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>...
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>lrwxrwxrwx<span class="w"> </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>nvim<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/7kh7s643w6brdzmbk28pzk5z13zgcbax-home-manager-path/bin/nvim
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># There are a few of those</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/etc/profiles/per-user/ndumazet/bin/<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="m">45</span>
+</span></code></pre></div>
+<p>And <code>/etc/profiles/per-user/ndumazet/bin</code> is in my <code>$PATH</code>.</p>
+<p>I've simplified a lot, but this is essentially how the NixOS ecosystem will be managing resources
+and binaries.</p>
+<p>Under the hood, you can imagine that all binaries are in fact statically linked or point to library
+paths which refer to Nix store paths. A corollary is that it becomes trivial to install several
+versions of a binary which all require distinct versions of a library, without risking the integrity
+of your system. This completely solves the "dependency hell" type of problems. You don't need tools
+like <code>virtualenv</code> just to manage different project requirements; Nix handles it at the operating
+system level.</p>
+<h2 id="nixos">NixOS<a class="headerlink" href="#nixos" title="Permanent link">&para;</a></h2>
+<p><code>NixOS</code> is an operating system building on all of the above.</p>
+<p>My system can currently boot 3 generations:</p>
+<div class="language-sh highlight"><span class="filename">System profiles</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>$<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/nix/var/nix/profiles
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>lrwxrwxrwx<span class="w"> </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">3</span><span class="w"> </span>Jan<span class="w"> </span><span class="m">21</span>:25<span class="w"> </span>default<span class="w"> </span>-&gt;<span class="w"> </span>/nix/var/nix/profiles/per-user/root/profile
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>drwxr-xr-x<span class="w"> </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">3</span><span class="w"> </span>Jan<span class="w"> </span><span class="m">17</span>:43<span class="w"> </span>per-user
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>lrwxrwxrwx<span class="w"> </span>-<span class="w"> </span>root<span class="w"> </span><span class="m">25</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">06</span>:57<span class="w"> </span>system<span class="w"> </span>-&gt;<span class="w"> </span>system-234-link
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>lrwxrwxrwx<span class="w"> </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">6</span><span class="w"> </span>Sep<span class="w"> </span><span class="m">08</span>:28<span class="w"> </span>system-223-link<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/m3x7xfxrydw8kamk31ky3vgs567daibx-nixos-system-bistannix-25.05.20250904.fe83bbd
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>lrwxrwxrwx<span class="w"> </span>-<span class="w"> </span>root<span class="w"> </span><span class="m">19</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">15</span>:10<span class="w"> </span>system-233-link<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/cihzg1vqz4m0g16w8lkglvbb9vjvm2i3-nixos-system-bistannix-25.05.20251016.98ff3f9-flake.20251019.e7299b0
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>lrwxrwxrwx<span class="w"> </span>-<span class="w"> </span>root<span class="w"> </span><span class="m">25</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">06</span>:57<span class="w"> </span>system-234-link<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/0syb258lyj0kfamd7i7kwi0r98b99vrj-nixos-system-bistannix-25.05.20251021.481cf55-flake.20251023.0febaec
+</span></code></pre></div>
+<p>Each generation (<code>system-${gen}-link</code>) points to a Store path, which is an immutable directory to a
+top level "system package".</p>
+<p>What's inside that Store directory path? A root-like filesystem, with more symlinks into the nix
+store:</p>
+<div class="language-sh highlight"><span class="filename">Inside a profile</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>$<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/nix/var/nix/profiles/system-233-link/
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>.r-xr-xr-x<span class="w"> </span><span class="m">8</span>.3k<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>activate
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>lrwxrwxrwx<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>append-initrd-secrets<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/854r1y7ds8gpb590ykp80pp8abxvh8rz-append-initrd-secrets/bin/append-initrd-secrets
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>dr-xr-xr-x<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>bin
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>.r--r--r--<span class="w">  </span><span class="m">789</span><span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>boot.json
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>.r-xr-xr-x<span class="w"> </span><span class="m">3</span>.4k<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>dry-activate
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>lrwxrwxrwx<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>etc<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/x625sh59bplvfq71rmh93i5mi762fc9a-etc/etc
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>.r--r--r--<span class="w">    </span><span class="m">0</span><span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>extra-dependencies
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>lrwxrwxrwx<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>firmware<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/ikkg1182hfwpghgh3afp16nmw3q3zclr-firmware/lib/firmware
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>.r-xr-xr-x<span class="w"> </span>172k<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>init
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>.r--r--r--<span class="w">    </span><span class="m">9</span><span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>init-interface-version
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>lrwxrwxrwx<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>initrd<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/04abzzbp0rymax41i7qgwrrlqvwh8ajl-initrd-linux-6.12.53/initrd
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>lrwxrwxrwx<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>kernel<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/z05bjh6ihlb04v2l1id59baxk1qdxpdz-linux-6.12.53/bzImage
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>lrwxrwxrwx<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>kernel-modules<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/kmh5d3qv20n5l4y96q63agjf552a5xmi-linux-6.12.53-modules
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>.r--r--r--<span class="w">   </span><span class="m">43</span><span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>kernel-params
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>.r--r--r--<span class="w">   </span><span class="m">45</span><span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>nixos-version
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>.r-xr-xr-x<span class="w"> </span><span class="m">4</span>.4k<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>prepare-root
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>dr-xr-xr-x<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>specialisation
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>lrwxrwxrwx<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>sw<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/4vmgbxnmsd7wi550f3va9m48shadqrwv-system-path
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>.r--r--r--<span class="w">   </span><span class="m">12</span><span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>system
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>lrwxrwxrwx<span class="w">    </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>systemd<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/d84f8nm2na5cr53m4jk0qk2mj7lgr9fx-systemd-257.9
+</span></code></pre></div>
+<p>You can see the usual initramfs, kernel, which you would expect on other distributions.</p>
+<p>Put together, this means that each <code>/nix/var/nix/profiles/system-${gen}-link/</code> path is an immutable
+version of linux distribution, at generation <code>${gen}</code>.</p>
+<ul>
+<li>When booting up, systemd-boot presents those 3 generations in a boot menu, and the boot sequence
+  will deploy the selected, particular system's generation.</li>
+<li>When upgrading your system, you will first build all your dependencies, create the root
+  filesystem, and the upgrade process will atomically swap to another generation, by overwriting a
+  couple symlinks.</li>
+</ul>
+<h2 id="is-mostly-a-tmpfs"><code>/</code> is mostly a tmpfs<a class="headerlink" href="#is-mostly-a-tmpfs" title="Permanent link">&para;</a></h2>
+<p>Inspired by <a href="https://grahamc.com/blog/erase-your-darlings/">Erase your darlings</a> and
+<a href="https://elis.nu/blog/2020/05/nixos-tmpfs-as-root/">tmpfs as root</a>, <code>/</code> root filesystem is not
+persistent.</p>
+<p>There are particular mountpoints, e.g. <code>/nix/</code> mentioned above, which survive reboots, but the vast
+majority of the filesystem is ephemeral or a long tree of links:</p>
+<div class="language-sh highlight"><span class="filename">Where is sshd_config</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>$<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/etc/ssh/sshd_config
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>lrwxrwxrwx<span class="w"> </span>-<span class="w"> </span>root<span class="w"> </span><span class="m">27</span><span class="w"> </span>Oct<span class="w"> </span><span class="m">17</span>:41<span class="w"> </span>/etc/ssh/sshd_config<span class="w"> </span>-&gt;<span class="w"> </span>/etc/static/ssh/sshd_config
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>$<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/etc/static/ssh/sshd_config
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>lrwxrwxrwx<span class="w"> </span>-<span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>/etc/static/ssh/sshd_config<span class="w"> </span>-&gt;<span class="w"> </span>/nix/store/lvb4syxyhzdjzqvxklb87kvzzygpfiny-sshd.conf-final
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>$<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span>/nix/store/lvb4syxyhzdjzqvxklb87kvzzygpfiny-sshd.conf-final
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>.r--r--r--<span class="w"> </span><span class="m">975</span><span class="w"> </span>root<span class="w">  </span><span class="m">1</span><span class="w"> </span>Jan<span class="w">  </span><span class="m">1970</span><span class="w"> </span>/nix/store/lvb4syxyhzdjzqvxklb87kvzzygpfiny-sshd.conf-final
+</span></code></pre></div>
+<p>This solution elegantly prevents me from hacking configuration files directly. For example,
+<code>/etc/ssh/sshd_config</code> is just a symlink pointing (indirectly) to a read-only file in <code>/nix/store/</code>.
+If I need to change a setting, I must go to the intent source, modify the versioned .nix file, and
+rebuild my system.</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../requirements/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Requirements">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Requirements
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../details/" class="md-footer__link md-footer__link--next" aria-label="Next: Details">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Details
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 Nicolas Dumazet
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["header.autohide", "content.action.edit", "content.code.annotate", "content.code.copy", "navigation.instant", "navigation.footer", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
