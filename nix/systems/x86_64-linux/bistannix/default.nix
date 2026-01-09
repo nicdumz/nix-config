@@ -25,8 +25,9 @@
       defaultFontSize = 18;
       factor = 1.25;
     };
-    nvidia.enable = true;
+    ollama.enable = true;
   };
+  services.xserver.videoDrivers = [ "amdgpu" ];
 
   networking.networkmanager.enable = false;
   networking.useDHCP = false;

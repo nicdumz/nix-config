@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   namespace,
@@ -8,6 +9,8 @@
 }:
 let
   cfg = config.${namespace}.vscode;
+  exts =
+    inputs.nix-vscode-extensions.extensions.${pkgs.stdenv.hostPlatform.system}.vscode-marketplace;
 in
 {
   options.${namespace}.vscode = {
@@ -15,6 +18,11 @@ in
       type = lib.types.bool;
       default = false;
       description = "Enable vscode (well, vscodium) for this user.";
+    };
+    continue = lib.mkOption {
+      type = lib.types.bool;
+      default = osConfig.${namespace}.ollama.enable or false;
+      description = "Enable continue extension for local AI dev.";
     };
   };
 
@@ -33,18 +41,21 @@ in
       profiles.default = {
         enableExtensionUpdateCheck = false;
         enableUpdateCheck = false;
-        extensions = with pkgs.vscode-extensions; [
-          asvetliakov.vscode-neovim
-          bierner.github-markdown-preview
-          catppuccin.catppuccin-vsc
-          catppuccin.catppuccin-vsc-icons
-          golang.go
-          jnoortheen.nix-ide
-          mkhl.direnv
-          redhat.vscode-yaml
-          stkb.rewrap
-          visualjj.visualjj
-        ];
+        extensions =
+          with pkgs.vscode-extensions;
+          [
+            asvetliakov.vscode-neovim
+            bierner.github-markdown-preview
+            catppuccin.catppuccin-vsc
+            catppuccin.catppuccin-vsc-icons
+            golang.go
+            jnoortheen.nix-ide
+            mkhl.direnv
+            redhat.vscode-yaml
+            stkb.rewrap
+            visualjj.visualjj
+          ]
+          ++ lib.lists.optional cfg.continue exts.continue.continue;
         userSettings = {
           # Tricky to get enough information density and not tiny fonts.
           "editor.fontSize" = config.fontProfiles.monospace.size - 2;
@@ -114,5 +125,34 @@ in
         };
       };
     };
-  };
+    home.file = lib.optionalAttrs cfg.continue {
+      # TODO: if I were smarter we should verify that each model is in the ollama config.
+      ".continue/config.yaml".source = (pkgs.formats.yaml { }).generate "continue-config" {
+        name = "config";
+        version = "0.1.1";
+        schema = "v1";
+        models = [
+          {
+            name = "Instinct";
+            provider = "ollama";
+            model = "nate/instinct";
+            roles = [
+              "autocomplete"
+            ];
+            autocompleteOptions.maxPromptTokens = 8192;
+            defaultCompletionOptions = {
+              temperature = 0;
+              contextLength = 32768;
+              stop = [ "<|im_end|>" ];
+            };
+          }
+        ];
+        context = [
+          { provider = "diff"; }
+          { provider = "file"; }
+          { provider = "code"; }
+        ];
+      };
+    };
+  }; # end of config
 }
