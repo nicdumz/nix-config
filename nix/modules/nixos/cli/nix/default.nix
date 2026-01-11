@@ -78,6 +78,8 @@
 
     settings = {
 
+      # default is tiny, 64MiB something
+      download-buffer-size = 512 * 1024 * 1024;
       # Enable flakes
       experimental-features = [
         "nix-command"
