@@ -1,4 +1,5 @@
 {
+  osConfig ? { },
   pkgs,
   ...
 }:
@@ -16,4 +17,7 @@
     vscode.enable = true;
     wallpaper.path = ./nixos-wallpaper.png;
   };
+  nix.extraOptions = ''
+    !include ${osConfig.sops.templates.ndumazet_nix_extra_config.path or "/dev/null"}
+  '';
 }
