@@ -5,31 +5,32 @@
   ...
 }:
 let
-  cfg = config.${namespace}.jackett;
+  cfg = config.${namespace}.sonarr;
 in
 {
-  options.${namespace}.jackett = {
+  options.${namespace}.sonarr = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Jackett: indexing.";
+      description = "Radarr: series.";
     };
   };
   config = lib.mkIf cfg.enable {
-    services.jackett = {
+    services.sonarr = {
       enable = true;
       group = "media";
+      settings.server.port = 7879;
     };
     users.groups.media = { };
 
     ${namespace} = {
-      motd.systemdServices = [ "jackett" ];
-      traefik.webservices.jackett.port = config.services.jackett.port;
+      motd.systemdServices = [ "sonarr" ];
+      traefik.webservices.sonarr.port = config.services.sonarr.settings.server.port;
       persistence.directories = [
         {
-          directory = config.services.jackett.dataDir;
-          inherit (config.services.jackett) user;
-          inherit (config.services.jackett) group;
+          directory = config.services.sonarr.dataDir;
+          inherit (config.services.sonarr) user;
+          inherit (config.services.sonarr) group;
         }
       ];
     };
