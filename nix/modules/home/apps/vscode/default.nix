@@ -67,6 +67,7 @@ in
           ];
           "editor.fontFamily" = config.fontProfiles.monospace.name + ", 'monospace', monospace";
           "files.insertFinalNewline" = true;
+          "redhat.telemetry.enabled" = false;
           "rewrap.autoWrap.enabled" = true;
           "rewrap.wrappingColumn" = 100;
           "nix.formatterPath" = [ "nixfmt" ];
@@ -109,10 +110,16 @@ in
           # END Catpuccin recs
 
           # BEGIN recommended mkdocs settings, https://squidfunk.github.io/mkdocs-material/creating-your-site/#configuration
-          yaml.schemas = {
-            "https://squidfunk.github.io/mkdocs-material/schema.json" = "mkdocs.yml";
+          "yaml.schemas" = {
+            "https://squidfunk.github.io/mkdocs-material/schema.json" = [ "mkdocs.yml" ];
+          }
+          // lib.optionalAttrs cfg.continue {
+            "file://${config.home.homeDirectory}/.vscode-oss/extensions/continue.continue/config-yaml-schema.json" =
+              [
+                ".continue/**/*.yaml"
+              ];
           };
-          yaml.customTags = [
+          "yaml.customTags" = [
             "!ENV scalar"
             "!ENV sequence"
             "!relative scalar"
