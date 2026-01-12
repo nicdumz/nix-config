@@ -23,6 +23,8 @@ in
     };
     users.groups.media = { };
 
+    # TODO: upstream
+    systemd.services.sonarr.unitConfig.RequiresMountsFor = [ config.services.sonarr.dataDir ];
     ${namespace} = {
       motd.systemdServices = [ "sonarr" ];
       traefik.webservices.sonarr.port = config.services.sonarr.settings.server.port;

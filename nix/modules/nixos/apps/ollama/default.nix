@@ -23,7 +23,10 @@ in
 
   config = lib.mkIf cfg.enable {
     # Otherwise we fill up / (and redownload models).
-    ${namespace}.persistence.directories = [ config.services.ollama.home ];
+    ${namespace} = {
+      persistence.directories = [ config.services.ollama.home ];
+      motd.systemdServices = [ "ollama" ];
+    };
     services.ollama = {
       enable = true;
       acceleration =
@@ -40,5 +43,7 @@ in
         "OLLAMA_KV_CACHE_TYPE" = "q8_0";
       };
     };
+    # TODO: upstream
+    systemd.services.ollama.unitConfig.RequiresMountsFor = [ config.services.ollama.models ];
   };
 }

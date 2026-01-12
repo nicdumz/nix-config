@@ -25,8 +25,13 @@ in
       isSystemUser = true;
     };
     users.groups.jellyseerr = { };
-    systemd.services.jellyseerr.serviceConfig.DynamicUser = lib.mkForce false;
-    systemd.services.jellyseer.serviceConfig.User = config.users.users.jellyseerr.name;
+
+    systemd.services.jellyseerr = {
+      serviceConfig.DynamicUser = lib.mkForce false;
+      serviceConfig.User = config.users.users.jellyseerr.name;
+      # TODO: upstream
+      unitConfig.RequiresMountsFor = config.services.jellyseerr.configDir;
+    };
 
     ${namespace} = {
       motd.systemdServices = [ "jellyseerr" ];

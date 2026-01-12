@@ -29,7 +29,10 @@ in
       isSystemUser = true;
     };
     users.groups.mealie = { };
-    systemd.services.mealie.serviceConfig.DynamicUser = lib.mkForce false;
+    systemd.services.mealie = {
+      unitConfig.RequiresMountsFor = [ dataDir ];
+      serviceConfig.DynamicUser = lib.mkForce false;
+    };
 
     ${namespace} = {
       motd.systemdServices = [ "mealie" ];
