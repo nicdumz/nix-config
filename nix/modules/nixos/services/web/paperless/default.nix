@@ -32,6 +32,9 @@ in
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
     };
 
+    # TODO: upstream
+    systemd.services.paperless-web.unitConfig.RequiresMountsFor =
+      config.systemd.services.paperless-web.serviceConfig.ReadWritePaths;
     ${namespace} = {
       motd.systemdServices = [ "paperless-web" ];
       persistence.directories = [

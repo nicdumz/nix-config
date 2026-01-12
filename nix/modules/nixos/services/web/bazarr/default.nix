@@ -23,13 +23,14 @@ in
     };
     users.groups.media = { };
 
+    # TODO: upstream
+    systemd.services.bazarr.unitConfig.RequiresMountsFor = [ config.services.bazarr.dataDir ];
     ${namespace} = {
       motd.systemdServices = [ "bazarr" ];
       traefik.webservices.bazarr.port = config.services.bazarr.listenPort;
       persistence.directories = [
         {
-          directory = "/var/lib/bazarr";
-          # directory = config.users.users.bazarr.home;
+          directory = config.services.bazarr.dataDir;
           user = config.users.users.bazarr.name;
           inherit (config.services.bazarr) group;
         }

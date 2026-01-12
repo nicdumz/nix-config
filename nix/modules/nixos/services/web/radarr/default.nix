@@ -23,6 +23,8 @@ in
     };
     users.groups.media = { };
 
+    # TODO: upstream
+    systemd.services.radarr.unitConfig.RequiresMountsFor = [ config.services.radarr.dataDir ];
     ${namespace} = {
       motd.systemdServices = [ "radarr" ];
       traefik.webservices.radarr.port = config.services.radarr.settings.server.port;

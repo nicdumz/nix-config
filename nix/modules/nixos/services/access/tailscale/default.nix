@@ -29,6 +29,10 @@ in
     systemd.services.tailscaled = {
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
+      # TODO: upstream
+      # Note: for reasons which I don't understand, /var/lib/tailscale
+      # dependency is automatically detected so no need to also add it here.
+      unitConfig.RequiresMountsFor = [ config.services.tailscale.authKeyFile ];
     };
 
     # Note: we could play with not persisting this to see what happens.

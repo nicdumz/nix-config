@@ -22,6 +22,8 @@ in
     };
     users.groups.media = { };
 
+    # TODO: upstream
+    systemd.services.jackett.unitConfig.RequiresMountsFor = [ config.services.jackett.dataDir ];
     ${namespace} = {
       motd.systemdServices = [ "jackett" ];
       traefik.webservices.jackett.port = config.services.jackett.port;

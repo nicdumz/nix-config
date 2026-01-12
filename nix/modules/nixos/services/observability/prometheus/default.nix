@@ -58,8 +58,10 @@ in
           inherit (config.users.users.nobody) group;
         };
       };
+
     # alertmanager users DynamicUser=true and no static alertmanager user is available to use.
-    systemd.services.alertmanager.serviceConfig.LoadCredential = [
+    systemd.services.alermanager.serviceConfig.LoadCredential = [
+      # Note: perhaps this requires a RequiresMount dependency.
       "${config.sops.secrets.telegram_token.name}:${config.sops.secrets.telegram_token.path}"
       "${config.sops.secrets.deadmanssnitch_url.name}:${config.sops.secrets.deadmanssnitch_url.path}"
     ];
