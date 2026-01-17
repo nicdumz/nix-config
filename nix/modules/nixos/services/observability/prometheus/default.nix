@@ -46,11 +46,11 @@ in
       {
         deadmanssnitch_url = {
           inherit sopsFile;
-          restartUnits = [ "alermanager.service" ];
+          restartUnits = [ "alertmanager.service" ];
         };
         telegram_token = {
           inherit sopsFile;
-          restartUnits = [ "alermanager.service" ];
+          restartUnits = [ "alertmanager.service" ];
         };
         prometheus_password = {
           inherit sopsFile;
@@ -60,7 +60,7 @@ in
       };
 
     # alertmanager users DynamicUser=true and no static alertmanager user is available to use.
-    systemd.services.alermanager.serviceConfig.LoadCredential = [
+    systemd.services.alertmanager.serviceConfig.LoadCredential = [
       # Note: perhaps this requires a RequiresMount dependency.
       "${config.sops.secrets.telegram_token.name}:${config.sops.secrets.telegram_token.path}"
       "${config.sops.secrets.deadmanssnitch_url.name}:${config.sops.secrets.deadmanssnitch_url.path}"
