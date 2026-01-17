@@ -16,6 +16,9 @@
     ndumazet_hashed_password.neededForUsers = true;
   };
 
+  # Support systemd users.
+  services.userborn.enable = true;
+
   users = {
     mutableUsers = false;
 
