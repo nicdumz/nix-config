@@ -29,6 +29,8 @@ in
     };
     services.ollama = {
       enable = true;
+      user = "ollama";
+      group = "ollama";
       acceleration =
         if builtins.elem "amdgpu" config.services.xserver.videoDrivers then "rocm" else "cuda";
       # remove models added locally but not configured.
@@ -43,7 +45,15 @@ in
         "OLLAMA_KV_CACHE_TYPE" = "q8_0";
       };
     };
-    # TODO: upstream
-    systemd.services.ollama.unitConfig.RequiresMountsFor = [ config.services.ollama.models ];
+    # TODO: upstream what's below
+    systemd.services.ollama = {
+      serviceConfig.DynamicUser = lib.mkForce false;
+      serviceConfig.ReadWritePaths = lib.mkForce [
+        config.services.ollama.home
+        # Do not fail when the models directory does not exist yet.
+        "-${config.services.ollama.models}"
+      ];
+      unitConfig.RequiresMountsFor = [ config.services.ollama.models ];
+    };
   };
 }
