@@ -81,12 +81,14 @@ in
     # source:
     #  https://github.com/mdlayher/homelab/blob/main/nixos/routnerr-3/configuration.nix
     # By default, not automatically configure any IPv6 addresses.
-    "net.ipv6.conf.all.accept_ra" = 0;
+    # "net.ipv6.conf.all.accept_ra" = 0;
     "net.ipv6.conf.all.autoconf" = 0;
     "net.ipv6.conf.all.use_tempaddr" = 0;
 
     # On WAN, allow IPv6 autoconfiguration and tempory address use.
-    "net.ipv6.conf.${wan}.accept_ra" = 2;
+    # Jan 2026: this breaks things when systemd-network units. systemd-network uses a userspace
+    # implementation and this option should not be enabled.
+    # "net.ipv6.conf.${wan}.accept_ra" = 2;
     "net.ipv6.conf.${wan}.autoconf" = 1;
   };
 
