@@ -94,6 +94,7 @@ in
 
   networking = {
     useDHCP = false; # manually configure below via networkd
+    nftables.enable = true;
   };
 
   systemd.network = {
@@ -102,7 +103,6 @@ in
     config.networkConfig.SpeedMeter = true;
 
     # TODO: allow hotplug for all
-    # NOTE: nftables.enable = true is tempting however interactions with Docker are complicated.
 
     wait-online = {
       extraArgs = [

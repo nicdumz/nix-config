@@ -50,14 +50,15 @@ in
     };
     users.groups.media = { };
 
+    # TODO: maybe could be in the firewall module.
+    networking.firewall.interfaces.wan0 = {
+      allowedTCPPorts = [ config.services.qbittorrent.torrentingPort ];
+      allowedUDPPorts = [ config.services.qbittorrent.torrentingPort ];
+    };
+
     ${namespace} = {
       motd.systemdServices = [ "qbittorrent" ];
       traefik.webservices.qbittorrent.port = config.services.qbittorrent.webuiPort;
-      firewall = {
-        tcp = [
-          config.services.qbittorrent.torrentingPort
-        ];
-      };
     };
   };
 }
