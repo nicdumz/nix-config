@@ -31,7 +31,6 @@ let
           name = "radarr";
           suffix = "(Movies)";
         }
-        "calibreweb"
       ];
     };
     Food = {
@@ -67,10 +66,6 @@ let
           name = "jackett";
           check = "https://jackett.home.nicdumz.fr/UI/Dashboard";
           icon = "/assets/jackett.png";
-        }
-        {
-          name = "calibredownloader";
-          icon = "calibreweb";
         }
       ];
     };
