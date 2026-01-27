@@ -10,10 +10,8 @@ let
   cfg = config.${namespace}.traefik;
 
   exposeLanIP = config.${namespace}.myipv4;
-  dockerSocket = builtins.head config.virtualisation.docker.listenOptions;
   staticConf = lib.${namespace}.readYAML pkgs ./traefik.yml;
-  # TODO: the entirety of the config could be in nix, allowing me to remove the docker
-  # provider / dependency on the socket entirely
+  # TODO: the entirety of the config could be in nix
   dynamicConf = lib.${namespace}.readYAML pkgs ./dynamic.yml;
   additionalDynamicConfig = {
     http = {
@@ -57,7 +55,7 @@ in
           };
         }
       );
-      description = "web services to reverse proxy to. This is additional to auto-discovery via docker provider";
+      description = "web services to reverse proxy to.";
     };
   };
 
@@ -73,7 +71,6 @@ in
         }
       ];
     };
-    users.groups.docker.members = [ "traefik" ];
 
     sops.secrets.gandi_token_env = {
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
@@ -84,7 +81,6 @@ in
     services.traefik = {
       enable = true;
       staticConfigOptions = lib.attrsets.recursiveUpdate staticConf {
-        providers.docker.endpoint = "unix://${dockerSocket}";
         # TODO: add Ipv6 ULA?
         entryPoints.websecure.address = "${exposeLanIP}:443";
       };

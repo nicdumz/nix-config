@@ -5,11 +5,6 @@ ping: {}
 metrics:
   prometheus:
     addEntryPointsLabels: true
-providers:
-  docker:
-    # exposedByDefault: true # this is the default
-    # endpoint: # overriden in derivation
-    defaultRule: "Host(`{{ .ContainerName }}.home.nicdumz.fr`)"
 entryPoints:
   traefik:
     # Overridden from :8080 which listens on all IPs.
