@@ -49,7 +49,7 @@ in
       # DHCP server.
       udp = [ 67 ];
     };
-    docker.enable = true;
+    homeassistant.enable = true;
     traefik.enable = true;
     glance.enable = true;
     grocy.enable = true;
@@ -94,36 +94,6 @@ in
 
   networking = {
     useDHCP = false; # manually configure below via networkd
-
-    # Docker firewall rules take over the forwarding chain and redirect all to DOCKER-USER.
-    # Make sure that forwarding still works as intended.
-    # There's a good discussion on https://github.com/NixOS/nixpkgs/issues/111852 although people
-    # are generally confused.
-    firewall.extraCommands = ''
-      ip46tables -N DOCKER-USER || true
-      ip46tables -N DOCKER-ISOLATION-STAGE-1 || true
-      ip46tables -N ts-forward || true
-
-      ip46tables -F FORWARD
-      ip46tables -P FORWARD DROP
-      ip46tables -A FORWARD -j DOCKER-USER
-      ip46tables -A FORWARD -j DOCKER-ISOLATION-STAGE-1
-
-      # DOCKER-USER is the chain that Docker lets us control.
-      ip46tables -F DOCKER-USER
-      # Tailscale rules first
-      ip46tables -A DOCKER-USER -j ts-forward
-      # Forward already open.
-      ip46tables -A DOCKER-USER -m state --state RELATED,ESTABLISHED -j ACCEPT
-
-      # Anything !wan can open to the outside.
-      ip46tables -A DOCKER-USER ! -i ${wan} -o ${wan} -j ACCEPT
-      # cross containers (different phys ifaces)
-      ip46tables -A DOCKER-USER -i docker-bridge -o docker-bridge -j ACCEPT
-
-      ip46tables -A DOCKER-USER -i ${wan} -j DROP
-      ip46tables -A DOCKER-USER -j RETURN
-    '';
   };
 
   systemd.network = {

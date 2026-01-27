@@ -25,7 +25,7 @@ in
       serverConfig = {
         LegalNotice.Accepted = true;
         BitTorrent.Session = {
-          DefaultSavePath = "${config.${namespace}.containers.dataroot.slow}/downloads";
+          DefaultSavePath = "/media/bigslowdata/downloads";
           QueueingSystemEnabled = true;
           IgnoreSlowTorrentsForQueueing = true;
           SlowTorrentsDownloadRate = 40; # kbps

@@ -10,7 +10,7 @@ http:
       ipAllowList:
         sourceRange:
           # Those IPs are set in compose2nix
-          - "ip.of.docker.bridge"
+          - "ip.of.lan.lol"
     cors:
       headers:
         accessControlAllowMethods:
