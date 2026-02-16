@@ -71,8 +71,9 @@ in
     };
     rebootRequiredCheck.enable = true;
     # observability stuff
-    loki.enable = true;
-    vector.enable = true;
+    # loki.enable = true;
+    # vector.enable = true;
+    victorialogs.enable = true;
     grafana.enable = true;
     prometheus.enable = true;
   };

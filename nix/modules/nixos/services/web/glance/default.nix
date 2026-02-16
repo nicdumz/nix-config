@@ -82,6 +82,11 @@ let
           icon = "prometheus";
         }
         "prometheus"
+        {
+          name = "victorialogs";
+          icon = "victoriametrics";
+          url = "https://victorialogs.home.nicdumz.fr/select/vmui/";
+        }
       ];
     };
   };
