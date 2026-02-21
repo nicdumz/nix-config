@@ -89,6 +89,16 @@ let
         }
       ];
     };
+    Access = {
+      order = 6;
+      sites = [
+        {
+          name = "pocketid";
+          icon = "/assets/pocketid.png";
+          url = "https://id.home.nicdumz.fr";
+        }
+      ];
+    };
   };
   sortedGroupValuePairList = lib.lists.sort (a: b: a.value.order < b.value.order) (
     lib.attrsets.mapAttrsToList lib.attrsets.nameValuePair groups
@@ -103,7 +113,7 @@ let
         name = if builtins.isString s then s else s.name;
         icon = if builtins.isString s then s else (s.icon or name);
         title_suffix = if s ? "suffix" then " ${s.suffix}" else "";
-        url = "https://${name}.home.nicdumz.fr";
+        url = s.url or "https://${name}.home.nicdumz.fr";
       in
       {
         inherit url;
