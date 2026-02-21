@@ -34,7 +34,7 @@ in
       };
 
       settings = {
-        server.domain = "grafana.home.nicdumz.fr";
+        server.root_url = "https://grafana.home.nicdumz.fr";
         # Note to self, default is already:
         # server.http_addr = "127.0.0.1";
         # server.http_port = 3000
