@@ -19,7 +19,9 @@ http:
           - OPTIONS
           - PUT
         accessControlAllowCredentials: true
-        accessControlAllowOriginList: ["https://jellyseerr.home.nicdumz.fr/", "https://home.nicdumz.fr"]
+        accessControlAllowHeaders: "*"
+        accessControlAllowOriginListRegex:
+          - ".*\\.home\\.nicdumz\\.fr"
         addVaryHeader: true
 tls:
   stores:
