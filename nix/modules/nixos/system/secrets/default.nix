@@ -35,4 +35,6 @@
   environment.systemPackages = with pkgs; [
     libfido2 # provides fido2-token utility
   ];
+  # Yubico
+  services.pcscd.enable = true;
 }
