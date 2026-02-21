@@ -76,6 +76,7 @@ in
     victorialogs.enable = true;
     grafana.enable = true;
     prometheus.enable = true;
+    pocketid.enable = true;
   };
 
   boot.kernel.sysctl = {
