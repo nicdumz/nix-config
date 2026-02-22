@@ -58,14 +58,14 @@ in
           ++ lib.lists.optional cfg.continue exts.continue.continue;
         userSettings = {
           # Tricky to get enough information density and not tiny fonts.
-          "editor.fontSize" = config.fontProfiles.monospace.size - 2;
+          # TODO: stylix took over
+          # "editor.fontSize" = config.fontProfiles.monospace.size - 2;
           "window.zoomLevel" = 1;
 
           "editor.rulers" = [
             80
             100
           ];
-          "editor.fontFamily" = config.fontProfiles.monospace.name + ", 'monospace', monospace";
           "files.insertFinalNewline" = true;
           "redhat.telemetry.enabled" = false;
           "rewrap.autoWrap.enabled" = true;
@@ -94,7 +94,8 @@ in
               };
             };
           };
-          "workbench.colorTheme" = "Catppuccin Mocha";
+          # Ignore stylix settings
+          "workbench.colorTheme" = lib.mkForce "Catppuccin Mocha";
           "workbench.iconTheme" = "catppuccin-mocha";
           # BEGIN Catpuccin recs
           # we try to make semantic highlighting look good
