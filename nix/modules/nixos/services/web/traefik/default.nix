@@ -1,9 +1,8 @@
 {
   config,
-  inputs,
   lib,
   namespace,
-  pkgs,
+  inputs,
   ...
 }:
 let
@@ -136,18 +135,18 @@ in
       ];
     };
 
-    sops.secrets.gandi_token_env = {
+    sops.secrets.gandi-token = {
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
-      owner = config.users.users.traefik.name;
-      inherit (config.users.users.nobody) group;
     };
+
+    sops.templates.gandi-token-env.content = "GANDIV5_PERSONAL_ACCESS_TOKEN=${config.sops.placeholder.gandi-token}";
 
     services.traefik = {
       enable = true;
       staticConfigOptions = staticConfig;
       dynamicConfigOptions = dynamicConfig;
       environmentFiles = [
-        config.sops.secrets.gandi_token_env.path
+        config.sops.templates.gandi-token-env.path
       ];
     };
   };
