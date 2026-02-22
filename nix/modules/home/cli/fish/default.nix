@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   ...
 }:
 {
@@ -7,6 +8,9 @@
     enable = true;
     # e.g. eza will setup abbrevations
     preferAbbrs = true;
+    interactiveShellInit = ''
+      ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
+    '';
     functions = {
       fish_greeting = ""; # bye greeting.
       # Merge history when pressing up
