@@ -1,7 +1,5 @@
 {
-  config,
   lib,
-  pkgs,
   ...
 }:
 {
@@ -9,31 +7,6 @@
     enable = true;
     # e.g. eza will setup abbrevations
     preferAbbrs = true;
-    interactiveShellInit = ''
-      set -l myblue "5277C3"
-
-      set -g tide_nix3_shell_bg_color $myblue
-      set -g tide_nix3_shell_color "white"
-      set -g tide_nix3_shell_icon ""
-
-      set -g tide_docker_bg_color $myblue
-      set -g tide_docker_color "white"
-      set -g tide_docker_icon ""
-
-      set -g tide_python_bg_color $myblue
-      set -g tide_python_color "white"
-      set -g tide_python_icon "󰌠"
-
-      set -g tide_gcloud_bg_color $myblue
-      set -g tide_gcloud_color "white"
-      set -g tide_gcloud_icon "󰊭"
-
-      set -g tide_go_bg_color $myblue
-      set -g tide_go_color "white"
-      set -g tide_go_icon ""
-
-      set -g tide_right_prompt_items status cmd_duration context jobs direnv time newline nix3_shell docker python go
-    ''; # maybe extend later
     functions = {
       fish_greeting = ""; # bye greeting.
       # Merge history when pressing up
@@ -54,25 +27,7 @@
           '';
         description = "override user completion for systems with lots of net users -- only use local users";
       };
-      # Improved nix shell (define a prompt item that I can use in e.g. tide_right_prompt_items)
-      _tide_item_nix3_shell = # fish
-        ''
-          set packages (nix-inspect)
-          if test -n "$IN_NIX_SHELL"
-            set -q name; or set name nix-shell
-            set -p packages $name
-          end
-          if set -q packages[1] &>/dev/null
-            _tide_print_item nix3_shell $tide_nix3_shell_icon' ' " $(string shorten -m 60 "$packages")"
-          end
-        '';
     };
-    plugins = [
-      {
-        name = "tide";
-        inherit (pkgs.fishPlugins.tide) src;
-      }
-    ];
     shellAbbrs = {
       kittydiff = "kitty +kitten diff";
       # fish for devshells
@@ -86,11 +41,8 @@
     };
     # TODO: maybe work specific extensions
   };
-  # Note: most examples I found on github were doing this wrong.
-  #  * `run` is necessary to support dry-run
-  #  * `linkGeneration` dependency is also required
-  # Note: https://github.com/snowfallorg/lib/issues/58 for config.lib vs lib.hm
-  home.activation.configure-tide = config.lib.dag.entryAfter [ "installPackages" "linkGeneration" ] ''
-    run ${lib.getExe pkgs.fish} -c "tide configure --auto --style=Rainbow --prompt_colors='True color' --show_time='24-hour format' --rainbow_prompt_separators=Round --powerline_prompt_heads=Round --powerline_prompt_tails=Round --powerline_prompt_style='Two lines, character and frame' --prompt_connection=Solid --powerline_right_prompt_frame=No --prompt_connection_andor_frame_color=Dark --prompt_spacing=Sparse --icons='Many icons' --transient=No"
-  '';
+  programs.starship = {
+    enable = true;
+    settings = lib.trivial.importTOML ./starship.toml;
+  };
 }
