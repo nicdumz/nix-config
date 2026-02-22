@@ -48,10 +48,6 @@ let
           icon = "paperlessngx";
         }
         "homeassistant"
-        {
-          name = "traefik";
-          icon = "traefikproxy";
-        }
       ];
     };
     Downloads = {
@@ -97,6 +93,14 @@ let
           icon = "/assets/pocketid.png";
           url = "https://id.home.nicdumz.fr";
         }
+        {
+          name = "traefik";
+          icon = "traefikproxy";
+        }
+        {
+          name = "ddns-updater";
+          icon = "gandi";
+        }
       ];
     };
   };
@@ -111,6 +115,7 @@ let
       s:
       let
         name = if builtins.isString s then s else s.name;
+        # default to simpleicon
         icon = if builtins.isString s then s else (s.icon or name);
         title_suffix = if s ? "suffix" then " ${s.suffix}" else "";
         url = s.url or "https://${name}.home.nicdumz.fr";
