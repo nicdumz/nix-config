@@ -18,6 +18,7 @@
       fish.colors.enable = false;
       kitty.colors.enable = false;
       neovim.colors.enable = false;
+      starship.colors.enable = false;
     };
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
     fonts = {
