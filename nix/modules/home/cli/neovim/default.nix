@@ -66,11 +66,13 @@
           let g:airline_section_y = '''
         '';
       }
-      vim-airline-themes
       vim-sensible
       {
         plugin = catppuccin-nvim;
-        config = "colorscheme catppuccin-mocha";
+        config = ''
+          colorscheme catppuccin-mocha
+          let g:airline_theme = 'catppuccin'
+        '';
       }
     ];
     defaultEditor = true;

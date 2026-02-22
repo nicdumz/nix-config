@@ -20,11 +20,6 @@ in
   config = lib.mkIf cfg.enable {
     programs.kitty = lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
       enable = true;
-      font = {
-        # TODO: this actually depends on display scaling ..
-        inherit (config.fontProfiles.monospace) size;
-        inherit (config.fontProfiles.monospace) name;
-      };
       themeFile = "Catppuccin-Mocha";
       # https://sw.kovidgoyal.net/kitty/shell-integration/
       # wut wut
