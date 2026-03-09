@@ -67,9 +67,6 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
 
   programs = {
     # top bar
-    # ashell.enable = true;
-    # ashell.systemd.enable = true;
-
     waybar = {
       enable = true;
       systemd.enable = true;
