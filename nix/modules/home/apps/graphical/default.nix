@@ -24,12 +24,129 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
       source = ~/.config/hypr/hyprland/*
     '';
   };
-  services.swaync.enable = true;
-  services.hyprpolkitagent.enable = true;
+  services = {
+    # notifications
+    swaync.enable = true;
+    hyprpolkitagent.enable = true;
+    network-manager-applet.enable = true;
+
+    # auto-lock
+    hypridle = {
+      enable = true;
+      settings = {
+        general = {
+          after_sleep_cmd = "hyprctl dispatch dpms on";
+          ignore_dbus_inhibit = false;
+          lock_cmd = "hyprlock";
+        };
+
+        listener = [
+          {
+            timeout = 900;
+            on-timeout = "hyprlock";
+          }
+          {
+            timeout = 1200;
+            on-timeout = "hyprctl dispatch dpms off";
+            on-resume = "hyprctl dispatch dpms on";
+          }
+        ];
+      };
+    };
+
+    # screen dimming / color
+    gammastep = {
+      enable = true;
+      tray = true;
+      # Zurich-ish
+      latitude = "47.37";
+      longitude = "8.53";
+      settings.general.adjustment-method = "wayland";
+    };
+  };
 
   programs = {
-    ashell.enable = true;
-    ashell.systemd.enable = true;
+    # top bar
+    # ashell.enable = true;
+    # ashell.systemd.enable = true;
+
+    waybar = {
+      enable = true;
+      systemd.enable = true;
+      settings = {
+        mainBar = {
+          # layer = "top";
+          # position = "top";
+          # height = 30;
+          modules-left = [
+            "hyprland/workspaces"
+            "hyprland/submap"
+          ];
+          modules-center = [ "hyprland/window" ];
+          modules-right = [
+            "mpd"
+            "idle_inhibitor"
+            "wireplumber"
+            "network"
+            "cpu"
+            "memory"
+            "temperature"
+            "battery"
+            "clock"
+            "tray"
+            "custom/power"
+          ];
+          tray.spacing = 20;
+
+          idle_inhibitor = {
+            format = "{icon}";
+            format-icons = {
+              activated = "";
+              deactivated = "";
+            };
+          };
+
+          "hyprland/workspaces" = {
+            format = "{name}";
+            on-click = "activate";
+            sort-by-number = true;
+            show-special = true;
+            special-visible-only = true;
+            format-icons = {
+              active = "";
+              default = "";
+            };
+          };
+          clock = {
+            tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
+            format = "{:%Y-%m-%d %H:%M}";
+            calendar.on-scroll = 1;
+            actions.on-scroll-up = "shift_up";
+            actions.on-scroll-down = "shift_down";
+          };
+          cpu = {
+            format = "{usage}% ";
+            tooltip = false;
+          };
+          memory.format = "{}% ";
+          "custom/power" = {
+            format = "⏻ ";
+            tooltip = false;
+            on-click = "wlogout";
+          };
+          network = {
+            format-wifi = "{essid} ({signalStrength}%) ";
+            format-ethernet = "{ipaddr}/{cidr} 󰈀";
+            tooltip-format = "{ifname} via {gwaddr} 󰈀";
+            format-linked = "{ifname} (No IP) 󰈀";
+            format-disconnected = "Disconnected ⚠";
+            format-alt = "{ifname}: {ipaddr}/{cidr}";
+          };
+        };
+      };
+    };
+
+    # run menu
     rofi = {
       enable = true;
       terminal = "kitty";
