@@ -41,13 +41,13 @@ in
   options.fontProfiles = {
     monospace = mkFontOption {
       kind = "monospace";
-      name = "Cascadia Code NF";
-      pkg = pkgs.cascadia-code;
+      name = "CaskaydiaCove Nerd Font";
+      pkg = pkgs.nerd-fonts.caskaydia-cove;
     };
     regular = mkFontOption {
       kind = "regular";
-      name = "Cantarell";
-      pkg = pkgs.cantarell-fonts;
+      name = "Arimo Nerd Font";
+      pkg = pkgs.nerd-fonts.arimo;
     };
   };
 
