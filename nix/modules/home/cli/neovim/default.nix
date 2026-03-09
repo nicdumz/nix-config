@@ -64,6 +64,9 @@
         config = ''
           let g:airline_powerline_fonts = 1
           let g:airline_section_y = '''
+          if exists('g:vscode') 
+            let g:airline_disable_statusline = 1
+          endif
         '';
       }
       vim-sensible
