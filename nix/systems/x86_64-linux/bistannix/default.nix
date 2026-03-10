@@ -22,7 +22,7 @@
     persistence.enable = true;
     tailscale.enable = true;
     scaling = {
-      defaultFontSize = 18;
+      defaultFontSize = 16;
       factor = 1.25;
     };
     ollama.enable = true;
