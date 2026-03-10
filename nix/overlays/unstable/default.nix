@@ -9,4 +9,6 @@ _final: _prev: {
   # Downgrade after https://github.com/NixOS/nixpkgs/issues/478145
   inherit (channels.nixpkgs-unstable) jackett;
   inherit (channels.nixpkgs-unstable) home-assistant;
+  # The version in stable is insecure
+  inherit (channels.nixpkgs-unstable) fosrl-pangolin;
 }

@@ -88,6 +88,7 @@ let
     Access = {
       order = 6;
       sites = [
+        "pangolin"
         {
           name = "pocketid";
           icon = "/assets/pocketid.png";

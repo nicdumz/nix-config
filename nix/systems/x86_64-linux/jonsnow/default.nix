@@ -38,10 +38,6 @@ in
 
   ${namespace} = {
     persistence.enable = true;
-    tailscale = {
-      enable = true;
-      exitNode.wanInterface = wan;
-    };
     blocky.enable = true;
     prober7.enable = true;
     firewall = {
@@ -77,6 +73,7 @@ in
     grafana.enable = true;
     prometheus.enable = true;
     pocketid.enable = true;
+    pangolin.enable = true;
   };
 
   boot.kernel.sysctl = {
