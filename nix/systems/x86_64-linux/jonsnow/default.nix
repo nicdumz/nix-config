@@ -89,6 +89,9 @@ in
     # implementation and this option should not be enabled.
     # "net.ipv6.conf.${wan}.accept_ra" = 2;
     "net.ipv6.conf.${wan}.autoconf" = 1;
+
+    # Grumbles, why isnt this implied due to masquerading below.
+    "net.ipv4.ip_forward" = 1;
   };
 
   networking = {
@@ -160,6 +163,8 @@ in
           # v4 stuff
           DHCPServer = true; # v4
           IPMasquerade = "ipv4";
+          IPv4Forwarding = true;
+          IPv6Forwarding = true;
 
           # v6 stuff
           IPv6AcceptRA = false;
