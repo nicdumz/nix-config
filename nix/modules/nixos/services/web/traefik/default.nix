@@ -70,7 +70,8 @@ let
     entryPoints.traefik.address = "127.0.0.1:8080";
     entryPoints.websecure = {
       # TODO: add Ipv6 ULA?
-      address = "${exposeLanIP}:443";
+      # Pangolin module tries to listen on all interfaces, do not let it.
+      address = lib.mkForce "${exposeLanIP}:443";
       http = {
         middlewares = [ "cors@file" ];
         tls.certResolver = "letsencrypt";
@@ -81,7 +82,8 @@ let
     # NOTE: this matches pangolin naming/configs
     certificatesResolvers.letsencrypt.acme = {
       email = "nicdumz@gmail.com";
-      storage = "/var/lib/traefik/acme.json";
+      # Pangolin module is silly and tries to override this.
+      storage = lib.mkForce "/var/lib/traefik/acme.json";
       dnsChallenge = {
         provider = "gandiv5";
         # Not sure, Gandi is making my life challenging (?)
@@ -143,6 +145,8 @@ in
 
     services.traefik = {
       enable = true;
+      # Enabling pangolin messes up with this default
+      dataDir = lib.mkForce "/var/lib/traefik";
       staticConfigOptions = staticConfig;
       dynamicConfigOptions = dynamicConfig;
       environmentFiles = [
