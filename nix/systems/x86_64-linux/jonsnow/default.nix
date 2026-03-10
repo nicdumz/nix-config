@@ -55,7 +55,7 @@ in
     bazarr.enable = true;
     radarr.enable = true;
     sonarr.enable = true;
-    jackett.enable = true;
+    prowlarr.enable = true;
     jellyseerr.enable = true;
     jellyfin.enable = true;
     motd = {

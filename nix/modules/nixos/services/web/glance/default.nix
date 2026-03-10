@@ -55,10 +55,7 @@ let
       sites = [
         "bazarr"
         "qbittorrent"
-        {
-          name = "jackett";
-          check = "https://jackett.home.nicdumz.fr/UI/Dashboard";
-        }
+        "prowlarr"
       ];
     };
     Observability = {
