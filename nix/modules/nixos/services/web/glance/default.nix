@@ -19,10 +19,7 @@ let
       order = 1;
       sites = [
         "jellyfin"
-        {
-          name = "jellyseerr";
-          icon = "/assets/jellyseerr.png";
-        }
+        "jellyseerr"
         {
           name = "sonarr";
           suffix = "(Series)";
@@ -45,23 +42,22 @@ let
       sites = [
         {
           name = "paperless";
-          icon = "paperlessngx";
+          icon = "paperless-ngx";
         }
-        "homeassistant"
+        {
+          name = "homeassistant";
+          icon = "home-assistant";
+        }
       ];
     };
     Downloads = {
       order = 4;
       sites = [
-        {
-          name = "bazarr";
-          icon = "/assets/bazarr.png";
-        }
+        "bazarr"
         "qbittorrent"
         {
           name = "jackett";
           check = "https://jackett.home.nicdumz.fr/UI/Dashboard";
-          icon = "/assets/jackett.png";
         }
       ];
     };
@@ -91,12 +87,12 @@ let
         "pangolin"
         {
           name = "pocketid";
-          icon = "/assets/pocketid.png";
+          icon = "pocket-id";
           url = "https://id.home.nicdumz.fr";
         }
         {
           name = "traefik";
-          icon = "traefikproxy";
+          # icon = "traefikproxy";
         }
         {
           name = "ddns-updater";
@@ -116,7 +112,7 @@ let
       s:
       let
         name = if builtins.isString s then s else s.name;
-        # default to simpleicon
+        # default to self-hosted icons
         icon = if builtins.isString s then s else (s.icon or name);
         title_suffix = if s ? "suffix" then " ${s.suffix}" else "";
         url = s.url or "https://${name}.home.nicdumz.fr";
@@ -124,7 +120,7 @@ let
       {
         inherit url;
         title = (capitalize name) + title_suffix;
-        icon = if lib.strings.hasInfix "/" icon then icon else "si:${icon}";
+        icon = if lib.strings.hasInfix "/" icon then icon else "sh:${icon}";
         check-url = s.check or url;
       }
     ) v.sites;
