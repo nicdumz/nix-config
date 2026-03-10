@@ -1,5 +1,3 @@
-/* Just replicate what is being done for .simple-icon */
 .monitor-site-icon {
-    filter: invert(1);
-    opacity: 0.7;
+    opacity: 0.65;
 }
