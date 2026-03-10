@@ -17,14 +17,15 @@
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
     services = {
-      displayManager.gdm.enable = true;
-      udev.packages = [ pkgs.gnome-settings-daemon ];
+      displayManager.sddm.enable = true;
+      displayManager.sddm.wayland.enable = true;
+      # udev.packages = [ pkgs.gnome-settings-daemon ];
     };
 
     environment = {
       systemPackages = with pkgs; [
         gedit
-        gnomeExtensions.appindicator
+        # gnomeExtensions.appindicator
         # clipboard support
         wl-clipboard
       ];
