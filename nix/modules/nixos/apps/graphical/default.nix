@@ -6,11 +6,10 @@
   ...
 }:
 {
-  imports = [ inputs.stylix.nixosModules.stylix ];
+  imports = [ inputs.catppuccin.nixosModules.catppuccin ];
 
   config = lib.mkIf config.nicdumz.graphical {
-    stylix.homeManagerIntegration.autoImport = false;
-    stylix.homeManagerIntegration.followSystem = false;
+    catppuccin.enable = true;
 
     # TODO: modularize between hyprland and Gnome
     programs.hyprland.enable = true;
