@@ -59,8 +59,8 @@ in
           ++ lib.lists.optional cfg.continue exts.continue.continue;
         userSettings = {
           # Tricky to get enough information density and not tiny fonts.
-          # TODO: stylix took over
-          # "editor.fontSize" = config.fontProfiles.monospace.size - 2;
+          "editor.fontSize" = config.fontProfiles.monospace.size;
+          "editor.fontFamily" = config.fontProfiles.monospace.name + ", 'monospace', monospace";
           "window.zoomLevel" = 1;
 
           "editor.rulers" = [

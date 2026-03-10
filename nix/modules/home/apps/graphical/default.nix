@@ -3,7 +3,6 @@
   osConfig ? { },
   lib,
   namespace,
-  pkgs,
   ...
 }:
 lib.mkIf (osConfig.${namespace}.graphical or false) {
@@ -70,6 +69,12 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
     waybar = {
       enable = true;
       systemd.enable = true;
+      style = ''
+        * {
+            font-family: "${config.fontProfiles.monospace.name}";
+            font-size: ${toString config.fontProfiles.monospace.size}pt;
+        }
+      '';
       settings = {
         mainBar = {
           # layer = "top";
