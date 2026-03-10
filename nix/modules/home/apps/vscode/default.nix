@@ -46,8 +46,9 @@ in
           [
             asvetliakov.vscode-neovim
             bierner.github-markdown-preview
-            catppuccin.catppuccin-vsc
-            catppuccin.catppuccin-vsc-icons
+            # Bundled with catppuccin repo
+            # catppuccin.catppuccin-vsc
+            # catppuccin.catppuccin-vsc-icons
             golang.go
             jnoortheen.nix-ide
             mkhl.direnv
@@ -94,16 +95,7 @@ in
               };
             };
           };
-          # Ignore stylix settings
-          "workbench.colorTheme" = lib.mkForce "Catppuccin Mocha";
-          "workbench.iconTheme" = "catppuccin-mocha";
           # BEGIN Catpuccin recs
-          # we try to make semantic highlighting look good
-          "editor.semanticHighlighting.enabled" = true;
-          # prevent VSCode from modifying the terminal colors
-          "terminal.integrated.minimumContrastRatio" = 1;
-          # make the window's titlebar use the workbench colors
-          "window.titleBarStyle" = "custom";
           # applicable if you use Go, this is an opt-in flag!
           "gopls" = {
             "ui.semanticTokens" = true;
