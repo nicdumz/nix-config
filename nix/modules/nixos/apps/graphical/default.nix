@@ -3,6 +3,7 @@
   config,
   lib,
   inputs,
+  namespace,
   ...
 }:
 {
@@ -19,8 +20,19 @@
     services = {
       displayManager.sddm.enable = true;
       displayManager.sddm.wayland.enable = true;
+      # Allows remembering the last logged in user.
+      accounts-daemon.enable = true;
       # udev.packages = [ pkgs.gnome-settings-daemon ];
     };
+
+    ${namespace} = {
+      # needs persistence
+      persistence.directories = [ config.users.users.sddm.home ];
+    };
+    # TODO: upstream
+    systemd.services.display-manager.unitConfig.RequiresMountsFor = [
+      config.users.users.sddm.home
+    ];
 
     environment = {
       systemPackages = with pkgs; [
