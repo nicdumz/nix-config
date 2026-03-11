@@ -10,6 +10,27 @@ let
 
   exposeLanIP = config.${namespace}.myipv4;
 
+  # Individual OIDC:
+  # - mealie
+  # - jellyfin (but allow TV...)
+  # - jellyseerr would need https://github.com/seerr-team/seerr/issues/183 or preview-OIDC branch
+  # - paperless
+  # - (grafana, but lost server admin)
+  # - (pangolin)
+
+  # Put behind an OIDC proxy (maybe oauth2-proxy):
+  # - radarr/bazarr/sonarr/prowlarr: disable auth first
+  # - victorialogs
+  # - traefik? (but open API for pangolin? first)
+  # - homeassistant (disable auth at https://www.home-assistant.io/docs/authentication/providers/ )
+  # - qbittorrent (and disable auth / local ips)
+  # - alertmanager
+  # - blackbox
+  # - ddns-updater?
+
+  # Other:
+  # - grocy: set ReverseProxyAuthMiddleware and pass the right header
+
   dynamicConfig = {
     http = {
       middlewares = {
