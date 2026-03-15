@@ -31,8 +31,7 @@ in
       persistence.directories = [
         {
           directory = config.services.radarr.dataDir;
-          inherit (config.services.radarr) user;
-          inherit (config.services.radarr) group;
+          inherit (config.services.radarr) user group;
         }
       ];
     };

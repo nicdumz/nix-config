@@ -31,8 +31,7 @@ in
       persistence.directories = [
         {
           directory = config.services.sonarr.dataDir;
-          inherit (config.services.sonarr) user;
-          inherit (config.services.sonarr) group;
+          inherit (config.services.sonarr) user group;
         }
       ];
     };

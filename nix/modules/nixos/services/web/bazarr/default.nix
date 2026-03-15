@@ -31,8 +31,7 @@ in
       persistence.directories = [
         {
           directory = config.services.bazarr.dataDir;
-          user = config.users.users.bazarr.name;
-          inherit (config.services.bazarr) group;
+          inherit (config.services.bazarr) user group;
         }
       ];
     };

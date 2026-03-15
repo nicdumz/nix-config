@@ -27,7 +27,13 @@
 
     ${namespace} = {
       # needs persistence
-      persistence.directories = [ config.users.users.sddm.home ];
+      persistence.directories = [
+        {
+          directory = config.users.users.sddm.home;
+          user = config.users.users.sddm.name;
+          inherit (config.users.users.sddm) group;
+        }
+      ];
     };
     # TODO: upstream
     systemd.services.display-manager.unitConfig.RequiresMountsFor = [

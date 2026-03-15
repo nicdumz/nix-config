@@ -44,5 +44,11 @@ in
       ];
       traefik.webservices.jellyseerr.port = config.services.jellyseerr.port;
     };
+    systemd.tmpfiles.settings.preservation = {
+      "/var/lib/jellyseerr".d = {
+        user = config.users.users.jellyseerr.name;
+        inherit (config.users.users.jellyseerr) group;
+      };
+    };
   };
 }
