@@ -6,6 +6,11 @@
   namespace,
   ...
 }:
+let
+  # Approximation
+  # TODO: put somewhere else
+  laptop = osConfig.networking.networkmanager.enable or false;
+in
 lib.mkIf (osConfig.${namespace}.graphical or false) {
   # TODO: modularize
   wayland.windowManager.hyprland = {
@@ -149,19 +154,24 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
                 middle = [
                   "windowtitle"
                 ];
-                right = [
-                  "media"
-                  "volume"
-                  # "network"
-                  # "bluetooth"
-                  # TODO: make it configurable
-                  # "battery"
-                  "hypridle"
-                  # Note: using gammasetp instead
-                  # "hyprsunset"
-                  "systray"
-                  "clock"
-                  "notifications"
+                right = builtins.concatLists [
+                  [
+                    "media"
+                    "volume"
+                  ]
+                  (lib.optionals laptop [
+                    "network"
+                    "bluetooth"
+                    "battery"
+                  ])
+                  [
+                    "hypridle"
+                    # Note: using gammasetp instead
+                    # "hyprsunset"
+                    "systray"
+                    "clock"
+                    "notifications"
+                  ]
                 ];
               };
             };
