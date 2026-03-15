@@ -47,8 +47,7 @@ in
       persistence.directories = [
         {
           directory = config.services.pocket-id.dataDir;
-          user = config.users.users.pocket-id.name;
-          inherit (config.users.users.pocket-id) group;
+          inherit (config.services.pocket-id) user group;
         }
       ];
       motd.systemdServices = [ "pocket-id" ];

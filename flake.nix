@@ -6,7 +6,7 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Has no releases so far, and not using nixpkgs.
-    impermanence.url = "github:nix-community/impermanence";
+    preservation.url = "github:nix-community/preservation";
 
     # Organize folders according to this predefined structure.
     snowfall-lib = {

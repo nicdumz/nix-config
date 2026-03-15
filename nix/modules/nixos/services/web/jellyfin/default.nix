@@ -35,22 +35,23 @@ in
       persistence.directories = [
         {
           directory = config.services.jellyfin.configDir;
-          user = config.users.users.jellyfin.name;
-          group = "media";
+          inherit (config.services.jellyfin) user group;
         }
         {
           directory = config.services.jellyfin.logDir;
-          user = config.users.users.jellyfin.name;
-          group = "media";
+          inherit (config.services.jellyfin) user group;
         }
         {
           directory = config.services.jellyfin.cacheDir;
-          user = config.users.users.jellyfin.name;
-          group = "media";
+          inherit (config.services.jellyfin) user group;
         }
       ];
       # unfortunately not exposed in the service config.
       traefik.webservices.jellyfin.port = 8096;
+    };
+    # Parent needs to exist with correct permissions but no need to preserve all of it.
+    systemd.tmpfiles.settings.preservation.${config.services.jellyfin.dataDir}.d = {
+      inherit (config.services.jellyfin) user group;
     };
   };
 }

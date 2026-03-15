@@ -22,10 +22,16 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # Otherwise we fill up / (and redownload models).
     ${namespace} = {
-      persistence.directories = [ config.services.ollama.home ];
       motd.systemdServices = [ "ollama" ];
+      # needs persistence
+      # Otherwise we fill up / (and redownload models).
+      persistence.directories = [
+        {
+          directory = config.users.users.ollama.home;
+          inherit (config.services.ollama) user group;
+        }
+      ];
     };
     services.ollama = {
       enable = true;

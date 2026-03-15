@@ -40,8 +40,7 @@ in
     ${namespace}.persistence.directories = [
       {
         directory = config.services.loki.dataDir;
-        user = config.users.users.loki.name;
-        inherit (config.users.users.loki) group;
+        inherit (config.services.loki) user group;
       }
     ];
 
