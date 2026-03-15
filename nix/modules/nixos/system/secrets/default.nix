@@ -19,6 +19,15 @@
       '';
       owner = "ndumazet";
     };
+
+    # used in home-manager
+    secrets.weather_api_key = { };
+    templates.weather_api_key = {
+      content = ''
+        { "weather_api_key": "${config.sops.placeholder.weather_api_key}" }
+      '';
+      owner = "ndumazet";
+    };
   };
   # TODO: upstream
   systemd.services =

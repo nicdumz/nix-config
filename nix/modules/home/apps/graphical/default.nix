@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   osConfig ? { },
   lib,
   namespace,
@@ -24,10 +25,7 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
     '';
   };
   services = {
-    # notifications
-    swaync.enable = true;
     hyprpolkitagent.enable = true;
-    network-manager-applet.enable = true;
 
     # auto-lock
     hypridle = {
@@ -37,6 +35,7 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
           after_sleep_cmd = "hyprctl dispatch dpms on";
           ignore_dbus_inhibit = false;
           lock_cmd = "hyprlock";
+          before_sleep_cmd = "hyprlock";
         };
 
         listener = [
@@ -62,91 +61,137 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
       longitude = "8.53";
       settings.general.adjustment-method = "wayland";
     };
+
+    hyprpaper = {
+      enable = true;
+      settings = {
+        splash = false;
+        preload = [
+          "${inputs.self.outPath}/assets/wallpapers/train-sideview.png"
+        ];
+        wallpaper = [
+          ",${inputs.self.outPath}/assets/wallpapers/train-sideview.png"
+        ];
+      };
+    };
   };
 
   programs = {
-    # top bar
-    waybar = {
-      enable = true;
-      systemd.enable = true;
-      style = ''
-        * {
-            font-family: "${config.fontProfiles.monospace.name}";
-            font-size: ${toString config.fontProfiles.monospace.size}pt;
-        }
-      '';
-      settings = {
-        mainBar = {
-          # layer = "top";
-          # position = "top";
-          # height = 30;
-          modules-left = [
-            "hyprland/workspaces"
-            "hyprland/submap"
-          ];
-          modules-center = [ "hyprland/window" ];
-          modules-right = [
-            "mpd"
-            "idle_inhibitor"
-            "wireplumber"
-            "network"
-            "cpu"
-            "memory"
-            "temperature"
-            "battery"
-            "clock"
-            "tray"
-            "custom/power"
-          ];
-          tray.spacing = 20;
+    # top bar & notifications
+    hyprpanel =
+      let
+        themeDirectory = "${config.programs.hyprpanel.package}/share/themes";
+        currentTheme = "catppuccin_mocha";
+        raw = lib.importJSON "${themeDirectory}/${currentTheme}.json";
+        selectedTheme = raw.theme or raw;
 
-          idle_inhibitor = {
-            format = "{icon}";
-            format-icons = {
-              activated = "";
-              deactivated = "";
-            };
-          };
+        # We need to turn the theme json into a nested attribute set. Otherwise we
+        # end up with an incorrect configuration that looks like:
+        # theme: {theme.bar.transparent: "value", theme.foo.bar: "another value"}
+        # when what we really want is: theme: {bar: ..., buttons: ...}
+        # ----
+        # turn "foo.bar.baz" and value into { foo = { bar = { baz = value; }; }; }
+        nestAttr = path: value: lib.attrsets.setAttrByPath (lib.splitString "." path) value;
 
-          "hyprland/workspaces" = {
-            format = "{name}";
-            on-click = "activate";
-            sort-by-number = true;
-            show-special = true;
-            special-visible-only = true;
-            format-icons = {
-              active = "";
-              default = "";
+        # merge a flat attrset into nested
+        unflatten =
+          flat:
+          lib.foldlAttrs (
+            acc: k: v:
+            lib.recursiveUpdate acc (nestAttr k v)
+          ) { } flat;
+
+        themeAttrs = unflatten selectedTheme;
+        baseTheme = themeAttrs.theme;
+
+        power = {
+          sleep = "systemctl suspend";
+          logout = "hyprctl dispatch exit";
+          reboot = "systemctl reboot";
+          shutdown = "systemctl poweroff";
+          confirmation = false;
+        };
+      in
+      {
+        enable = true;
+        settings = {
+          theme = baseTheme // {
+            font = {
+              name = "CaskaydiaCove NF";
+              size = "16px";
             };
+            bar.buttons.windowtitle.spacing = "1em";
           };
-          clock = {
-            tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-            format = "{:%Y-%m-%d %H:%M}";
-            calendar.on-scroll = 1;
-            actions.on-scroll-up = "shift_up";
-            actions.on-scroll-down = "shift_down";
+          menus = {
+            clock.time.military = true;
+            clock.weather.unit = "metric";
+            clock.weather.location = "Zurich, Switzerland";
+            clock.weather.key = osConfig.sops.templates.weather_api_key.path;
+            dashboard.shortcuts.left = {
+              shortcut1.icon = "";
+              shortcut1.command = "google-chrome";
+              shortcut1.tooltip = "Chrome";
+              shortcut2.icon = "";
+              shortcut2.command = "codium";
+              shortcut2.tooltip = "VSCodium";
+              shortcut3.icon = "󰄛";
+              shortcut3.command = "kitty";
+              shortcut3.tooltip = "Terminal";
+            };
+            dashboard.powermenu = power;
+            inherit power;
           };
-          cpu = {
-            format = "{usage}% ";
-            tooltip = false;
+          bar = {
+            clock.format = "%a %b %d  %H:%M:%S";
+            notifications.show_total = true;
+            launcher.icon = "󰍜";
+            layouts = {
+              "0" = {
+                left = [
+                  "dashboard"
+                  "workspaces"
+                ];
+                middle = [
+                  "windowtitle"
+                ];
+                right = [
+                  "media"
+                  "volume"
+                  # "network"
+                  # "bluetooth"
+                  # TODO: make it configurable
+                  # "battery"
+                  "hypridle"
+                  # Note: using gammasetp instead
+                  # "hyprsunset"
+                  "systray"
+                  "clock"
+                  "notifications"
+                ];
+              };
+            };
+            systray.customIcons = {
+              gammastep = {
+                icon = "󱩌";
+              };
+            };
+            windowtitle.title_map = [
+              [
+                "gjs"
+                ""
+                "Hyprpanel Settings"
+              ]
+              [
+                "codium"
+                ""
+                "Codium"
+              ]
+            ];
           };
-          memory.format = "{}% ";
-          "custom/power" = {
-            format = "⏻ ";
-            tooltip = false;
-            on-click = "wlogout";
-          };
-          network = {
-            format-wifi = "{essid} ({signalStrength}%) ";
-            format-ethernet = "{ipaddr}/{cidr} 󰈀";
-            tooltip-format = "{ifname} via {gwaddr} 󰈀";
-            format-linked = "{ifname} (No IP) 󰈀";
-            format-disconnected = "Disconnected ⚠";
-            format-alt = "{ifname}: {ipaddr}/{cidr}";
-          };
+          wallpaper.enable = false;
+          scalingPriority = "hyprland";
         };
       };
-    };
 
     # run menu
     rofi = {
@@ -159,53 +204,41 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
         location = 0;
         # font = "JetBrainsMono Nerd Font Mono 12";
         drun-display-format = "{icon} {name}";
-        display-drun = " Apps";
-        display-run = " Run";
+        display-drun = " Apps";
+        display-run = " Run";
         display-filebrowser = " File";
       };
+      # This theme is adding to the catppuccin mocha theme, mostly rounding.
+      theme =
+        let
+          # Use `mkLiteral` for string-like values that should show without
+          # quotes, e.g.:
+          # {
+          #   foo = "abc"; => foo: "abc";
+          #   bar = mkLiteral "abc"; => bar: abc;
+          # };
+          inherit (config.lib.formats.rasi) mkLiteral;
+        in
+        {
+          window = {
+            # width:            600px;
+            border = mkLiteral "2px";
+            border-color = mkLiteral "@blue"; # Mocha accent color
+            border-radius = mkLiteral "12px"; # Matches standard HyprPanel rounding
+            # background-color = mkLiteral "@bg-col";
+          };
+          element = {
+            padding = mkLiteral "8px";
+            border-radius = mkLiteral "8px"; # Rounded selection highlight
+            margin = mkLiteral "2px 5px";
+          };
+          "element selected.normal" = {
+            # force maroon for selected color.
+            background-color = mkLiteral "@maroon";
+          };
+        };
     };
 
-    wlogout = {
-      enable = true;
-      layout = [
-        {
-          label = "shutdown";
-          action = "sleep 1; systemctl poweroff";
-          text = "Shutdown";
-          keybind = "s";
-        }
-        {
-          "label" = "reboot";
-          "action" = "sleep 1; systemctl reboot";
-          "text" = "Reboot";
-          "keybind" = "r";
-        }
-        {
-          "label" = "logout";
-          "action" = "sleep 1; hyprctl dispatch exit";
-          "text" = "Exit";
-          "keybind" = "e";
-        }
-        {
-          "label" = "suspend";
-          "action" = "sleep 1; systemctl suspend";
-          "text" = "Suspend";
-          "keybind" = "u";
-        }
-        {
-          "label" = "lock";
-          "action" = "sleep 1; hyprlock";
-          "text" = "Lock";
-          "keybind" = "l";
-        }
-        {
-          "label" = "hibernate";
-          "action" = "sleep 1; systemctl hibernate";
-          "text" = "Hibernate";
-          "keybind" = "h";
-        }
-      ];
-    };
   };
   # Optional, hint Electron apps to use Wayland:
   home.sessionVariables.NIXOS_OZONE_WL = "1";
