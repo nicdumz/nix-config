@@ -17,12 +17,7 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
       "$mod" = "SUPER";
       "$terminal" = "kitty";
     };
-    extraConfig = ''
-      exec-once = $terminal
-      # This lets me add non-hermetic settings and reloading before integrating
-      # them into this configuration.
-      source = ~/.config/hypr/hyprland/*
-    '';
+    extraConfig = builtins.readFile ./hyprland.conf;
   };
   services = {
     hyprpolkitagent.enable = true;
