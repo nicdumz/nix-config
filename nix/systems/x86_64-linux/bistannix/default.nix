@@ -26,7 +26,10 @@
       factor = 1.25;
     };
     ollama.enable = true;
+    boot.resolution = "3840x2160";
   };
+  # NOTE: if setting up new system you first need to enroll keys etc.
+  boot.loader.limine.secureBoot.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   networking.networkmanager.enable = false;
