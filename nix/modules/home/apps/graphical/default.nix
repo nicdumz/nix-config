@@ -123,20 +123,30 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
             bar.buttons.windowtitle.spacing = "1em";
           };
           menus = {
-            clock.time.military = true;
-            clock.weather.unit = "metric";
-            clock.weather.location = "Zurich, Switzerland";
-            clock.weather.key = osConfig.sops.templates.weather_api_key.path;
+            clock = {
+              time.military = true;
+              weather = {
+                unit = "metric";
+                location = "Zurich, Switzerland";
+                key = osConfig.sops.templates.weather_api_key.path;
+              };
+            };
             dashboard.shortcuts.left = {
-              shortcut1.icon = "";
-              shortcut1.command = "google-chrome";
-              shortcut1.tooltip = "Chrome";
-              shortcut2.icon = "";
-              shortcut2.command = "codium";
-              shortcut2.tooltip = "VSCodium";
-              shortcut3.icon = "󰄛";
-              shortcut3.command = "kitty";
-              shortcut3.tooltip = "Terminal";
+              shortcut1 = {
+                icon = "";
+                command = "google-chrome";
+                tooltip = "Chrome";
+              };
+              shortcut2 = {
+                icon = "";
+                command = "codium";
+                tooltip = "VSCodium";
+              };
+              shortcut3 = {
+                icon = "󰄛";
+                command = "kitty";
+                tooltip = "Terminal";
+              };
             };
             dashboard.powermenu = power;
             inherit power;
