@@ -146,7 +146,7 @@ lib.mkIf (osConfig.${namespace}.graphical or false) {
             notifications.show_total = true;
             launcher.icon = "󰍜";
             layouts = {
-              "0" = {
+              "*" = {
                 left = [
                   "dashboard"
                   "workspaces"
