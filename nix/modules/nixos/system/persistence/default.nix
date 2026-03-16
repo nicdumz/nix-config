@@ -13,6 +13,14 @@ let
       directory = lib.mkOption { type = lib.types.str; };
       user = lib.mkOption { type = lib.types.str; };
       group = lib.mkOption { type = lib.types.str; };
+      configureParent = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+      };
+      parent = {
+        user = lib.mkOption { type = lib.types.str; };
+        group = lib.mkOption { type = lib.types.str; };
+      };
     };
   };
 in
