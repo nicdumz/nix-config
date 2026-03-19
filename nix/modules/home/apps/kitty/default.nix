@@ -2,7 +2,6 @@
   config,
   lib,
   namespace,
-  osConfig ? { },
   ...
 }:
 let
@@ -18,7 +17,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.kitty = lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
+    programs.kitty = lib.optionalAttrs config.${namespace}.device.isGraphical {
       enable = true;
       font = {
         # TODO: this actually depends on display scaling ..

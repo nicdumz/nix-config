@@ -2,7 +2,6 @@
   config,
   lib,
   namespace,
-  osConfig ? { },
   pkgs,
   ...
 }:
@@ -18,7 +17,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.enable && (osConfig.${namespace}.graphical or false)) {
+  config = lib.mkIf (cfg.enable && config.${namespace}.device.isGraphical) {
     home.packages = [
       pkgs.google-chrome
     ];

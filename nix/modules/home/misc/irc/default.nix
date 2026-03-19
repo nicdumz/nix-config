@@ -2,7 +2,6 @@
   config,
   lib,
   namespace,
-  osConfig ? { },
   ...
 }:
 let
@@ -20,6 +19,6 @@ in
   config = lib.mkIf cfg.enable {
     # TODO: lacks configuration
     programs.irssi.enable = true;
-    programs.hexchat.enable = osConfig.${namespace}.graphical or false;
+    programs.hexchat.enable = config.${namespace}.device.isGraphical;
   };
 }

@@ -2,7 +2,6 @@
   config,
   lib,
   namespace,
-  osConfig ? { },
   ...
 }:
 let
@@ -18,7 +17,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.librewolf = lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
+    programs.librewolf = lib.optionalAttrs config.${namespace}.device.isGraphical {
       enable = true;
       settings =
         let

@@ -9,9 +9,9 @@
 let
   # Approximation
   # TODO: put somewhere else
-  laptop = osConfig.networking.networkmanager.enable or false;
+  laptop = config.${namespace}.device.type == "laptop";
 in
-lib.mkIf (osConfig.${namespace}.graphical or false) {
+lib.mkIf config.${namespace}.device.isGraphical {
   # TODO: modularize
   wayland.windowManager.hyprland = {
     enable = true; # enable Hyprland
