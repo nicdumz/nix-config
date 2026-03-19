@@ -16,7 +16,7 @@
   };
 
   ${namespace} = {
-    graphical = true;
+    device.type = "desktop";
     persistence.enable = true;
   };
 

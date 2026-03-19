@@ -2,7 +2,6 @@
   config,
   lib,
   namespace,
-  osConfig ? { },
   ...
 }:
 let
@@ -16,7 +15,7 @@ in
     };
   };
 
-  config = lib.mkIf (osConfig.${namespace}.graphical or false) {
+  config = lib.mkIf config.${namespace}.device.isGraphical {
     dconf.settings = {
       "org/gnome/desktop/background" = {
         picture-uri-dark = "file://" + cfg.path;

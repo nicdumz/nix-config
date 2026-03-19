@@ -34,7 +34,7 @@ in
       pkgs.gopls
     ];
 
-    programs.vscode = lib.optionalAttrs (osConfig.${namespace}.graphical or false) {
+    programs.vscode = lib.optionalAttrs config.${namespace}.device.isGraphical {
       enable = true;
       package = pkgs.vscodium;
       mutableExtensionsDir = false;

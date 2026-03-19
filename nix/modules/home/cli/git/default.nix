@@ -12,6 +12,7 @@
         aliases = {
           st = "status";
           ci = "commit";
+          co = "checkout";
           glog = "log --graph --decorate --branches=*";
         };
         # TODO: everything below should be configured per-user.

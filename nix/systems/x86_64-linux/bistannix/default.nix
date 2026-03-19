@@ -18,7 +18,7 @@
   };
 
   ${namespace} = {
-    graphical = true;
+    device.type = "desktop";
     persistence.enable = true;
     tailscale.enable = true;
     scaling = {

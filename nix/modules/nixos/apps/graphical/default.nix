@@ -9,7 +9,7 @@
 {
   imports = [ inputs.catppuccin.nixosModules.catppuccin ];
 
-  config = lib.mkIf config.nicdumz.graphical {
+  config = lib.mkIf config.nicdumz.device.isGraphical {
     catppuccin.enable = true;
 
     # TODO: modularize between hyprland and Gnome

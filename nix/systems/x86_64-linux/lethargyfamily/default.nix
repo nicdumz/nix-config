@@ -20,7 +20,7 @@
   # services.network-manager-applet.enable = true;
 
   ${namespace} = {
-    graphical = true;
+    device.type = "laptop";
     persistence.enable = true;
     tailscale.enable = true;
     scaling = {

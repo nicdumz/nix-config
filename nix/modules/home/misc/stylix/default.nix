@@ -1,14 +1,14 @@
 {
+  config,
   namespace,
   inputs,
-  osConfig ? { },
   lib,
   ...
 }:
 {
   imports = [ inputs.catppuccin.homeModules.catppuccin ];
 
-  catppuccin = lib.mkIf (osConfig.${namespace}.graphical or false) {
+  catppuccin = lib.mkIf config.${namespace}.device.isGraphical {
     enable = true;
     cursors.enable = true;
     waybar.enable = false;
