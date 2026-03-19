@@ -6,6 +6,8 @@
       settings = {
         core.editor = "nvim";
         core.askPass = ""; # needs to be empty to use terminal for ask pass
+        credential.helper = "store";
+        push.default = "matching";
         "url \"git@github.com:\"".pushInsteadOf = "https://github.com/";
         aliases = {
           st = "status";
