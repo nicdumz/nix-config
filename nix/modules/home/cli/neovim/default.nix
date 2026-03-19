@@ -6,6 +6,7 @@
       # both already in system packages, but just in case...
       nixd
       nixfmt-rfc-style
+      nixfmt
     ];
     plugins = with pkgs.vimPlugins; [
       (nvim-treesitter.withPlugins (ps: [ ps.nix ]))
@@ -45,6 +46,9 @@
               filetypes = { 'nix', 'in.nix' },
               settings = {
                 nixd = {
+                  formatting = {
+                    command = { "nixfmt" },
+                  },
                   options = {
                     nixos = {
                       expr = '(builtins.getFlake ("git+file://" + toString ./.)).nixosConfigurations.bistannix.options',
