@@ -21,8 +21,15 @@ in
     };
     continue = lib.mkOption {
       type = lib.types.bool;
-      default = osConfig.${namespace}.ollama.enable or false;
+      default = config.${namespace}.ollama.enable;
       description = "Enable continue extension for local AI dev.";
+    };
+  };
+  options.${namespace}.ollama = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = osConfig.${namespace}.ollama.enable or null;
+      description = "Enable ollama integration";
     };
   };
 
@@ -154,5 +161,5 @@ in
         ];
       };
     };
-  }; # end of config
+  };
 }
