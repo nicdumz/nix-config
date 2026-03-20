@@ -37,6 +37,7 @@ in
   hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
 
   ${namespace} = {
+    device.type = "server";
     persistence.enable = true;
     blocky.enable = true;
     prober7.enable = true;

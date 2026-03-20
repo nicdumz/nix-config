@@ -16,4 +16,7 @@
   boot.initrd.systemd.enable = lib.mkForce false;
 
   snowfallorg.users.ndumazet.create = false;
+
+  # Installer is headless.
+  nicdumz.device.type = "server";
 }

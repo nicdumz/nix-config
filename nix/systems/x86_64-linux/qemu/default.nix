@@ -43,4 +43,6 @@
   system.stateVersion = "25.11";
   # networking.hostName = "qemu-vm";
   snowfallorg.users.ndumazet.create = false;
+
+  ${namespace}.device.type = "server";
 }
