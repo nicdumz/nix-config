@@ -39,7 +39,7 @@ in
 {
   options.${namespace}.scaling.defaultFontSize = lib.mkOption {
     type = lib.types.int;
-    default = 14;
+    default = osConfig.${namespace}.scaling.defaultFontSize or 14;
     description = "Default font size";
   };
 
@@ -58,10 +58,6 @@ in
   };
 
   config = {
-    ${namespace}.scaling.defaultFontSize = lib.mkIf (
-      osConfig.${namespace}.scaling.defaultFontSize or null != null
-    ) (lib.mkDefault osConfig.${namespace}.scaling.defaultFontSize);
-
     fonts.fontconfig.enable = true;
     home.packages = [
       # nit: this could iterate on above cfg somehow

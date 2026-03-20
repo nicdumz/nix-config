@@ -13,23 +13,25 @@ let
     inputs.nix-vscode-extensions.extensions.${pkgs.stdenv.hostPlatform.system}.vscode-marketplace;
 in
 {
-  options.${namespace}.vscode = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Enable vscode (well, vscodium) for this user.";
+  options.${namespace} = {
+    vscode = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Enable vscode (well, vscodium) for this user.";
+      };
+      continue = lib.mkOption {
+        type = lib.types.bool;
+        default = config.${namespace}.ollama.enable;
+        description = "Enable continue extension for local AI dev.";
+      };
     };
-    continue = lib.mkOption {
-      type = lib.types.bool;
-      default = config.${namespace}.ollama.enable;
-      description = "Enable continue extension for local AI dev.";
-    };
-  };
-  options.${namespace}.ollama = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = osConfig.${namespace}.ollama.enable or null;
-      description = "Enable ollama integration";
+    ollama = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = osConfig.${namespace}.ollama.enable or false;
+        description = "Enable ollama integration";
+      };
     };
   };
 
