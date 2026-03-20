@@ -16,7 +16,7 @@
   };
 
   ${namespace} = {
-    device.type = "desktop";
+    device.type = "server";
     persistence.enable = true;
   };
 

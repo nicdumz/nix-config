@@ -29,7 +29,7 @@ let
       # TODO: find a way to scale this depending on scaling factors.
       size = lib.mkOption {
         type = lib.types.int;
-        default = osConfig.${namespace}.scaling.defaultFontSize or 14;
+        default = config.${namespace}.scaling.defaultFontSize;
         description = "Size in pixels for ${kind} font profile";
         example = "14";
       };
@@ -37,6 +37,12 @@ let
   cfg = config.fontProfiles;
 in
 {
+  options.${namespace}.scaling.defaultFontSize = lib.mkOption {
+    type = lib.types.int;
+    default = 14;
+    description = "Default font size";
+  };
+
   # TODO: move to namespace
   options.fontProfiles = {
     monospace = mkFontOption {
@@ -52,6 +58,10 @@ in
   };
 
   config = {
+    ${namespace}.scaling.defaultFontSize = lib.mkIf (
+      osConfig.${namespace}.scaling.defaultFontSize or null != null
+    ) (lib.mkDefault osConfig.${namespace}.scaling.defaultFontSize);
+
     fonts.fontconfig.enable = true;
     home.packages = [
       # nit: this could iterate on above cfg somehow
