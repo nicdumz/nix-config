@@ -3,6 +3,7 @@
 site_name: Nicolas and NixOS
 site_url: https://nicdumz.fr/nix-config
 site_author: Nicolas Dumazet
+site_dir: site/nix-config
 copyright: Copyright &copy; 2025 Nicolas Dumazet
 repo_name: nicdumz/nix-config
 repo_url: https://github.com/nicdumz/nix-config

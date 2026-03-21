@@ -1,6 +1,7 @@
 .direnv/
 .pre-commit-config.yaml
-result
+node_modules/
 qemu*.qcow2
 qemu*efi-vars.fd
+result
 site/

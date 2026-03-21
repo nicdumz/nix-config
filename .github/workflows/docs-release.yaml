@@ -6,8 +6,9 @@ on:
       - main
     paths:
       - ".github/workflows/docs-release.yaml"
-      - ".mkdocs.yml"
+      - "mkdocs.yml"
       - "docs/**"
+      - "wrangler.jsonc"
 permissions:
   contents: write
 jobs:
@@ -15,10 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Configure Git Credentials
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
@@ -29,5 +26,11 @@ jobs:
           path: ~/.cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material
-      - run: mkdocs gh-deploy --force
+      - name: Install mkdocs
+        run: pip install mkdocs-material
+      - name: Local website build
+        run: mkdocs build
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
