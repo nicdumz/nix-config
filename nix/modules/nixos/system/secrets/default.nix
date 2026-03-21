@@ -29,7 +29,7 @@
       owner = "ndumazet";
     };
   };
-  # TODO: upstream
+  # TODO: in-progress-upstream (https://github.com/Mic92/sops-nix/pull/928)
   systemd.services =
     let
       files =
