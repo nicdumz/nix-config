@@ -42,6 +42,7 @@ mkShell {
     # Note: pkgs.colmena below would be too old
     inputs.colmena.defaultPackage.${stdenv.hostPlatform.system}
     pkgs.age-plugin-fido2-hmac
+    pkgs.wrangler # for cloudflare deploys
   ];
   buildInputs = check.enabledPackages ++ [ myPython ];
   shellHook = ''

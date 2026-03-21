@@ -1,0 +1,23 @@
+// This is configuration to deploy to Cloudflare Worker
+{
+    "name": "nix-config", // worker name
+    "compatibility_date": "2026-03-21",
+    "assets": {
+        // We claim to deploy to ./site but mkdocs deploys to ./site/nix-config:
+        // this lets us serve on /nix-config in Cloudflare.
+        "directory": "./site"
+    },
+    "routes": [
+        {
+            "pattern": "www.nicdumz.fr/nix-config/*",
+            "zone_name": "nicdumz.fr"
+        },
+        {
+            "pattern": "nicdumz.fr/nix-config/*",
+            "zone_name": "nicdumz.fr"
+        }
+    ],
+    "observability": {
+        "enabled": true
+    }
+}
