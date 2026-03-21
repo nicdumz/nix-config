@@ -1,34 +1,318 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build jonsnow",
-            "type": "shell",
-            "group": "build",
-            "command": "colmena build --on=jonsnow",
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "build lethargyfamily",
-            "type": "shell",
-            "group": "build",
-            "command": "colmena build --on=lethargyfamily"
-        },
-        {
-            "label": "build all",
-            "type": "shell",
-            "group": "build",
-            "command": "colmena build"
-        },
-        {
-            "label": "build bistannix",
-            "type": "shell",
-            "group": "build",
-            "command": "colmena build --on=bistannix"
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    // ========================================
+    // Tier 1: Validation Tasks
+    // ========================================
+    {
+      "label": "Format: nix fmt",
+      "type": "shell",
+      "command": "nix fmt",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Check: nix flake",
+      "type": "shell",
+      "command": "nix flake check",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "owner": "nix",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": [
+          {
+            "regexp": "^(error|warning): (.*)$",
+            "severity": 1,
+            "message": 2
+          },
+          {
+            "regexp": "^\\s+at (.*):(\\d+):(\\d+):$",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    },
+    {
+      "label": "Validate: All",
+      "dependsOn": [
+        "Format: nix fmt",
+        "Check: nix flake"
+      ],
+      "dependsOrder": "sequence",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    // ========================================
+    // Tier 2: NixOS Build Tasks
+    // ========================================
+    {
+      "label": "Build NixOS: bistannix",
+      "type": "shell",
+      "command": "nix build .#nixosConfigurations.bistannix.config.system.build.toplevel",
+      "dependsOn": ["Validate: All"],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "owner": "nix",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": [
+          {
+            "regexp": "^(error|warning): (.*)$",
+            "severity": 1,
+            "message": 2
+          },
+          {
+            "regexp": "^\\s+at (.*):(\\d+):(\\d+):$",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    },
+    {
+      "label": "Build NixOS: jonsnow",
+      "type": "shell",
+      "command": "nix build .#nixosConfigurations.jonsnow.config.system.build.toplevel",
+      "dependsOn": ["Validate: All"],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "owner": "nix",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": [
+          {
+            "regexp": "^(error|warning): (.*)$",
+            "severity": 1,
+            "message": 2
+          },
+          {
+            "regexp": "^\\s+at (.*):(\\d+):(\\d+):$",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    },
+    {
+      "label": "Build NixOS: lethargyfamily",
+      "type": "shell",
+      "command": "nix build .#nixosConfigurations.lethargyfamily.config.system.build.toplevel",
+      "dependsOn": ["Validate: All"],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "owner": "nix",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": [
+          {
+            "regexp": "^(error|warning): (.*)$",
+            "severity": 1,
+            "message": 2
+          },
+          {
+            "regexp": "^\\s+at (.*):(\\d+):(\\d+):$",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    },
+    {
+      "label": "Build NixOS: All Hosts",
+      "type": "shell",
+      "command": "colmena build",
+      "dependsOn": ["Validate: All"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "owner": "nix",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": [
+          {
+            "regexp": "^(error|warning): (.*)$",
+            "severity": 1,
+            "message": 2
+          },
+          {
+            "regexp": "^\\s+at (.*):(\\d+):(\\d+):$",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    },
+
+    // ========================================
+    // Tier 2: Home-Manager Build Tasks
+    // ========================================
+    {
+      "label": "Build Home: ndumazet",
+      "type": "shell",
+      "command": "nix build .#homeConfigurations.ndumazet.activationPackage",
+      "dependsOn": ["Validate: All"],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "owner": "nix",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": [
+          {
+            "regexp": "^(error|warning): (.*)$",
+            "severity": 1,
+            "message": 2
+          },
+          {
+            "regexp": "^\\s+at (.*):(\\d+):(\\d+):$",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    },
+    {
+      "label": "Build Home: ndumazet@bistannix",
+      "type": "shell",
+      "command": "nix build '.#homeConfigurations.\"ndumazet@bistannix\".activationPackage'",
+      "dependsOn": ["Validate: All"],
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": {
+        "owner": "nix",
+        "fileLocation": ["relative", "${workspaceFolder}"],
+        "pattern": [
+          {
+            "regexp": "^(error|warning): (.*)$",
+            "severity": 1,
+            "message": 2
+          },
+          {
+            "regexp": "^\\s+at (.*):(\\d+):(\\d+):$",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      }
+    },
+    {
+      "label": "Build Home: All Configs",
+      "dependsOn": [
+        "Build Home: ndumazet",
+        "Build Home: ndumazet@bistannix"
+      ],
+      "dependsOrder": "parallel",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    // ========================================
+    // Tier 2: Combined Build Task
+    // ========================================
+    {
+      "label": "Build: Everything",
+      "dependsOn": [
+        "Build NixOS: All Hosts",
+        "Build Home: All Configs"
+      ],
+      "dependsOrder": "parallel",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    // ========================================
+    // Tier 3: Deploy Tasks (Independent)
+    // ========================================
+    {
+      "label": "Deploy: bistannix (local)",
+      "type": "shell",
+      "command": "colmena apply-local --sudo test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Deploy: jonsnow",
+      "type": "shell",
+      "command": "colmena test --no-substitute --on=jonsnow",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Deploy: lethargyfamily",
+      "type": "shell",
+      "command": "colmena test --no-substitute --on=lethargyfamily",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Deploy: All Remote",
+      "type": "shell",
+      "command": "colmena test --no-substitute",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
 }
