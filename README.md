@@ -45,7 +45,6 @@ Everyday usage:
 ```sh
 colmena build  # builds all hosts
 colmena apply  # apply to all remote hosts
-colmena apply-local --sudo build # build for my local host
 colmena apply-local --sudo switch # apply for my local host
 ```
 
