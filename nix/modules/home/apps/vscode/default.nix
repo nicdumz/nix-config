@@ -56,9 +56,11 @@ in
   config = lib.mkIf cfg.enable {
     # TODO: modularize
     # I use Go below
-    home.packages = [
-      pkgs.go
-      pkgs.gopls
+    home.packages = with pkgs; [
+      claude-code
+      nodejs_24 # for Claude
+      go
+      gopls
     ];
 
     programs.vscode = lib.optionalAttrs config.${namespace}.device.isGraphical {
@@ -71,6 +73,7 @@ in
         extensions =
           with pkgs.vscode-extensions;
           [
+            anthropic.claude-code # using exts. fails allowUnfree stuff.
             asvetliakov.vscode-neovim
             bierner.github-markdown-preview
             golang.go
