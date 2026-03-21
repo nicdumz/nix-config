@@ -87,14 +87,8 @@ let
           icon = "pocket-id";
           url = "https://id.home.nicdumz.fr";
         }
-        {
-          name = "traefik";
-          # icon = "traefikproxy";
-        }
-        {
-          name = "ddns-updater";
-          icon = "gandi";
-        }
+        "traefik"
+        "ddns-updater"
       ];
     };
   };

@@ -26,7 +26,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets.gandi-token = {
+    sops.secrets.cloudflare-dns-api-token = {
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
     };
 
@@ -34,15 +34,19 @@ in
       {
         "settings": [
           {
-            "provider": "gandi",
+            "provider": "cloudflare",
+            "zone_identifier": "686bd156340822f7200d83d81db673c9",
+            "ttl": 1,
             "domain": "${cfg.domains}",
-            "personal_access_token": "${config.sops.placeholder.gandi-token}",
+            "token": "${config.sops.placeholder.cloudflare-dns-api-token}",
             "ip_version": "ipv4"
           },
           {
-            "provider": "gandi",
+            "provider": "cloudflare",
+            "zone_identifier": "686bd156340822f7200d83d81db673c9",
+            "ttl": 1,
             "domain": "${cfg.domains}",
-            "personal_access_token": "${config.sops.placeholder.gandi-token}",
+            "token": "${config.sops.placeholder.cloudflare-dns-api-token}",
             "ip_version": "ipv6"
           }
         ]

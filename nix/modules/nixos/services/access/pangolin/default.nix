@@ -22,7 +22,7 @@ in
       baseDomain = "home.nicdumz.fr";
       # It's a bit strange to duplicate this with traefik config,
       # the pangolin module could be better.
-      dnsProvider = "gandiv5";
+      dnsProvider = "cloudflare";
       letsEncryptEmail = "nicdumz@gmail.com";
       settings = {
         app = {

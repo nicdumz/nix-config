@@ -106,9 +106,10 @@ let
       # Pangolin module is silly and tries to override this.
       storage = lib.mkForce "/var/lib/traefik/acme.json";
       dnsChallenge = {
-        provider = "gandiv5";
-        # Not sure, Gandi is making my life challenging (?)
-        propagation.disableANSChecks = true;
+        provider = "cloudflare";
+        # TODO: is that needed?
+        # # Not sure, Gandi is making my life challenging (?)
+        # propagation.disableANSChecks = true;
         # Blocky otherwise would mask the actual Gandi record.
         resolvers = [
           "1.1.1.1:53"
@@ -158,11 +159,11 @@ in
       ];
     };
 
-    sops.secrets.gandi-token = {
+    sops.secrets.cloudflare-dns-api-token = {
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
     };
 
-    sops.templates.gandi-token-env.content = "GANDIV5_PERSONAL_ACCESS_TOKEN=${config.sops.placeholder.gandi-token}";
+    sops.templates.cloudflare-dns-api-token-env.content = "CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare-dns-api-token}";
 
     services.traefik = {
       enable = true;
@@ -171,7 +172,7 @@ in
       staticConfigOptions = staticConfig;
       dynamicConfigOptions = dynamicConfig;
       environmentFiles = [
-        config.sops.templates.gandi-token-env.path
+        config.sops.templates.cloudflare-dns-api-token-env.path
       ];
     };
   };
