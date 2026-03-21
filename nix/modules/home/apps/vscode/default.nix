@@ -11,6 +11,22 @@ let
   cfg = config.${namespace}.vscode;
   exts =
     inputs.nix-vscode-extensions.extensions.${pkgs.stdenv.hostPlatform.system}.vscode-marketplace;
+  # Needs patching to find libstdc++ and musl
+  # This is similar to how continue.continue finds libstdc++
+  jj-view = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
+    mktplcRef = {
+      name = "jj-view";
+      publisher = "jj-view";
+      version = "1.20.0";
+      sha256 = "sha256-3NRUHFYJdfx2YU/SgtUehsYSO6xdl9QpUJEnLcZV2iU=";
+    };
+    # Patch obtained from: https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/editors/vscode/extensions/continue.continue/default.nix
+    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    buildInputs = [
+      pkgs.stdenv.cc.cc.lib
+      pkgs.musl
+    ];
+  };
 in
 {
   options.${namespace} = {
@@ -55,15 +71,14 @@ in
           [
             asvetliakov.vscode-neovim
             bierner.github-markdown-preview
-            # Bundled with catppuccin repo
-            # catppuccin.catppuccin-vsc
-            # catppuccin.catppuccin-vsc-icons
             golang.go
             jnoortheen.nix-ide
             mkhl.direnv
             redhat.vscode-yaml
             stkb.rewrap
-            visualjj.visualjj
+          ]
+          ++ [
+            jj-view
           ]
           ++ lib.lists.optional cfg.continue exts.continue.continue;
         userSettings = {
