@@ -13,6 +13,8 @@ let
     inputs.nix-vscode-extensions.extensions.${pkgs.stdenv.hostPlatform.system}.vscode-marketplace;
   # Needs patching to find libstdc++ and musl
   # This is similar to how continue.continue finds libstdc++
+  # If https://github.com/nix-community/nix-vscode-extensions/issues/181 gets fixed we can get rid
+  # of this and take it from that repository directly.
   jj-view = pkgs.vscode-utils.buildVscodeMarketplaceExtension {
     mktplcRef = {
       name = "jj-view";
