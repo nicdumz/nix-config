@@ -14,8 +14,6 @@ let
 
   myPython = pkgs.python312.withPackages (
     p: with p; [
-      mkdocs-material
-      mkdocs-minify-plugin
       pygments
     ]
   );
@@ -43,6 +41,7 @@ mkShell {
     inputs.colmena.defaultPackage.${stdenv.hostPlatform.system}
     pkgs.age-plugin-fido2-hmac
     pkgs.wrangler # for cloudflare deploys
+    pkgs.zensical
   ];
   buildInputs = check.enabledPackages ++ [ myPython ];
   shellHook = ''

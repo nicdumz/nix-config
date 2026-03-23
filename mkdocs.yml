@@ -1,4 +1,4 @@
-# Recall: `mkdocs serve` in the top-level directory gives you a local
+# Recall: `zensical serve` in the top-level directory gives you a local
 # version.
 site_name: Nicolas and NixOS
 site_url: https://nicdumz.fr/nix-config
@@ -9,6 +9,7 @@ repo_name: nicdumz/nix-config
 repo_url: https://github.com/nicdumz/nix-config
 edit_uri: edit/main/docs/
 theme:
+  variant: classic
   name: material
   # Default themes, but support automatic dark theme.
   palette:
