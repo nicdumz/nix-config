@@ -9,4 +9,5 @@ _final: _prev: {
   inherit (channels.nixpkgs-unstable) home-assistant;
   # The version in stable is insecure
   inherit (channels.nixpkgs-unstable) fosrl-pangolin;
+  inherit (channels.nixpkgs-unstable) zensical;
 }

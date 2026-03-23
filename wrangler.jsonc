@@ -3,7 +3,7 @@
     "name": "nix-config", // worker name
     "compatibility_date": "2026-03-21",
     "assets": {
-        // We claim to deploy to ./site but mkdocs deploys to ./site/nix-config:
+        // We claim to deploy to ./site but zensical deploys to ./site/nix-config:
         // this lets us serve on /nix-config in Cloudflare.
         "directory": "./site"
     },
