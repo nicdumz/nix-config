@@ -13,8 +13,10 @@ let
 in
 {
   options.${namespace}.weather.api_key_path = lib.mkOption {
-    type = lib.types.nullOr lib.types.path;
-    default = osConfig.sops.templates.weather_api_key.path or null;
+    type = lib.types.path;
+    # TODO: upstream
+    # There's a bug when you pass null as a config path, the app crashes.
+    default = osConfig.sops.templates.weather_api_key.path or "/dev/null";
     description = "Path to the weather API key for hyprpanel module.";
   };
   config = lib.mkIf config.${namespace}.device.isGraphical {
