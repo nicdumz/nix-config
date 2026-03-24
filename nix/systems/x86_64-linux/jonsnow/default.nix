@@ -78,32 +78,29 @@ in
   };
 
   boot.kernel.sysctl = {
-    # source:
-    #  https://github.com/mdlayher/homelab/blob/main/nixos/routnerr-3/configuration.nix
-    # By default, not automatically configure any IPv6 addresses.
-    # "net.ipv6.conf.all.accept_ra" = 0;
-    "net.ipv6.conf.all.autoconf" = 0;
-    "net.ipv6.conf.all.use_tempaddr" = 0;
-
-    # On WAN, allow IPv6 autoconfiguration and tempory address use.
-    # Jan 2026: this breaks things when systemd-network units. systemd-network uses a userspace
-    # implementation and this option should not be enabled.
-    # "net.ipv6.conf.${wan}.accept_ra" = 2;
-    "net.ipv6.conf.${wan}.autoconf" = 1;
-
-    # Grumbles, why isnt this implied due to masquerading below.
+    # Master Switches: Enable the routing engine
+    # Somehow cannot be set via networkd
     "net.ipv4.ip_forward" = 1;
   };
 
   networking = {
     useDHCP = false; # manually configure below via networkd
     nftables.enable = true;
+    useNetworkd = true;
+
+    firewall.filterForward = true;
+    firewall.extraForwardRules = ''
+      iifname "${lan}" oifname "${wan}" accept
+      iifname "${lan}" oifname "${lan}" accept
+    '';
   };
 
   systemd.network = {
     enable = true;
 
-    config.networkConfig.SpeedMeter = true;
+    config.networkConfig = {
+      SpeedMeter = true;
+    };
 
     # TODO: allow hotplug for all
 
@@ -130,6 +127,9 @@ in
           DHCP = "ipv4";
           # accept Router Advertisements for Stateless IPv6 Autoconfiguraton (SLAAC)
           IPv6AcceptRA = true;
+          IPv6PrivacyExtensions = "prefer-public";
+          IPv4Forwarding = true;
+          IPv6Forwarding = true;
         };
         # Never accept ISP DNS or search domains for any DHCP/RA family.
         dhcpV4Config = {
