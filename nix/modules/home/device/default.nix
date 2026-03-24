@@ -26,7 +26,7 @@
     };
   };
 
-  config = lib.mkIf (osConfig.${namespace}.device.type or null != null) {
-    ${namespace}.device.type = lib.mkDefault osConfig.${namespace}.device.type;
+  config = lib.mkIf ((osConfig.${namespace}.device.type or null) != null) {
+    ${namespace}.device.type = osConfig.${namespace}.device.type;
   };
 }
