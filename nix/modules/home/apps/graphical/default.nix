@@ -40,16 +40,19 @@ in
         enable = true;
         settings = {
           general = {
-            after_sleep_cmd = "hyprctl dispatch dpms on";
+            # Work around https://github.com/Jas-SinghFSU/HyprPanel/issues/1079
+            after_sleep_cmd = "hyprctl dispatch dpms on && systemctl --user restart hyprpanel.service";
+            on_unlock_cmd = "systemctl --user restart hyprpanel.service";
+
             ignore_dbus_inhibit = false;
             lock_cmd = "hyprlock";
-            before_sleep_cmd = "hyprlock";
+            before_sleep_cmd = "loginctl lock-session";
           };
 
           listener = [
             {
               timeout = 900;
-              on-timeout = "hyprlock";
+              on-timeout = "loginctl lock-session";
             }
             {
               timeout = 1200;
