@@ -87,6 +87,12 @@ in
       };
     };
 
+    # This is what hyprpanel uses.
+    home.file.faceicon = {
+      source = "${inputs.self.outPath}/assets/avatar_256.png";
+      target = ".face.icon";
+    };
+
     programs = {
       # top bar & notifications
       hyprpanel =
