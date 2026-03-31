@@ -71,6 +71,7 @@ in
         latitude = "47.37";
         longitude = "8.53";
         settings.general.adjustment-method = "wayland";
+        temperature.night = 3500; # A little warmer than default 3700
       };
 
       hyprpaper = {
