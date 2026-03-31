@@ -22,7 +22,6 @@
   ${namespace} = {
     device.type = "laptop";
     persistence.enable = true;
-    tailscale.enable = true;
     scaling = {
       defaultFontSize = 14;
       factor = 0.8;
