@@ -25,7 +25,7 @@ in
       isSystemUser = true;
     };
 
-    # TODO: upstream
+    # TODO: in-progress-upstream (26.05)
     systemd.services.prowlarr = {
       unitConfig.RequiresMountsFor = [ config.services.prowlarr.dataDir ];
       serviceConfig.DynamicUser = lib.mkForce false;

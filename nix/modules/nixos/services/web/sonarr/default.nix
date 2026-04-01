@@ -23,7 +23,7 @@ in
     };
     users.groups.media = { };
 
-    # TODO: upstream
+    # TODO: in-progress-upstream (26.05)
     systemd.services.sonarr.unitConfig.RequiresMountsFor = [ config.services.sonarr.dataDir ];
     ${namespace} = {
       motd.systemdServices = [ "sonarr" ];
