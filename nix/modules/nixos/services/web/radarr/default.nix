@@ -23,7 +23,7 @@ in
     };
     users.groups.media = { };
 
-    # TODO: upstream
+    # TODO: in-progress-upstream (26.05)
     systemd.services.radarr.unitConfig.RequiresMountsFor = [ config.services.radarr.dataDir ];
     ${namespace} = {
       motd.systemdServices = [ "radarr" ];

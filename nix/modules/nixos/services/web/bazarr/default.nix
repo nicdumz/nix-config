@@ -23,7 +23,7 @@ in
     };
     users.groups.media = { };
 
-    # TODO: upstream
+    # TODO: in-progress-upstream (26.05)
     systemd.services.bazarr.unitConfig.RequiresMountsFor = [ config.services.bazarr.dataDir ];
     ${namespace} = {
       motd.systemdServices = [ "bazarr" ];

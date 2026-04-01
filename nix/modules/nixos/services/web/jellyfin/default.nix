@@ -29,7 +29,7 @@ in
       "video"
     ];
 
-    # TODO: upstream
+    # TODO: in-progress-upstream (26.05)
     systemd.services.jellyfin.unitConfig.RequiresMountsFor = [
       config.services.jellyfin.configDir
       config.services.jellyfin.logDir
