@@ -47,6 +47,10 @@
         # clipboard support
         wl-clipboard
       ];
+      pathsToLink = [
+        "/share/xdg-desktop-portal"
+        "/share/applications"
+      ];
     };
   };
 }
