@@ -121,10 +121,4 @@
       use-xdg-base-directories = true;
     };
   };
-
-  environment.systemPackages = with pkgs; [
-    nixd
-    nixfmt-rfc-style
-  ];
-
 }
