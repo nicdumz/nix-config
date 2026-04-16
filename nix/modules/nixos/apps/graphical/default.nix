@@ -35,7 +35,7 @@
         }
       ];
     };
-    # TODO: upstream
+    # TODO: in-progress-upstream (26.05)
     systemd.services.display-manager.unitConfig.RequiresMountsFor = [
       config.users.users.sddm.home
     ];
@@ -46,6 +46,10 @@
         # gnomeExtensions.appindicator
         # clipboard support
         wl-clipboard
+      ];
+      pathsToLink = [
+        "/share/xdg-desktop-portal"
+        "/share/applications"
       ];
     };
   };

@@ -20,7 +20,6 @@
   ${namespace} = {
     device.type = "desktop";
     persistence.enable = true;
-    tailscale.enable = true;
     scaling = {
       defaultFontSize = 16;
       factor = 1.25;

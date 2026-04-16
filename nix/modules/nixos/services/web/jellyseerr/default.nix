@@ -29,7 +29,7 @@ in
     systemd.services.jellyseerr = {
       serviceConfig.DynamicUser = lib.mkForce false;
       serviceConfig.User = config.users.users.jellyseerr.name;
-      # TODO: upstream
+      # TODO: in-progress-upstream (26.05)
       unitConfig.RequiresMountsFor = config.services.jellyseerr.configDir;
     };
 

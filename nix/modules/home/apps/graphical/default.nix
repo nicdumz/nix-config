@@ -1,25 +1,39 @@
 {
   config,
   inputs,
-  osConfig ? { },
   lib,
   namespace,
+  osConfig ? { },
+  pkgs,
   ...
 }:
 let
+  cfg = config.${namespace};
   # Approximation
   # TODO: put somewhere else
-  laptop = config.${namespace}.device.type == "laptop";
+  laptop = cfg.device.type == "laptop";
 in
 {
-  options.${namespace}.weather.api_key_path = lib.mkOption {
-    type = lib.types.path;
-    # TODO: upstream
-    # There's a bug when you pass null as a config path, the app crashes.
-    default = osConfig.sops.templates.weather_api_key.path or "/dev/null";
-    description = "Path to the weather API key for hyprpanel module.";
+  imports = [ inputs.noctalia.homeModules.default ];
+
+  options.${namespace} = {
+    weather.api_key_path = lib.mkOption {
+      type = lib.types.path;
+      # TODO: upstream
+      # There's a bug when you pass null as a config path, the app crashes.
+      default = osConfig.sops.templates.weather_api_key.path or "/dev/null";
+      description = "Path to the weather API key for hyprpanel module.";
+    };
+    desktopshell = lib.mkOption {
+      type = lib.types.enum [
+        "hyprpanel"
+        "noctalia"
+      ];
+      default = "noctalia";
+    };
   };
-  config = lib.mkIf config.${namespace}.device.isGraphical {
+
+  config = lib.mkIf cfg.device.isGraphical {
     # TODO: modularize
     wayland.windowManager.hyprland = {
       enable = true; # enable Hyprland
@@ -30,7 +44,10 @@ in
         "$mod" = "SUPER";
         "$terminal" = "kitty";
       };
-      extraConfig = builtins.readFile ./hyprland.conf;
+      extraConfig = lib.strings.concatLines [
+        (builtins.readFile ./hyprland.conf)
+        (lib.strings.optionalString (cfg.desktopshell == "noctalia") "exec-once = noctalia-shell")
+      ];
     };
     services = {
       hyprpolkitagent.enable = true;
@@ -41,8 +58,15 @@ in
         settings = {
           general = {
             # Work around https://github.com/Jas-SinghFSU/HyprPanel/issues/1079
-            after_sleep_cmd = "hyprctl dispatch dpms on && systemctl --user restart hyprpanel.service";
-            on_unlock_cmd = "systemctl --user restart hyprpanel.service";
+            after_sleep_cmd = lib.concatStrings [
+              "hyprctl dispatch dpms on"
+              (lib.optionalString (
+                cfg.desktopshell == "hyprpanel"
+              ) " && systemctl --user restart hyprpanel.service")
+            ];
+            on_unlock_cmd = lib.optionalString (
+              cfg.desktopshell == "hyprpanel"
+            ) "systemctl --user restart hyprpanel.service";
 
             ignore_dbus_inhibit = false;
             lock_cmd = "hyprlock";
@@ -64,6 +88,7 @@ in
       };
 
       # screen dimming / color
+      # remember: wlsunset is somehow unhappy with hyprland
       gammastep = {
         enable = true;
         tray = true;
@@ -71,6 +96,7 @@ in
         latitude = "47.37";
         longitude = "8.53";
         settings.general.adjustment-method = "wayland";
+        temperature.night = 3400; # A little warmer than default 3700
       };
 
       hyprpaper = {
@@ -88,7 +114,7 @@ in
     };
 
     # This is what hyprpanel uses.
-    home.file.faceicon = {
+    home.file.faceicon = lib.mkIf (cfg.desktopshell == "hyprpanel") {
       source = "${inputs.self.outPath}/assets/avatar_256.png";
       target = ".face.icon";
     };
@@ -130,11 +156,11 @@ in
           };
         in
         {
-          enable = true;
+          enable = cfg.desktopshell == "hyprpanel";
           settings = {
             theme = baseTheme // {
               font = {
-                name = "CaskaydiaCove NF";
+                inherit (config.fontProfiles.monospace) name;
                 size = "16px";
               };
               bar.buttons.windowtitle.spacing = "1em";
@@ -225,6 +251,160 @@ in
           };
         };
 
+      noctalia-shell = {
+        enable = cfg.desktopshell == "noctalia";
+        plugins = {
+          sources = [
+            {
+              enabled = true;
+              name = "Official Noctalia Plugins";
+              url = "https://github.com/noctalia-dev/noctalia-plugins";
+            }
+          ];
+          states = {
+            privacy-indicator = {
+              enabled = true;
+              sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+            };
+          };
+          version = 2;
+        };
+        settings = {
+          ui = {
+            fontFixed = config.fontProfiles.monospace.name;
+            fontDefault = config.fontProfiles.regular.name;
+          };
+          colorSchemes.predefinedScheme = "Catppuccin";
+          general = {
+            avatarImage = "${inputs.self.outPath}/assets/avatar_256.png";
+          };
+          location = {
+            name = "Zurich";
+            showWeekNumberInCalendar = true;
+            monthBeforeDay = true;
+          };
+          wallpaper.enabled = false;
+          bar = {
+            # TODO: not sure what's good for a laptop yet.
+            fontScale = if laptop then 1 else 1.2;
+            widgets = {
+              center = [
+                {
+                  id = "Workspace";
+                  iconScale = 0.8;
+                  pillSize = 0.8;
+                }
+              ];
+              left = [
+                {
+                  id = "SystemMonitor";
+                }
+                {
+                  id = "ActiveWindow";
+                  maxWidth = 600;
+                }
+                {
+                  id = "MediaMini";
+                  maxWidth = 400;
+                }
+              ];
+              right = builtins.concatLists [
+                [
+                  {
+                    id = "Tray";
+                  }
+                  {
+                    id = "NotificationHistory";
+                  }
+                  {
+                    id = "Volume";
+                  }
+                  {
+                    id = "Battery";
+                  }
+                ]
+                (lib.optionals laptop [
+                  {
+                    id = "Network";
+                  }
+                  {
+                    id = "Bluetooth"; # only for laptops?
+                  }
+                  {
+                    id = "Brightness";
+                  }
+                ])
+                [
+                  {
+                    id = "plugin:privacy-indicator";
+                  }
+                  {
+                    id = "Spacer";
+                    width = 10;
+                  }
+                  {
+                    id = "Clock";
+                  }
+                  {
+                    id = "Spacer";
+                    width = 10;
+                  }
+                  {
+                    id = "ControlCenter";
+                    useDistroLogo = true;
+                  }
+                  {
+                    id = "SessionMenu";
+                  }
+                ]
+              ];
+            };
+          };
+          # controlCenter# tweak shortcuts etc
+          shortcuts = {
+            # left =
+            # right =
+          };
+          nightLight.autoSchedule = false;
+          sessionMenu = {
+            enableCountdown = false;
+            powerOptions = [
+              {
+                action = "lock";
+                keybind = "l";
+                enabled = true;
+              }
+              {
+                action = "suspend";
+                keybind = "s";
+                enabled = true;
+              }
+              {
+                action = "reboot";
+                keybind = "r";
+                enabled = true;
+              }
+              {
+                action = "logout";
+                keybind = "o";
+                enabled = true;
+              }
+              {
+                action = "shutdown";
+                keybind = "d";
+                enabled = true;
+
+              }
+              {
+                action = "rebootToUefi";
+                keybind = "b";
+                enabled = true;
+              }
+            ];
+          };
+        };
+      };
+
       # run menu
       rofi = {
         enable = true;
@@ -234,7 +414,7 @@ in
           show-icons = true;
           icon-theme = "Papirus";
           location = 0;
-          # font = "JetBrainsMono Nerd Font Mono 12";
+          font = config.fontProfiles.monospace.name;
           drun-display-format = "{icon} {name}";
           display-drun = " Apps";
           display-run = " Run";
@@ -274,5 +454,14 @@ in
     };
     # Optional, hint Electron apps to use Wayland:
     home.sessionVariables.NIXOS_OZONE_WL = "1";
+    # TODO: might not make sense outside of laptops.
+    services.network-manager-applet.enable = laptop;
+
+    # Recommended noctalia deps
+    home.packages = [
+      pkgs.brightnessctl
+      pkgs.cliphist
+    ];
+    xdg.portal.enable = true;
   };
 }

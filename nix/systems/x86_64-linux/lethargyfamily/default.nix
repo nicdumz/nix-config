@@ -16,13 +16,11 @@
   };
 
   networking.networkmanager.enable = true;
-  # Would be for homemanager
-  # services.network-manager-applet.enable = true;
+  hardware.bluetooth.enable = true;
 
   ${namespace} = {
     device.type = "laptop";
     persistence.enable = true;
-    tailscale.enable = true;
     scaling = {
       defaultFontSize = 14;
       factor = 0.8;
