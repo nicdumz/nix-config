@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 let
   # Setup symlinks to system-wide programs (instead of using binaries coming
   # from nix).
@@ -12,20 +12,25 @@ let
     (
       _final: prev:
       let
+        oneLink = directory: programName: "ln -s ${directory}/${programName} $out/bin/${programName}";
         mkLink =
           {
             packageName,
-            programName ? packageName,
+            programNames ? [ packageName ],
             directory ? "/usr/bin",
+            ... # We purposedly ignore other args, which would come from overrides
           }:
           prev.runCommand "${packageName}-system-link"
             {
-              meta.mainProgram = programName;
+              # first program is considered important
+              meta.mainProgram = builtins.head programNames;
             }
-            ''
-              mkdir -p $out/bin
-              ln -s ${directory}/${programName} $out/bin/${programName}
-            '';
+            (
+              lib.strings.concatLines [
+                "mkdir -p $out/bin"
+                (lib.strings.concatMapStringsSep "\n" (oneLink directory) programNames)
+              ]
+            );
       in
       builtins.listToAttrs (
         map (
@@ -33,10 +38,12 @@ let
           let
             args = if builtins.isString m then { packageName = m; } else m;
           in
-          {
-            name = args.packageName;
-            value = mkLink args;
-          }
+          lib.throwIf (args.packageName == "git")
+            "Putting 'git' in systemLinks breaks nixpkgs functional tests which uses git.overrides"
+            {
+              name = args.packageName;
+              value = lib.makeOverridable mkLink args;
+            }
         ) mappings
       )
     );
@@ -47,7 +54,17 @@ in
       system ? "x86_64-linux",
       nixpkgs,
       overlays ? [ ],
-      systemLinks,
+      # List of links to create against the standalone system.
+      # Created as overlays of nix packages.
+      # Each element can either be:
+      #  - a {packageName: string, programNames ? [ packageName ], directory ? "/usr/bin"} attribute
+      #  - a string, which is interpreted as a {packageName} attribute
+      # The following example is a replacement of nixpkgs.hyprland:
+      #  {
+      #    packageName = "hyprland";
+      #    programNames = ["hyprland" "hyprctl" "Hyprland"];
+      #  }
+      systemLinks ? [ ],
       deviceType,
       localModules ? [ ],
       nicdumz,
