@@ -137,6 +137,7 @@
           allowLocalDeployment = true;
           targetHost = null;
         };
+        lethargyfamily.allowLocalDeployment = true;
         liveusb.targetHost = null;
       };
 
