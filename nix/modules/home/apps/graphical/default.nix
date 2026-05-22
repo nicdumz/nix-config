@@ -44,10 +44,11 @@ in
         "$mod" = "SUPER";
         "$terminal" = "kitty";
       };
-      extraConfig = lib.strings.concatLines [
-        (builtins.readFile ./hyprland.conf)
-        (lib.strings.optionalString (cfg.desktopshell == "noctalia") "exec-once = noctalia-shell")
-      ];
+      extraConfig = import ./hyprland.nix {
+          inherit (cfg) desktopshell;
+          inherit (pkgs.hyprland) version;
+          inherit lib;
+        };
     };
     services = {
       hyprpolkitagent.enable = true;
