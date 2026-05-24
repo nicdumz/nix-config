@@ -318,6 +318,8 @@ in
                 (lib.optionals laptop [
                   {
                     id = "Battery";
+                    alwaysShowPercentage = true;
+                    hideIfNotDetected = false;
                   }
                   {
                     id = "Network";
