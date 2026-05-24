@@ -45,10 +45,10 @@ in
         "$terminal" = "kitty";
       };
       extraConfig = import ./hyprland.nix {
-          inherit (cfg) desktopshell;
-          inherit (pkgs.hyprland) version;
-          inherit lib;
-        };
+        inherit (cfg) desktopshell;
+        inherit (pkgs.hyprland) version;
+        inherit lib;
+      };
     };
     services = {
       hyprpolkitagent.enable = true;
@@ -314,11 +314,11 @@ in
                   {
                     id = "Volume";
                   }
+                ]
+                (lib.optionals laptop [
                   {
                     id = "Battery";
                   }
-                ]
-                (lib.optionals laptop [
                   {
                     id = "Network";
                   }
