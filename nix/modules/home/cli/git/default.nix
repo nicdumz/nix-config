@@ -40,6 +40,10 @@
         git = {
           auto-local-branch = true;
         };
+        remotes = {
+          origin.auto-track-bookmarks = "glob:*";
+          upstream.auto-track-bookmarks = "main";
+        };
       };
     };
   };
