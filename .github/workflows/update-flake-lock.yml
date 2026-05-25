@@ -23,7 +23,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8
         with:
-          commit-message: "flake.lock: automatic update"
+          commit-message: "chore: nix flake update"
           title: "flake.lock: automatic update"
           labels: merge-queue
           branch: update_flake_lock_action
