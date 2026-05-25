@@ -37,6 +37,9 @@
           default-command = "log";
           pager = ":builtin";
         };
+        git = {
+          auto-local-branch = true;
+        };
       };
     };
   };
