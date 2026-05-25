@@ -13,7 +13,7 @@
     defaultSopsFile = inputs.self.outPath + "/secrets/global.yaml";
     # TODO: this could be in home-manager somewhere, but requires setting sops + HM
     secrets.ndumazet_github_token.restartUnits = [ "nix-daemon.service" ];
-    templates.ndumazet_nix_extra_config = {
+    templates.ndumazet_nix_github_access_token = {
       content = ''
         access-tokens = github.com=${config.sops.placeholder.ndumazet_github_token}
       '';
