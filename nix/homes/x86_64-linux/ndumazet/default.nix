@@ -18,6 +18,6 @@
     wallpaper.path = ./nixos-wallpaper.png;
   };
   nix.extraOptions = ''
-    !include ${osConfig.sops.templates.ndumazet_nix_extra_config.path or "/dev/null"}
+    !include ${osConfig.sops.templates.ndumazet_nix_github_access_token.path or "/dev/null"}
   '';
 }
