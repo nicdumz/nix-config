@@ -2,7 +2,6 @@
   config,
   lib,
   namespace,
-  pkgs,
   ...
 }:
 let
@@ -18,9 +17,7 @@ in
   };
 
   config = lib.mkIf (cfg.enable && config.${namespace}.device.isGraphical) {
-    home.packages = [
-      pkgs.google-chrome
-    ];
+    programs.google-chrome.enable = true;
 
     xdg = {
       mimeApps = {
