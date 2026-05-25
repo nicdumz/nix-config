@@ -46,7 +46,7 @@ in
       };
       extraConfig = import ./hyprland.nix {
         inherit (cfg) desktopshell;
-        inherit (pkgs.hyprland) version;
+        inherit (config.wayland.windowManager.hyprland.package) version;
         inherit lib;
       };
     };
