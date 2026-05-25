@@ -18,10 +18,12 @@ let
             packageName,
             programNames ? [ packageName ],
             directory ? "/usr/bin",
+            version ? "corp-syslink",
             ... # We purposedly ignore other args, which would come from overrides
           }:
           prev.runCommand "${packageName}-system-link"
             {
+              inherit version;
               # first program is considered important
               meta.mainProgram = builtins.head programNames;
             }
