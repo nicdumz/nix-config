@@ -24,6 +24,6 @@ jobs:
         uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "chore: nix flake update"
-          title: "flake.lock: automatic update"
+          title: "chore: nix flake update"
           labels: merge-queue
           branch: update_flake_lock_action
