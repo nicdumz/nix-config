@@ -29,12 +29,6 @@ in
       "video"
     ];
 
-    # TODO: in-progress-upstream (26.05)
-    systemd.services.jellyfin.unitConfig.RequiresMountsFor = [
-      config.services.jellyfin.configDir
-      config.services.jellyfin.logDir
-      config.services.jellyfin.cacheDir
-    ];
     ${namespace} = {
       motd.systemdServices = [ "jellyfin" ];
       persistence.directories = [

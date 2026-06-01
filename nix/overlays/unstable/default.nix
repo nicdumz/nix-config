@@ -10,8 +10,6 @@ _final: _prev: {
   inherit (channels.nixpkgs-unstable) home-assistant;
   # The version in stable is insecure
   inherit (channels.nixpkgs-unstable) fosrl-pangolin;
-  # 26.05: only exists as of 26.05, can be moved to stable afterwards.
-  inherit (channels.nixpkgs-unstable) zensical;
   # Things are still moving a lot and unstable is a lot more useable.
   inherit (channels.nixpkgs-unstable) jujutsu;
   inherit (channels.nixpkgs-unstable) pulumi; # stable is "very old"

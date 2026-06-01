@@ -53,9 +53,8 @@ in
       gopls
     ];
 
-    programs.vscode = lib.optionalAttrs config.${namespace}.device.isGraphical {
+    programs.vscodium = lib.optionalAttrs config.${namespace}.device.isGraphical {
       enable = true;
-      package = pkgs.vscodium;
       mutableExtensionsDir = false;
       profiles =
         let

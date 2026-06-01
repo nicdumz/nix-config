@@ -34,10 +34,16 @@ in
   };
 
   config = lib.mkIf cfg.device.isGraphical {
+    # FIXME 26.05: their theme is in lua sigh
+    catppuccin.hyprland.enable = false;
     # TODO: modularize
     wayland.windowManager.hyprland = {
       enable = true; # enable Hyprland
+      # TODO: 26.05: move to lua
+      configType = "hyprlang";
       systemd = {
+        # 26.05 FIXME: trying uwsm instead
+        # enable = false;
         variables = [ "--all" ];
       };
       settings = {

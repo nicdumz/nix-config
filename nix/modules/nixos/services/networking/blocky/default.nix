@@ -158,9 +158,7 @@ in
         # presence of /etc/resolv.conf forwarding to systemd-resolved
         # I feel like this should be the default, and this doesn't really have to be in this config,
         # but ... sue me ;-)
-        extraConfig = ''
-          DNSStubListenerExtra=[::1]:53
-        '';
+        settings.Resolve.DNSStubListenerExtra = "[::1]:53";
       };
     })
   ];

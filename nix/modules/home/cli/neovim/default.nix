@@ -2,10 +2,11 @@
 {
   programs.neovim = {
     enable = true;
+    withRuby = false;
+    withPython3 = true;
     extraPackages = with pkgs; [
       # both already in system packages, but just in case...
       nixd
-      nixfmt-rfc-style
       nixfmt
     ];
     plugins = with pkgs.vimPlugins; [
@@ -65,6 +66,7 @@
       nvim-lspconfig
       {
         plugin = vim-airline;
+        type = "viml";
         config = ''
           let g:airline_powerline_fonts = 1
           let g:airline_section_y = '''
@@ -76,6 +78,7 @@
       vim-sensible
       {
         plugin = catppuccin-nvim;
+        type = "viml";
         config = ''
           colorscheme catppuccin-mocha
           let g:airline_theme = 'catppuccin'

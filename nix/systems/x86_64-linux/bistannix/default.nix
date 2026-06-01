@@ -25,7 +25,7 @@
       factor = 1.25;
     };
     # Disable for now
-    # ollama.enable = true;
+    # ollama.enable = true, I haz Claude etc
     boot.resolution = "3840x2160";
     # TODO: move to laptop?
     work.enable = true;

@@ -59,8 +59,6 @@ in
         ];
       };
 
-      # TODO: in-progress-upstream (26.05)
-      systemd.services.grocy-setup.unitConfig.RequiresMountsFor = [ config.services.grocy.dataDir ];
       ${namespace} = {
         motd.systemdServices = [ "grocy" ];
         persistence.directories = [

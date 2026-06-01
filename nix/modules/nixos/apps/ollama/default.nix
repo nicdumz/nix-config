@@ -2,6 +2,7 @@
   config,
   lib,
   namespace,
+  pkgs,
   ...
 }:
 let
@@ -37,8 +38,11 @@ in
       enable = true;
       user = "ollama";
       group = "ollama";
-      acceleration =
-        if builtins.elem "amdgpu" config.services.xserver.videoDrivers then "rocm" else "cuda";
+      package =
+        if builtins.elem "amdgpu" config.services.xserver.videoDrivers then
+          pkgs.ollama-rocm
+        else
+          pkgs.ollama-cuda;
       # remove models added locally but not configured.
       syncModels = true;
       loadModels = [
