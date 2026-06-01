@@ -49,10 +49,9 @@
           in
           {
             enable = true;
-            # TODO 26.05 enable and remove below
-            # resolution = res;
+            resolution = res;
             style = {
-              interface.brandingColor = 4; # blue from below
+              interface.brandingColor = "89b4fa"; # blue from below
               interface.resolution = res;
               wallpapers = [
                 (inputs.self.outPath + "/assets/wallpapers/horizon-2.jpg")

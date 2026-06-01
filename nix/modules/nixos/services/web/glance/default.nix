@@ -19,7 +19,7 @@ let
       order = 1;
       sites = [
         "jellyfin"
-        "jellyseerr"
+        "seerr"
         {
           name = "sonarr";
           suffix = "(Series)";

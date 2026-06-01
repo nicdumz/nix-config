@@ -4,7 +4,7 @@
     git-crypt
     glow
     nixd
-    nixfmt-rfc-style
+    nixfmt
     nixpkgs-review
   ];
 }

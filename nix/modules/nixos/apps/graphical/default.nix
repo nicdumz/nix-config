@@ -13,8 +13,12 @@
     catppuccin.enable = true;
 
     # TODO: modularize between hyprland and Gnome
-    programs.hyprland.enable = true;
-    programs.hyprlock.enable = true;
+    programs = {
+      hyprland.enable = true;
+      # TODO: 26.05 do I need the following?
+      # hyprland.withUWSM = true;
+      hyprlock.enable = true;
+    };
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
     services = {
@@ -24,6 +28,10 @@
       accounts-daemon.enable = true;
       # udev.packages = [ pkgs.gnome-settings-daemon ];
       gnome.gnome-keyring.enable = true;
+
+      # TODO 26.05: remove this override. I only keep it here to avoid the switch inhibitor which
+      # comes with it. By itself it doesn't sound broken, just needs a clean switch later.
+      dbus.implementation = "dbus";
     };
 
     security.pam.services = {
@@ -41,10 +49,6 @@
         }
       ];
     };
-    # TODO: in-progress-upstream (26.05)
-    systemd.services.display-manager.unitConfig.RequiresMountsFor = [
-      config.users.users.sddm.home
-    ];
 
     environment = {
       systemPackages = with pkgs; [

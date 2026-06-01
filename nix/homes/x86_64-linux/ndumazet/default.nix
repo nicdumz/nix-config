@@ -6,7 +6,7 @@
 {
   home.packages = [
     # useful for (shell) color diagnosis.
-    pkgs.neofetch
+    pkgs.hyfetch
     pkgs.dig
   ];
 

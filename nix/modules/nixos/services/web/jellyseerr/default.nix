@@ -12,11 +12,11 @@ in
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Jellyseerr: request downloads.";
+      description = "Seerr: request downloads.";
     };
   };
   config = lib.mkIf cfg.enable {
-    services.jellyseerr = {
+    services.seerr = {
       enable = true;
     };
     users.users.jellyseerr = {
@@ -26,23 +26,21 @@ in
     };
     users.groups.jellyseerr = { };
 
-    systemd.services.jellyseerr = {
+    systemd.services.seerr = {
       serviceConfig.DynamicUser = lib.mkForce false;
       serviceConfig.User = config.users.users.jellyseerr.name;
-      # TODO: in-progress-upstream (26.05)
-      unitConfig.RequiresMountsFor = config.services.jellyseerr.configDir;
     };
 
     ${namespace} = {
-      motd.systemdServices = [ "jellyseerr" ];
+      motd.systemdServices = [ "seerr" ];
       persistence.directories = [
         {
-          directory = config.services.jellyseerr.configDir;
+          directory = config.services.seerr.configDir;
           user = config.users.users.jellyseerr.name;
           inherit (config.users.users.jellyseerr) group;
         }
       ];
-      traefik.webservices.jellyseerr.port = config.services.jellyseerr.port;
+      traefik.webservices.seerr.port = config.services.seerr.port;
     };
     systemd.tmpfiles.settings.preservation = {
       "/var/lib/jellyseerr".d = {

@@ -120,7 +120,8 @@
 
     # See https://wiki.hypr.land/Configuring/Dwindle-Layout/ for more
     dwindle {
-        pseudotile = true # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+        # Disable from .55 -- but do i care
+        # pseudotile = true # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
         preserve_split = true # You probably want this
     }
 

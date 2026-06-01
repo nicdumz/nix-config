@@ -75,11 +75,9 @@ in
       ];
     };
     rebootRequiredCheck.enable = true;
-    # observability stuff
-    # loki.enable = true;
-    # vector.enable = true;
     victorialogs.enable = true;
-    grafana.enable = true;
+    # 26.05 introduces a breaking change (need to reencrypt DB) and for now i cant be bothered.
+    # grafana.enable = true;
     prometheus.enable = true;
     pocketid.enable = true;
     pangolin.enable = true;
