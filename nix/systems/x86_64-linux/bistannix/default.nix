@@ -27,6 +27,8 @@
     # Disable for now
     # ollama.enable = true;
     boot.resolution = "3840x2160";
+    # TODO: move to laptop?
+    work.enable = true;
   };
   # NOTE: if setting up new system you first need to enroll keys etc.
   boot.loader.limine.secureBoot.enable = true;

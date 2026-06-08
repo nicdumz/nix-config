@@ -147,10 +147,35 @@ in
           };
         in
         {
-          default = common // { };
-          work = common // { };
+          default = common;
+          work = lib.mkMerge [
+            common
+            {
+              extensions =
+                with pkgs.vscode-extensions;
+                [
+                  bazelbuild.vscode-bazel
+                  charliermarsh.ruff
+                  tamasfe.even-better-toml
+                ]
+                ++ [
+                  exts.astral-sh.ty
+                ];
+            }
+          ];
+
         };
     };
+
+    # Catpuccin only enables thememing on the default profile usually.
+    catppuccin.vscode.profiles = {
+      default.enable = true;
+      work = {
+        enable = true;
+        flavor = "macchiato"; # try a different theme to differentiate a bit?
+      };
+    };
+
     home.file = lib.optionalAttrs cfg.continue {
       # TODO: if I were smarter we should verify that each model is in the ollama config.
       ".continue/config.yaml".source = (pkgs.formats.yaml { }).generate "continue-config" {
