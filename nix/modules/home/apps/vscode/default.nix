@@ -79,6 +79,17 @@ in
               ]
               ++ lib.lists.optional cfg.continue exts.continue.continue;
             userSettings = {
+              "editor.formatOnSave" = true;
+              "files.autoSave" = "afterDelay";
+              "files.autoSaveDelay" = 1000;
+              "files.associations" = {
+                "BUILD" = "starlark";
+                "*.bzl" = "starlark";
+                "*.bazel" = "starlark";
+                "*.hujson" = "jsonc";
+                "OWNERS" = "plaintext";
+                "ALL_OWNERS" = "plaintext";
+              };
               # Tricky to get enough information density and not tiny fonts.
               "editor.fontSize" = config.fontProfiles.monospace.size;
               "editor.fontFamily" = config.fontProfiles.monospace.name + ", 'monospace', monospace";
@@ -161,6 +172,33 @@ in
                 ++ [
                   exts.astral-sh.ty
                 ];
+              userSettings = {
+                "python.defaultInterpreterPath" = "\${workspaceFolder}/.venv/bin/python";
+                "python.languageServer" = "None";
+                "ruff.configuration" = "\${workspaceFolder}/pyproject.toml";
+                "[python]" = {
+                  "editor.codeActionsOnSave" = {
+                    "source.fixAll.ruff" = "explicit";
+                    "source.organizeImports.ruff" = "explicit";
+                  };
+                  "editor.defaultFormatter" = "charliermarsh.ruff";
+                };
+                "[starlark]"."editor.formatOnSave" = false;
+                "[jsonc]" = {
+                  "editor.formatOnSave" = true;
+                  "files.insertFinalNewline" = true;
+                };
+                "[toml]"."editor.defaultFormatter" = "tamasfe.even-better-toml";
+                "files.exclude" = {
+                  "**/__pycache__" = true;
+                  "**/*.pyc" = true;
+                };
+                "search.exclude" = {
+                  "**/__pycache__" = true;
+                  "**/*.pyc" = true;
+                };
+                "files.watcherExclude"."**/__pycache__/**" = true;
+              };
             }
           ];
 

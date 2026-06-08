@@ -31,5 +31,15 @@ in
         tailscale
       ]
       ++ (lib.optionals cfg.device.isGraphical [ slack ]);
+
+    # https://nix.dev/permalink/stub-ld sadness
+    programs.nix-ld = {
+      enable = true;
+      libraries = with pkgs; [
+        stdenv.cc.cc.lib # libstdc++ — Bazel sometimes shells out to clang/g++ wrappers
+        zlib # common Bazel transitive dep
+      ];
+    };
   };
+
 }
