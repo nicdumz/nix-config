@@ -46,6 +46,7 @@
         # gnomeExtensions.appindicator
         # clipboard support
         wl-clipboard
+        hyprshot
       ];
       pathsToLink = [
         "/share/xdg-desktop-portal"

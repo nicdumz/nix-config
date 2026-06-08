@@ -16,6 +16,11 @@ in
       default = false;
       description = "Turn on tailscale on host.";
     };
+    useKeyfile = lib.mkOption {
+      type = bool;
+      default = true;
+      description = "Join own tailnet.";
+    };
     exitNode.wanInterface = lib.mkOption {
       type = str;
       description = "Make this host an exit node? If yes, let me know what is the wan interface.";
@@ -46,7 +51,7 @@ in
       extraSetFlags = lib.lists.optionals exitNode [ "--advertise-exit-node" ];
       # The key is a reusable key from https://login.tailscale.com/admin/settings/keys
       # It unfortunately expires after 90d ..
-      authKeyFile = config.sops.secrets.tailscale_oauth_token.path;
+      authKeyFile = lib.mkIf cfg.useKeyfile config.sops.secrets.tailscale_oauth_token.path;
     };
 
     systemd.services.tailscale-transport-layer-offloads = lib.mkIf exitNode {

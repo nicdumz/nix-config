@@ -101,6 +101,10 @@ in
               ];
               "files.insertFinalNewline" = true;
               "redhat.telemetry.enabled" = false;
+              "workbench.trustedDomains" = [
+                "https://accounts.google.com"
+                "https://github.com"
+              ];
               "rewrap.autoWrap.enabled" = true;
               "rewrap.wrappingColumn" = 100;
               "nix.formatterPath" = [ "nixfmt" ];
@@ -167,6 +171,7 @@ in
                 [
                   bazelbuild.vscode-bazel
                   charliermarsh.ruff
+                  ms-python.python # dependencies for others.
                   tamasfe.even-better-toml
                 ]
                 ++ [
@@ -193,11 +198,13 @@ in
                   "**/__pycache__" = true;
                   "**/*.pyc" = true;
                 };
+                "bazel.executable" = "bazelisk";
                 "search.exclude" = {
                   "**/__pycache__" = true;
                   "**/*.pyc" = true;
                 };
                 "files.watcherExclude"."**/__pycache__/**" = true;
+                "git.enabled" = false; # jj everywhere
               };
             }
           ];
@@ -208,10 +215,7 @@ in
     # Catpuccin only enables thememing on the default profile usually.
     catppuccin.vscode.profiles = {
       default.enable = true;
-      work = {
-        enable = true;
-        flavor = "macchiato"; # try a different theme to differentiate a bit?
-      };
+      work.enable = true;
     };
 
     home.file = lib.optionalAttrs cfg.continue {
