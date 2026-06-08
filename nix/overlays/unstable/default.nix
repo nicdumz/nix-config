@@ -14,4 +14,6 @@ _final: _prev: {
   inherit (channels.nixpkgs-unstable) zensical;
   # Things are still moving a lot and unstable is a lot more useable.
   inherit (channels.nixpkgs-unstable) jujutsu;
+  inherit (channels.nixpkgs-unstable) pulumi; # stable is "very old"
+  inherit (channels.nixpkgs-unstable) claude-code; # AI AI
 }

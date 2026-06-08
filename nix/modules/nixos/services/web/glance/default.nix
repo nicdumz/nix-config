@@ -103,7 +103,7 @@ let
       s:
       let
         name = if builtins.isString s then s else s.name;
-        # default to self-hosted icons
+        # default to self-hosted icons, check at https://selfh.st/icons/
         icon = if builtins.isString s then s else (s.icon or name);
         title_suffix = if s ? "suffix" then " ${s.suffix}" else "";
         url = s.url or "https://${name}.home.nicdumz.fr";

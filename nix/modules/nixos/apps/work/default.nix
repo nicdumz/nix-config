@@ -20,15 +20,23 @@ in
   };
 
   config = lib.mkIf cfg.work.enable {
-    services.tailscale.enable = true;
+    ${namespace}.tailscale = {
+      enable = true;
+      useKeyfile = false;
+    };
+
     environment.systemPackages =
       with pkgs;
       [
+        # aspect-cli
         bazelisk
         buildifier
-        uv
-        # aspect-cli
+        google-cloud-sdk
+        (pulumi.withPackages (p: [ p.pulumi-python ]))
+        ruff
         tailscale
+        ty
+        uv
       ]
       ++ (lib.optionals cfg.device.isGraphical [ slack ]);
 
