@@ -117,6 +117,8 @@ in
                   dns.msftncsi.com
                   # OK -- can I configure analytics myself? Sigh.
                   analytics.google.com
+                  # this is a database, not a spam website
+                  clickhouse.com
                 ''
               ];
             };
