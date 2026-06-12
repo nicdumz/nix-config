@@ -25,5 +25,6 @@
       defaultFontSize = 14;
       factor = 0.8;
     };
+    work.enable = true;
   };
 }
