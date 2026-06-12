@@ -52,6 +52,7 @@ in
     };
     services = {
       hyprpolkitagent.enable = true;
+      gnome-keyring.enable = true;
 
       # auto-lock
       hypridle = {

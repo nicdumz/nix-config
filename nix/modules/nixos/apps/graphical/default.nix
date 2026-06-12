@@ -23,6 +23,12 @@
       # Allows remembering the last logged in user.
       accounts-daemon.enable = true;
       # udev.packages = [ pkgs.gnome-settings-daemon ];
+      gnome.gnome-keyring.enable = true;
+    };
+
+    security.pam.services = {
+      sddm.enableGnomeKeyring = true;
+      hyprlock.enableGnomeKeyring = true;
     };
 
     ${namespace} = {
