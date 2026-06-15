@@ -39,12 +39,14 @@
       mac = "74:ac:b9:ab:b7:34";
       ip = "192.168.1.2";
     };
-    unifi-ap-ac-prod = {
-      mac = "f4:92:bf:23:42:c7";
+    # XGS1250-12
+    zyxel-switch = {
+      mac = "70:49:A2:4A:82:16";
       ip = "192.168.1.3";
     };
-    unifi-cloudkey = {
-      mac = "74:ac:b9:16:73:33";
+    # XGS1250-12
+    zyxel-ap = {
+      mac = "bc:7e:c3:56:3b:fc";
       ip = "192.168.1.4";
     };
     # jonsnow-admin0 =
