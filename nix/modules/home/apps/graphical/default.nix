@@ -42,8 +42,6 @@ in
       # TODO: 26.05: move to lua
       configType = "hyprlang";
       systemd = {
-        # 26.05 FIXME: trying uwsm instead
-        # enable = false;
         variables = [ "--all" ];
       };
       settings = {

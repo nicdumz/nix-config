@@ -15,11 +15,21 @@
     # TODO: modularize between hyprland and Gnome
     programs = {
       hyprland.enable = true;
-      # TODO: 26.05 do I need the following?
-      # hyprland.withUWSM = true;
       hyprlock.enable = true;
     };
     environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
+    # TODO: UPSTREAM?
+    # hyprland.enable with withUWSM=false unconditionally adds the full hyprland package as a
+    # sessionPackage, which includes hyprland-uwsm.desktop alongside hyprland.desktop. SDDM ends
+    # up launching the uwsm session (which fails without withUWSM=true). Override with a filtered
+    # package that only exposes hyprland.desktop.
+    services.displayManager.sessionPackages = lib.mkForce [
+      (pkgs.runCommand "hyprland-session" { passthru.providedSessions = [ "hyprland" ]; } ''
+        mkdir -p $out/share/wayland-sessions
+        cp ${config.programs.hyprland.package}/share/wayland-sessions/hyprland.desktop $out/share/wayland-sessions/
+      '')
+    ];
 
     services = {
       displayManager.sddm.enable = true;
