@@ -182,6 +182,8 @@ in
 
           # Allow mDNS to work on the LAN.
           MulticastDNS = true;
+
+          IPv4ProxyARP = true;
         };
 
         # v4
