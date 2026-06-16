@@ -34,24 +34,15 @@ in
   };
 
   config = lib.mkIf cfg.device.isGraphical {
-    # FIXME 26.05: their theme is in lua sigh
-    catppuccin.hyprland.enable = false;
     # TODO: modularize
     wayland.windowManager.hyprland = {
-      enable = true; # enable Hyprland
-      # TODO: 26.05: move to lua
-      configType = "hyprlang";
+      enable = true;
+      configType = "lua";
       systemd = {
         variables = [ "--all" ];
       };
-      settings = {
-        "$mod" = "SUPER";
-        "$terminal" = "kitty";
-      };
-      extraConfig = import ./hyprland.nix {
+      extraConfig = import ./hyprland-lua.nix {
         inherit (cfg) desktopshell;
-        inherit (config.wayland.windowManager.hyprland.package) version;
-        inherit lib;
       };
     };
     services = {
