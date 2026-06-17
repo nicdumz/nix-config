@@ -70,9 +70,8 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     noctalia = {
-      # TODO: unpin: they removed options (as things became available in Nix) so need to stay
-      # behind until I can upgrade to 26.05 or such
-      url = "github:noctalia-dev/noctalia-shell?ref=5311e14d2000af2f523789c76a3d869dcb42f130";
+      # Note: v5 is alpha at the moment
+      url = "github:noctalia-dev/noctalia-shell/legacy-v4";
       # TODO: noctalia claims to need unstable for now, revisit later
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
