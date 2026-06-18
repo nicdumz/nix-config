@@ -78,6 +78,9 @@ in
               ]
               ++ lib.lists.optional cfg.continue exts.continue.continue;
             userSettings = {
+              "window.zoomPerWindow" = false;
+              # TODO: this may need tweaking in desktop vs laptop
+              "window.zoomLevel" = 0.4;
               "editor.formatOnSave" = true;
               "files.autoSave" = "afterDelay";
               "files.autoSaveDelay" = 1000;
@@ -92,7 +95,6 @@ in
               # Tricky to get enough information density and not tiny fonts.
               "editor.fontSize" = config.fontProfiles.monospace.size;
               "editor.fontFamily" = config.fontProfiles.monospace.name + ", 'monospace', monospace";
-              "window.zoomLevel" = 1;
 
               "editor.rulers" = [
                 80
