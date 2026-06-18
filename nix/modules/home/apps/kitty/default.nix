@@ -2,6 +2,7 @@
   config,
   lib,
   namespace,
+  osConfig ? { },
   ...
 }:
 let
@@ -21,7 +22,8 @@ in
       enable = true;
       font = {
         # TODO: this actually depends on display scaling ..
-        inherit (config.fontProfiles.monospace) size;
+        # TODO: maybe vary between desktop and laptop
+        size = config.fontProfiles.monospace.size / (osConfig.${namespace}.scaling.factor or 1);
         inherit (config.fontProfiles.monospace) name;
       };
       themeFile = "Catppuccin-Mocha";
