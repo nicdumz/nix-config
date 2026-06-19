@@ -12,11 +12,16 @@ let
     (
       _final: prev:
       let
-        oneLink = directory: programName: "ln -s ${directory}/${programName} $out/bin/${programName}";
+        # sourceName: on-disk binary name when it differs from the exposed program names.
+        # e.g. Chrome's binary is "Google Chrome" but we expose it as "google-chrome-stable" and "google-chrome".
+        oneLink =
+          directory: sourceName: programName:
+          "ln -s '${directory}/${sourceName}' $out/bin/${programName}";
         mkLink =
           {
             packageName,
             programNames ? [ packageName ],
+            sourceName ? packageName,
             directory ? "/usr/bin",
             version ? "corp-syslink",
             ... # We purposedly ignore other args, which would come from overrides
@@ -30,7 +35,7 @@ let
             (
               lib.strings.concatLines [
                 "mkdir -p $out/bin"
-                (lib.strings.concatMapStringsSep "\n" (oneLink directory) programNames)
+                (lib.strings.concatMapStringsSep "\n" (oneLink directory sourceName) programNames)
               ]
             );
       in

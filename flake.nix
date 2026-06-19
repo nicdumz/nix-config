@@ -91,7 +91,10 @@
     in
     lib.mkFlake {
       # Simplify eval, do not generate all systems ...
-      supportedSystems = [ "x86_64-linux" ];
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
 
       channels-config = {
         allowUnfree = true;

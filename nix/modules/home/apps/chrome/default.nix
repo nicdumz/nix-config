@@ -2,6 +2,7 @@
   config,
   lib,
   namespace,
+  pkgs,
   ...
 }:
 let
@@ -19,7 +20,7 @@ in
   config = lib.mkIf (cfg.enable && config.${namespace}.device.isGraphical) {
     programs.google-chrome.enable = true;
 
-    xdg = {
+    xdg = lib.mkIf pkgs.stdenv.isLinux {
       mimeApps = {
         enable = true;
         defaultApplications = {

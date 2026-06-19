@@ -55,13 +55,15 @@
     };
   };
   # TODO: upstream?
-  home.file.".bazelrc".text = ''
-    # Otherwise bazel hardcodes /bin/bash
-    build:local-linux --shell_executable=/run/current-system/sw/bin/bash
-    run --shell_executable=/run/current-system/sw/bin/bash
-    # Otherwise `env bash` shebangs dont find bash. We also need `find` etc.
-    build --action_env=PATH=/bin:/usr/bin:/usr/local/bin:/run/current-system/sw/bin
-  '';
+  home.file.".bazelrc" = lib.mkIf pkgs.stdenv.isLinux {
+    text = ''
+      # Otherwise bazel hardcodes /bin/bash
+      build:local-linux --shell_executable=/run/current-system/sw/bin/bash
+      run --shell_executable=/run/current-system/sw/bin/bash
+      # Otherwise `env bash` shebangs dont find bash. We also need `find` etc.
+      build --action_env=PATH=/bin:/usr/bin:/usr/local/bin:/run/current-system/sw/bin
+    '';
+  };
   programs.starship = {
     enable = true;
     settings = lib.trivial.importTOML ./starship.toml;

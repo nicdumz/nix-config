@@ -33,7 +33,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.device.isGraphical {
+  config = lib.mkIf (pkgs.stdenv.isLinux && cfg.device.isGraphical) {
     # TODO: modularize
     wayland.windowManager.hyprland = {
       enable = true;

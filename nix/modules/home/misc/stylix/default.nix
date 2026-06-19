@@ -3,6 +3,7 @@
   namespace,
   inputs,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -10,7 +11,7 @@
 
   catppuccin = lib.mkIf config.${namespace}.device.isGraphical {
     enable = true;
-    cursors.enable = true;
+    cursors.enable = pkgs.stdenv.isLinux;
     waybar.enable = false;
     # image = config.${namespace}.wallpaper.path;
     # polarity = "dark";
