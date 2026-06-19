@@ -4,6 +4,7 @@
 
   # Stuff that root user and others may need
   environment.systemPackages = with pkgs; [
+    arp-scan
     colordiff
     dig
     ethtool
