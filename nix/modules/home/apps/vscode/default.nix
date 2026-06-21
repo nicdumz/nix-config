@@ -11,14 +11,19 @@ let
   cfg = config.${namespace}.vscode;
   exts =
     inputs.nix-vscode-extensions.extensions.${pkgs.stdenv.hostPlatform.system}.vscode-marketplace;
-  # Needs patching to find libstdc++ and musl
-  jj-view = exts.jj-view.jj-view.override {
-    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
-    buildInputs = [
-      pkgs.stdenv.cc.cc.lib
-      pkgs.musl
-    ];
-  };
+  # On Linux the VSIX ELF binary needs patching to find libstdc++ and musl.
+  # On Darwin the VSIX bundles Mach-O darwin binaries that need no patching.
+  jj-view =
+    if pkgs.stdenv.isLinux then
+      exts.jj-view.jj-view.override {
+        nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+        buildInputs = [
+          pkgs.stdenv.cc.cc.lib
+          pkgs.musl
+        ];
+      }
+    else
+      exts.jj-view.jj-view;
 in
 {
   options.${namespace} = {
@@ -73,9 +78,7 @@ in
                 redhat.vscode-yaml
                 stkb.rewrap
               ]
-              ++ [
-                jj-view
-              ]
+              ++ [ jj-view ]
               ++ lib.lists.optional cfg.continue exts.continue.continue;
             userSettings = {
               "window.zoomPerWindow" = false;
