@@ -19,6 +19,29 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # macOS system configuration. Input MUST be named `darwin` for snowfall-lib
+    # to generate darwinConfigurations and integrate home-manager.
+    darwin = {
+      url = "github:nix-darwin/nix-darwin?ref=nix-darwin-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Trampolines nix-store .app bundles into ~/Applications so Spotlight and
+    # Launchpad can find GUI apps installed via nixpkgs (kitty, vscodium, ...).
+    mac-app-util = {
+      url = "github:hraban/mac-app-util";
+      # mac-app-util pins its OWN nixpkgs deliberately (its SBCL/cl-nix-lite Lisp
+      # toolchain only builds against that pin — following ours breaks it), so we
+      # leave inputs.nixpkgs alone. But its dev-only extras (cl-nix-lite's nixpkgs
+      # and the treefmt-nix copies, "not used for actual overlay") are collapsed
+      # onto our inputs so the tree doesn't track them as separate nixpkgs.
+      inputs = {
+        treefmt-nix.follows = "treefmt-nix";
+        cl-nix-lite.inputs.nixpkgs.follows = "nixpkgs";
+        cl-nix-lite.inputs.treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+
     flake-programs-sqlite = {
       url = "github:wamserma/flake-programs-sqlite";
       inputs.nixpkgs.follows = "nixpkgs";
