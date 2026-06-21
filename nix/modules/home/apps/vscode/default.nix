@@ -64,8 +64,6 @@ in
       profiles =
         let
           common = {
-            enableExtensionUpdateCheck = false;
-            enableUpdateCheck = false;
             extensions =
               with pkgs.vscode-extensions;
               [
@@ -81,6 +79,8 @@ in
               ++ [ jj-view ]
               ++ lib.lists.optional cfg.continue exts.continue.continue;
             userSettings = {
+              "update.mode" = "none";
+              "extensions.autoCheckUpdates" = false;
               "window.zoomPerWindow" = false;
               # TODO: this may need tweaking in desktop vs laptop
               "window.zoomLevel" = 0.4;
