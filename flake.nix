@@ -124,6 +124,10 @@
       };
 
       outputs-builder = channels: {
+        checks =
+          channels.nixpkgs.lib.optionalAttrs (channels.nixpkgs.stdenv.hostPlatform.system == "x86_64-linux")
+            (builtins.mapAttrs (_name: cfg: cfg.config.system.build.toplevel) inputs.self.nixosConfigurations);
+
         # inlined treefmt config.
         formatter = inputs.treefmt-nix.lib.mkWrapper channels.nixpkgs {
           projectRootFile = "flake.nix";
