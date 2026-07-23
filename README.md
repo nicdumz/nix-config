@@ -33,7 +33,7 @@ recommend a read to understand their philosophy.
   - I cannot commit to the `main` branch, instead I need to use feature branches, via Github PRs.
     Each PR integrates with [Nix CI](https://nix-ci.com/), building all the hosts, and validating
     configs.
-  - `direnv` integration: if you `cd` into the repo you should get a useable development
+  - `direnv` integration: `cd` into the repo and you should get a useable development
     environment.
   - `nix fmt` in this repo just does the right thing.
   - A few git hooks enforcing best practices.
