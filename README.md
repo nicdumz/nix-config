@@ -31,7 +31,7 @@ recommend a read to understand their philosophy.
 - `disko` handles partition layout for new installs.
 - Development on this repo:
   - I cannot commit to the `main` branch, instead I need to use feature branches, via Github PRs.
-    Each PR integrates with [Garnix](https://garnix.io/), building all the hosts, and validating
+    Each PR integrates with [Nix CI](https://nix-ci.com/), building all the hosts, and validating
     configs.
   - `direnv` integration: if you `cd` into the repo you should get a useable development
     environment.

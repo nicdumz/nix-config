@@ -139,7 +139,7 @@ jj commit -m "feat: add new feature"
 nix build .#nixosConfigurations.bistannix.config.system.build.toplevel --show-trace
 
 # Check specific package evaluation
-# Note that you can 
+# Note that you can
 nix eval .#nixosConfigurations.bistannix.config.system.build.toplevel --show-trace
 ```
 
@@ -150,14 +150,14 @@ the development environment is automatically activated with all necessary tools.
 
 ## CI/CD Integration
 
-Pull requests are automatically validated by [Garnix](https://garnix.io/), which:
+Pull requests are automatically validated by [Nix CI](https://nix-ci.com/), which:
 
 - Builds all host configurations
 - Runs all checks
 - Validates the flake structure
 
-Agents should ensure all changes pass local validation before suggesting commits, as the same checks
-will run in CI.
+Agents should ensure all changes pass local validation (`nix flake check`)
+before suggesting commits, as the same checks will run in CI.
 
 ## Module Structure
 
