@@ -4,7 +4,7 @@ pull_request_rules:
       # Note to self: applying this label requires "triage" permission at least,
       # so PRs from external contributors can't do this.
       - label="merge-queue"
-      - check-success=All Garnix checks
+      - check-success=Nix CI App
     actions:
       merge:
         method: rebase
