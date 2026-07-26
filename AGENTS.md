@@ -156,8 +156,8 @@ Pull requests are automatically validated by [Nix CI](https://nix-ci.com/), whic
 - Runs all checks
 - Validates the flake structure
 
-Agents should ensure all changes pass local validation (`nix flake check`)
-before suggesting commits, as the same checks will run in CI.
+Agents should ensure all changes pass local validation (`nix flake check`) before suggesting
+commits, as the same checks will run in CI.
 
 ## Module Structure
 
