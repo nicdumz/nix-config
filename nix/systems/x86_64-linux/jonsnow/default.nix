@@ -84,9 +84,10 @@ in
   };
 
   boot.kernel.sysctl = {
-    # Master Switches: Enable the routing engine
-    # Somehow cannot be set via networkd
-    "net.ipv4.ip_forward" = 1;
+    # Master switches: networkd's per-interface Forwarding= isn't enough,
+    # the kernel also gates forwarding on these global switches.
+    "net.ipv4.conf.all.forwarding" = 1;
+    "net.ipv6.conf.all.forwarding" = 1;
   };
 
   networking = {
