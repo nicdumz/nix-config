@@ -67,6 +67,7 @@ in
     prowlarr.enable = true;
     jellyseerr.enable = true;
     jellyfin.enable = true;
+    plex.enable = true;
     motd = {
       enable = true;
       networkInterfaces = [

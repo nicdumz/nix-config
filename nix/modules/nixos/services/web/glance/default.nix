@@ -18,6 +18,12 @@ let
     Media = {
       order = 1;
       sites = [
+        {
+          name = "plex";
+          # Root "/" requires auth (403); /identity is Plex's documented
+          # unauthenticated health-check endpoint.
+          check = "https://plex.home.nicdumz.fr/identity";
+        }
         "jellyfin"
         "seerr"
         {
