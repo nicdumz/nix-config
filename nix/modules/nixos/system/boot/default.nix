@@ -49,6 +49,9 @@
           in
           {
             enable = true;
+            # Also installing in the fallback path so we survive motherboard
+            # and NVRAM resets.
+            efiInstallAsRemovable = true;
             resolution = res;
             style = {
               interface.brandingColor = "89b4fa"; # blue from below
