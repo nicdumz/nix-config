@@ -45,6 +45,10 @@ in
       };
       environmentFile = config.sops.templates.pangolin-env.path;
     };
+    # Pinned: dynamic uids/gids are not stable across userborn runs with
+    # mutableUsers = false, and this user/group owns persisted state.
+    users.users.pangolin.uid = 991;
+    users.groups.fossorial.gid = 999;
     ${namespace} = {
       persistence.directories = [
         {

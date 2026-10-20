@@ -21,7 +21,10 @@ in
       group = "media";
       listenPort = 6768;
     };
-    users.groups.media = { };
+    # Pinned: dynamic uids/gids are not stable across userborn runs with
+    # mutableUsers = false, and this user/group own persisted state.
+    users.users.bazarr.uid = 999;
+    users.groups.media.gid = 995;
 
     ${namespace} = {
       motd.systemdServices = [ "bazarr" ];

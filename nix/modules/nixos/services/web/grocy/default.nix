@@ -35,6 +35,9 @@ in
         settings.currency = "CHF";
         settings.calendar.firstDayOfWeek = 1;
       };
+      # Pinned: dynamic uids are not stable across userborn runs with
+      # mutableUsers = false, and this user owns persisted state.
+      users.users.grocy.uid = 997;
 
       environment.etc."grocy/config.php".text = lib.mkAfter ''
         // Disable most features -- don't need them.

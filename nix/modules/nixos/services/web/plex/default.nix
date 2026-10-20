@@ -22,7 +22,9 @@ in
       enable = true;
       group = "media";
     };
-    users.groups.media = { };
+    # Pinned: dynamic gids are not stable across userborn runs with
+    # mutableUsers = false, and this group owns persisted state.
+    users.groups.media.gid = 995;
     # For hardware rendering
     users.users.plex.extraGroups = [
       "render"
@@ -36,9 +38,7 @@ in
           directory = config.services.plex.dataDir;
           inherit (config.services.plex) user group;
           # NOTE: no configureParent here: dataDir's parent is the shared
-          # /var/lib, which must stay root-owned (see incident where this
-          # was set to plex:media and broke tmpfiles ownership for every
-          # other service under /var/lib).
+          # /var/lib, which must stay root-owned.
         }
       ];
       # unfortunately not exposed in the service config.

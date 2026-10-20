@@ -22,12 +22,17 @@ in
       enable = true;
       group = "media";
     };
-    users.groups.media = { };
-    # For hardware rendering
-    users.users.jellyfin.extraGroups = [
-      "render"
-      "video"
-    ];
+    # Pinned: dynamic uids/gids are not stable across userborn runs with
+    # mutableUsers = false, and this user/group own persisted state.
+    users.groups.media.gid = 995;
+    users.users.jellyfin = {
+      uid = 980;
+      # For hardware rendering
+      extraGroups = [
+        "render"
+        "video"
+      ];
+    };
 
     ${namespace} = {
       motd.systemdServices = [ "jellyfin" ];
