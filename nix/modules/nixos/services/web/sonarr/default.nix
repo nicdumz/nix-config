@@ -21,7 +21,9 @@ in
       group = "media";
       settings.server.port = 7879;
     };
-    users.groups.media = { };
+    # Pinned: dynamic gids are not stable across userborn runs with
+    # mutableUsers = false, and this group owns persisted state.
+    users.groups.media.gid = 995;
 
     ${namespace} = {
       motd.systemdServices = [ "sonarr" ];

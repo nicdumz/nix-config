@@ -19,12 +19,15 @@ in
     services.seerr = {
       enable = true;
     };
+    # Pinned: dynamic uids/gids are not stable across userborn runs with
+    # mutableUsers = false, and this user/group own persisted state.
     users.users.jellyseerr = {
       description = "Services needs a user but doesn't explicitly create it.";
       group = "jellyseerr";
       isSystemUser = true;
+      uid = 996;
     };
-    users.groups.jellyseerr = { };
+    users.groups.jellyseerr.gid = 998;
 
     systemd.services.seerr = {
       serviceConfig.DynamicUser = lib.mkForce false;

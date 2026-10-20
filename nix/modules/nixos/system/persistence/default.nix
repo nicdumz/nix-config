@@ -39,6 +39,38 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
+    assertions =
+      let
+        # Plain string entries (e.g. "/etc/ssh" in the base list above) are
+        # root-owned and always stable; only the { directory, user, group,
+        # ... } form needs checking.
+        namedDirs = builtins.filter lib.isAttrs cfg.directories;
+        mkAssertion = directory: kind: name: pinned: {
+          assertion = pinned;
+          message = ''
+            ${namespace}.persistence: ${kind} '${name}' owns persisted directory
+            '${directory}' but has no explicit id pinned. With mutableUsers =
+            false, userborn reallocates every unpinned uid/gid from scratch on
+            every boot, so ownership of persisted data silently drifts to
+            whatever service happens to land on the same number next time.
+            Pin users.users.${name}.uid (or users.groups.${name}.gid).
+          '';
+        };
+        dirAssertions = d: [
+          (mkAssertion d.directory "user" d.user (config.users.users.${d.user}.uid != null))
+          (mkAssertion d.directory "group" d.group (config.users.groups.${d.group}.gid != null))
+        ]
+        ++ lib.optionals d.configureParent [
+          (mkAssertion d.directory "parent user" d.parent.user (
+            config.users.users.${d.parent.user}.uid != null
+          ))
+          (mkAssertion d.directory "parent group" d.parent.group (
+            config.users.groups.${d.parent.group}.gid != null
+          ))
+        ];
+      in
+      lib.concatMap dirAssertions namedDirs;
+
     preservation = {
       enable = true;
       preserveAt."/persist" = {

@@ -18,15 +18,20 @@ in
   config = lib.mkIf cfg.enable {
     services.prowlarr.enable = true;
 
-    users.groups.media = { };
+    # Pinned: dynamic uids/gids are not stable across userborn runs with
+    # mutableUsers = false, and this user/group own persisted state.
+    users.groups.media.gid = 995;
     users.users.prowlarr = {
       description = "Services needs a user but doesn't explicitly create it.";
       group = "media";
       isSystemUser = true;
+      uid = 988;
     };
 
     systemd.services.prowlarr = {
       serviceConfig.DynamicUser = lib.mkForce false;
+      # Without an explicit User, disabling DynamicUser leaves this running as root.
+      serviceConfig.User = config.users.users.prowlarr.name;
     };
     ${namespace} = {
       motd.systemdServices = [ "prowlarr" ];

@@ -28,12 +28,15 @@ in
         "http://${config.services.victorialogs.listenAddress}/insert/journald";
     };
 
+    # Pinned: dynamic uids/gids are not stable across userborn runs with
+    # mutableUsers = false, and this user/group own persisted state.
     users.users.victorialogs = {
       description = "Services needs a user but doesn't explicitly create it.";
       group = "victorialogs";
       isSystemUser = true;
+      uid = 982;
     };
-    users.groups.victorialogs = { };
+    users.groups.victorialogs.gid = 984;
 
     systemd.services.victorialogs = {
       serviceConfig.DynamicUser = lib.mkForce false;

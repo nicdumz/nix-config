@@ -48,7 +48,9 @@ in
         };
       };
     };
-    users.groups.media = { };
+    # Pinned: dynamic gids are not stable across userborn runs with
+    # mutableUsers = false, and this group owns persisted state.
+    users.groups.media.gid = 995;
 
     # TODO: maybe could be in the firewall module.
     networking.firewall.interfaces.wan0 = {
