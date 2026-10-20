@@ -66,7 +66,6 @@ in
     sonarr.enable = true;
     prowlarr.enable = true;
     jellyseerr.enable = true;
-    jellyfin.enable = true;
     plex.enable = true;
     motd = {
       enable = true;
