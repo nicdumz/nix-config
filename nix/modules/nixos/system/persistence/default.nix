@@ -56,18 +56,20 @@ in
             Pin users.users.${name}.uid (or users.groups.${name}.gid).
           '';
         };
-        dirAssertions = d: [
-          (mkAssertion d.directory "user" d.user (config.users.users.${d.user}.uid != null))
-          (mkAssertion d.directory "group" d.group (config.users.groups.${d.group}.gid != null))
-        ]
-        ++ lib.optionals d.configureParent [
-          (mkAssertion d.directory "parent user" d.parent.user (
-            config.users.users.${d.parent.user}.uid != null
-          ))
-          (mkAssertion d.directory "parent group" d.parent.group (
-            config.users.groups.${d.parent.group}.gid != null
-          ))
-        ];
+        dirAssertions =
+          d:
+          [
+            (mkAssertion d.directory "user" d.user (config.users.users.${d.user}.uid != null))
+            (mkAssertion d.directory "group" d.group (config.users.groups.${d.group}.gid != null))
+          ]
+          ++ lib.optionals d.configureParent [
+            (mkAssertion d.directory "parent user" d.parent.user (
+              config.users.users.${d.parent.user}.uid != null
+            ))
+            (mkAssertion d.directory "parent group" d.parent.group (
+              config.users.groups.${d.parent.group}.gid != null
+            ))
+          ];
       in
       lib.concatMap dirAssertions namedDirs;
 
