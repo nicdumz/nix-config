@@ -11,42 +11,50 @@
 
   sops = {
     defaultSopsFile = inputs.self.outPath + "/secrets/global.yaml";
-    # TODO: this could be in home-manager somewhere, but requires setting sops + HM
-    secrets.ndumazet_github_token.restartUnits = [ "nix-daemon.service" ];
-    templates.ndumazet_nix_github_access_token = {
-      content = ''
-        access-tokens = github.com=${config.sops.placeholder.ndumazet_github_token}
-      '';
-      owner = "ndumazet";
+
+    secrets = {
+      # TODO: this could be in home-manager somewhere, but requires setting sops + HM
+      ndumazet_github_token.restartUnits = [ "nix-daemon.service" ];
+
+      # used in home-manager
+      weather_api_key = { };
+
+      # nix-ci.com (and its api/cache subdomains) share one login/password pair.
+      nix_ci_username = { };
+      nix_ci_password = { };
     };
 
-    # used in home-manager
-    secrets.weather_api_key = { };
-    templates.weather_api_key = {
-      content = ''
-        { "weather_api_key": "${config.sops.placeholder.weather_api_key}" }
-      '';
-      owner = "ndumazet";
-    };
+    templates = {
+      ndumazet_nix_github_access_token = {
+        content = ''
+          access-tokens = github.com=${config.sops.placeholder.ndumazet_github_token}
+        '';
+        owner = "ndumazet";
+      };
 
-    # nix-ci.com (and its api/cache subdomains) share one login/password pair.
-    secrets.nix_ci_username = { };
-    secrets.nix_ci_password = { };
-    templates.ndumazet_netrc = {
-      content = ''
-        machine nix-ci.com
-          login ${config.sops.placeholder.nix_ci_username}
-          password ${config.sops.placeholder.nix_ci_password}
-        machine api.nix-ci.com
-          login ${config.sops.placeholder.nix_ci_username}
-          password ${config.sops.placeholder.nix_ci_password}
-        machine cache.nix-ci.com
-          login ${config.sops.placeholder.nix_ci_username}
-          password ${config.sops.placeholder.nix_ci_password}
-      '';
-      path = "/home/ndumazet/.netrc";
-      owner = "ndumazet";
-      mode = "0400";
+      weather_api_key = {
+        content = ''
+          { "weather_api_key": "${config.sops.placeholder.weather_api_key}" }
+        '';
+        owner = "ndumazet";
+      };
+
+      ndumazet_netrc = {
+        content = ''
+          machine nix-ci.com
+            login ${config.sops.placeholder.nix_ci_username}
+            password ${config.sops.placeholder.nix_ci_password}
+          machine api.nix-ci.com
+            login ${config.sops.placeholder.nix_ci_username}
+            password ${config.sops.placeholder.nix_ci_password}
+          machine cache.nix-ci.com
+            login ${config.sops.placeholder.nix_ci_username}
+            password ${config.sops.placeholder.nix_ci_password}
+        '';
+        path = "/home/ndumazet/.netrc";
+        owner = "ndumazet";
+        mode = "0400";
+      };
     };
   };
   # TODO: in-progress-upstream (https://github.com/Mic92/sops-nix/pull/928)
