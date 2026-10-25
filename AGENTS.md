@@ -161,6 +161,9 @@ commits, as the same checks will run in CI.
 
 ### Querying Nix CI status for a PR
 
+This repo's Nix CI overview page is <https://nix-ci.com/gh:nicdumz:nix-config> — start there to find
+the ref/commit/run you need.
+
 Reviewed snapshot of <https://nix-ci.com/instructions> (as of 2026-10-25) for navigating the CI site
 after opening a PR:
 
