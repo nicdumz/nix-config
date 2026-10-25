@@ -159,6 +159,27 @@ Pull requests are automatically validated by [Nix CI](https://nix-ci.com/), whic
 Agents should ensure all changes pass local validation (`nix flake check`) before suggesting
 commits, as the same checks will run in CI.
 
+### Querying Nix CI status for a PR
+
+Reviewed snapshot of <https://nix-ci.com/instructions> (as of 2026-10-25) for navigating the CI site
+after opening a PR:
+
+- Always fetch pages with `Accept: text/markdown, application/json, text/html` (in that order). Many
+  pages have a markdown or JSON representation that is more agent-friendly.
+- [Documentation pages](https://nix-ci.com/documentation) all support `text/markdown`.
+- Build pages:
+  - `/<repo-url>/` — repository overview: list of refs with CI status
+  - `/<repo-url>/<ref>/` — ref page: list of suites (commits) for a branch/tag
+  - `/<repo-url>/<ref>/<commit>/<suite-uuid>/` — suite page: list of runs (derivations) for a commit
+  - `/<repo-url>/<ref>/<commit>/<run-uuid>/` — run page: status and logs for a single derivation
+    build
+  - `/<repo-url>/<ref>/<commit>/<run-uuid>/raw-logs` — raw build logs (text/plain, streamed)
+  - `/<repo-url>/<ref>/<commit>/<run-uuid>/tail` — tail logs with timestamps (text/plain, streamed
+    from latest)
+
+Private pages require `curl --netrc` (credentials for `ndumazet` are provisioned via sops into
+`~/.netrc`, see `nix/modules/nixos/system/secrets/default.nix`).
+
 ## Module Structure
 
 This flake uses [snowfall-lib](https://snowfall.org/guides/lib/quickstart/) for organization.
