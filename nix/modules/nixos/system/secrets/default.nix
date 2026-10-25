@@ -28,6 +28,26 @@
       '';
       owner = "ndumazet";
     };
+
+    # nix-ci.com (and its api/cache subdomains) share one login/password pair.
+    secrets.nix_ci_username = { };
+    secrets.nix_ci_password = { };
+    templates.ndumazet_netrc = {
+      content = ''
+        machine nix-ci.com
+          login ${config.sops.placeholder.nix_ci_username}
+          password ${config.sops.placeholder.nix_ci_password}
+        machine api.nix-ci.com
+          login ${config.sops.placeholder.nix_ci_username}
+          password ${config.sops.placeholder.nix_ci_password}
+        machine cache.nix-ci.com
+          login ${config.sops.placeholder.nix_ci_username}
+          password ${config.sops.placeholder.nix_ci_password}
+      '';
+      path = "/home/ndumazet/.netrc";
+      owner = "ndumazet";
+      mode = "0400";
+    };
   };
   # TODO: in-progress-upstream (https://github.com/Mic92/sops-nix/pull/928)
   systemd.services =
