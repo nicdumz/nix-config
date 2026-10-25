@@ -1,6 +1,28 @@
 # sudo nix run 'github:nix-community/disko/latest#disko-install' -- --write-efi-boot-entries --flake '.#myvm' --disk main /dev/sda
 
 {
+  # Must match nix.settings.substituters/trusted-public-keys in
+  # nix/modules/nixos/cli/nix/default.nix verbatim -- nixConfig can only be
+  # plain literals (not even a bare `import`), so it can't read that module's
+  # settings directly. An assertion in that module fails `nix flake check`
+  # if these two ever drift apart.
+  nixConfig = {
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://numtide.cachix.org"
+      "https://noctalia.cachix.org"
+      "https://herdr.cachix.org"
+      "https://herdr-nix.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+      "herdr.cachix.org-1:3nH7IStRsS0ASfdonA0DCRR2ZrSCeWitZ7Kwew0cR4I="
+      "herdr-nix.cachix.org-1:UpdsQYx39PK0PToKQaa2EFq19Lsjs1M9Ho+X7VNt9gs="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -17,6 +39,14 @@
     home-manager = {
       url = "github:nix-community/home-manager?ref=release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Tracks master, not a release branch: the only home-manager with
+    # modules/programs/herdr.nix, which we source by path below (not
+    # copied/vendored) since it hasn't landed on a release branch yet. Drop
+    # this input and switch to home-manager's own module once it has.
+    home-manager-unstable = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     # macOS system configuration. Input MUST be named `darwin` for snowfall-lib
@@ -95,6 +125,29 @@
     claude-code = {
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    oh-my-pi = {
+      url = "github:can1357/oh-my-pi";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    # Official prebuilt-binary packaging of herdr itself (cachix: herdr.cachix.org).
+    # NOT the same project as herdr-plugins below, despite the similar name.
+    herdr = {
+      url = "github:herdrdev/herdr-nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    # Third-party herdr plugin packaging + the home-manager module that
+    # registers them (cachix: herdr-nix.cachix.org). Unrelated maintainer to
+    # the official herdr-nix above.
+    herdr-plugins = {
+      url = "github:lorenzorapetti/herdr-nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        # Its checks activate against programs.herdr, which only exists on
+        # home-manager-unstable (see above) -- follow the same input, not
+        # our release-26.05 home-manager.
+        home-manager.follows = "home-manager-unstable";
+      };
     };
     noctalia = {
       # Note: v5 is alpha at the moment
