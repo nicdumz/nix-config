@@ -5,7 +5,50 @@
   system,
   ...
 }:
+let
+  # flake.nix can't import these (nixConfig must be plain literals), so it
+  # repeats them by hand; assert the two stay in sync. Compared against these
+  # `let`-bound lists directly, not config.nix.settings.substituters, since
+  # NixOS' own nix module appends further defaults (e.g. cache.nixos.org)
+  # there that would break an equality check.
+  substituters = [
+    "https://nix-community.cachix.org"
+    "https://numtide.cachix.org"
+    "https://noctalia.cachix.org"
+    # herdr's own prebuilt-binary release cache.
+    "https://herdr.cachix.org"
+    # lorenzorapetti/herdr-nix's plugin cache (unrelated project, similar name).
+    "https://herdr-nix.cachix.org"
+  ];
+
+  trustedPublicKeys = [
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+    "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+    "herdr.cachix.org-1:3nH7IStRsS0ASfdonA0DCRR2ZrSCeWitZ7Kwew0cR4I="
+    "herdr-nix.cachix.org-1:UpdsQYx39PK0PToKQaa2EFq19Lsjs1M9Ho+X7VNt9gs="
+  ];
+
+  flakeNixConfig = (import (inputs.self.outPath + "/flake.nix")).nixConfig;
+in
 {
+  assertions = [
+    {
+      assertion = flakeNixConfig.extra-substituters == substituters;
+      message = ''
+        flake.nix's nixConfig.extra-substituters has drifted from
+        nix/modules/nixos/cli/nix/default.nix. Update flake.nix to match.
+      '';
+    }
+    {
+      assertion = flakeNixConfig.extra-trusted-public-keys == trustedPublicKeys;
+      message = ''
+        flake.nix's nixConfig.extra-trusted-public-keys has drifted from
+        nix/modules/nixos/cli/nix/default.nix. Update flake.nix to match.
+      '';
+    }
+  ];
+
   nixpkgs.hostPlatform = system;
 
   system = {
@@ -85,18 +128,10 @@
         "flakes"
       ];
 
-      # Substitutions
-      substituters = [
-        "https://nix-community.cachix.org"
-        "https://numtide.cachix.org"
-        "https://noctalia.cachix.org"
-      ];
-
-      trusted-public-keys = [
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-        "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
-      ];
+      # Substitutions. Kept as `let` bindings above and checked against
+      # flake.nix's nixConfig by the assertions above.
+      inherit substituters;
+      trusted-public-keys = trustedPublicKeys;
 
       # Fallback quickly if substituters are not available.
       connect-timeout = 25;
