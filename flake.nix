@@ -85,8 +85,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin = {
-      url = "github:catppuccin/nix/release-26.05";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # Track main (not release-26.05): the release branch's vscode theme still
+      # builds with pnpm_10, which nixpkgs now flags as insecure. main already
+      # builds with pnpm_11, so follow nixpkgs-unstable (which main itself
+      # targets, and which becomes the next stable release in a few weeks).
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     claude-code = {
       url = "github:sadjow/claude-code-nix";
