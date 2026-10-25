@@ -38,7 +38,7 @@ mkShell {
     pkgs.ssh-to-age
     pkgs.yq-go
     # Note: pkgs.colmena below would be too old
-    inputs.colmena.defaultPackage.${stdenv.hostPlatform.system}
+    inputs.colmena.packages.${stdenv.hostPlatform.system}.default
     pkgs.age-plugin-fido2-hmac
     pkgs.zensical
   ]
