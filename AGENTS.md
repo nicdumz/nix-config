@@ -5,19 +5,16 @@ configuration.
 
 ## Version Control
 
-### Use Jujutsu (jj) for Commits
-
-This repository uses [Jujutsu](https://github.com/jc-vcs/jj) (jj) instead of git for version
-control.
+### Conventional Commits
 
 **Create commits with conventional commit messages:**
 
 ```sh
-jj commit -m "feat: add new feature"
-jj commit -m "fix: resolve bug in module"
-jj commit -m "docs: update README"
-jj commit -m "refactor: simplify configuration"
-jj commit -m "chore: update dependencies"
+git commit -m "feat: add new feature"
+git commit -m "fix: resolve bug in module"
+git commit -m "docs: update README"
+git commit -m "refactor: simplify configuration"
+git commit -m "chore: update dependencies"
 ```
 
 Follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification:
@@ -36,8 +33,8 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/
 For breaking changes, add `!` after the type or add `BREAKING CHANGE:` in the commit body:
 
 ```sh
-jj commit -m "feat!: change module interface"
-jj commit -m "feat: change API
+git commit -m "feat!: change module interface"
+git commit -m "feat: change API
 
 BREAKING CHANGE: the old API is no longer supported"
 ```
@@ -129,7 +126,7 @@ nix flake check
 colmena build
 
 # 4. Create commit with conventional commit message
-jj commit -m "feat: add new feature"
+git commit -m "feat: add new feature"
 ```
 
 ### Troubleshooting Builds
@@ -198,7 +195,7 @@ nix/
 
 ## Best Practices Summary
 
-1. ✅ Use `jj commit` with conventional commit messages
+1. ✅ Use conventional commit messages
 1. ✅ Run `nix fmt` before every commit
 1. ✅ Run `nix flake check` to validate configurations
 1. ✅ Test builds with `colmena build` or specific config builds
