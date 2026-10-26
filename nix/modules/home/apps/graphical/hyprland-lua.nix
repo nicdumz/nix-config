@@ -7,7 +7,7 @@
       scale    = 1.25,
   })
 
-  local ipc = "noctalia-shell ipc call"
+  local ipc = "noctalia msg"
 
   hl.config({
       xwayland = {
@@ -160,15 +160,15 @@
   hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
   hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
-  hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd(ipc .. " launcher toggle"))
-  hl.bind(mod .. " + comma", hl.dsp.exec_cmd(ipc .. " settings toggle"))
+  hl.bind(mod .. " + SPACE", hl.dsp.exec_cmd(ipc .. " panel-toggle launcher"))
+  hl.bind(mod .. " + comma", hl.dsp.exec_cmd(ipc .. " settings-toggle"))
 
   -- Media keys
-  hl.bind("XF86AudioRaiseVolume",   hl.dsp.exec_cmd(ipc .. " volume increase"),   { locked = true, repeating = true })
-  hl.bind("XF86AudioLowerVolume",   hl.dsp.exec_cmd(ipc .. " volume decrease"),   { locked = true, repeating = true })
-  hl.bind("XF86AudioMute",          hl.dsp.exec_cmd(ipc .. " volume muteOutput"), { locked = true })
-  hl.bind("XF86MonBrightnessUp",    hl.dsp.exec_cmd(ipc .. " brightness increase"), { locked = true, repeating = true })
-  hl.bind("XF86MonBrightnessDown",  hl.dsp.exec_cmd(ipc .. " brightness decrease"), { locked = true, repeating = true })
+  hl.bind("XF86AudioRaiseVolume",   hl.dsp.exec_cmd(ipc .. " volume-up"),       { locked = true, repeating = true })
+  hl.bind("XF86AudioLowerVolume",   hl.dsp.exec_cmd(ipc .. " volume-down"),     { locked = true, repeating = true })
+  hl.bind("XF86AudioMute",          hl.dsp.exec_cmd(ipc .. " volume-mute"),     { locked = true })
+  hl.bind("XF86MonBrightnessUp",    hl.dsp.exec_cmd(ipc .. " brightness-up"),   { locked = true, repeating = true })
+  hl.bind("XF86MonBrightnessDown",  hl.dsp.exec_cmd(ipc .. " brightness-down"), { locked = true, repeating = true })
 
   hl.bind(mod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
@@ -194,8 +194,15 @@
     if desktopshell == "noctalia" then
       ''
         hl.on("hyprland.start", function()
-            hl.exec_cmd("noctalia-shell")
-        end)''
+            hl.exec_cmd("noctalia")
+        end)
+
+        -- v5 Settings is a standalone window (v4 used an in-shell panel).
+        hl.window_rule({
+            match = { class = "dev.noctalia.Noctalia" },
+            float = true,
+            size  = { 1080, 920 },
+        })''
     else
       ""
   }

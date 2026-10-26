@@ -150,10 +150,10 @@
       };
     };
     noctalia = {
-      # Note: v5 is alpha at the moment
-      url = "github:noctalia-dev/noctalia-shell/legacy-v4";
-      # TODO: noctalia claims to need unstable for now, revisit later
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      # v5 (native runtime). The `cachix` branch tracks the latest commit already
+      # pushed to noctalia.cachix.org. Overriding its nixpkgs (follows) would change
+      # the derivation hash and force a local build, so it is intentionally not set.
+      url = "github:noctalia-dev/noctalia/cachix";
     };
   };
 

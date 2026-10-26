@@ -242,158 +242,109 @@ in
           };
         };
 
-      noctalia-shell = {
+      noctalia = {
         enable = cfg.desktopshell == "noctalia";
-        plugins = {
-          sources = [
-            {
-              enabled = true;
-              name = "Official Noctalia Plugins";
-              url = "https://github.com/noctalia-dev/noctalia-plugins";
-            }
-          ];
-          states = {
-            privacy-indicator = {
-              enabled = true;
-              sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
-            };
-          };
-          version = 2;
-        };
+        # Rendered to ~/.config/noctalia/config.toml and checked at build time with
+        # `noctalia config validate`. Schema: https://docs.noctalia.dev/noctalia/configuration/
+        # GUI changes land in ~/.local/state/noctalia/settings.toml and win over this.
         settings = {
-          ui = {
-            fontFixed = config.fontProfiles.monospace.name;
-            fontDefault = config.fontProfiles.regular.name;
-          };
-          colorSchemes.predefinedScheme = "Catppuccin";
-          general = {
-            avatarImage = "${inputs.self.outPath}/assets/avatar_256.png";
-          };
-          location = {
-            name = "Zurich";
-            showWeekNumberInCalendar = true;
-            monthBeforeDay = true;
-          };
-          wallpaper.enabled = false;
-          bar = {
-            # TODO: not sure what's good for a laptop yet.
-            fontScale = if laptop then 1 else 1.2;
-            widgets = {
-              center = [
-                {
-                  id = "Workspace";
-                  iconScale = 0.8;
-                  pillSize = 0.8;
-                }
-              ];
-              left = [
-                {
-                  id = "SystemMonitor";
-                }
-                {
-                  id = "ActiveWindow";
-                  maxWidth = 600;
-                }
-                {
-                  id = "MediaMini";
-                  maxWidth = 400;
-                }
-              ];
-              right = builtins.concatLists [
-                [
-                  {
-                    id = "Tray";
-                  }
-                  {
-                    id = "NotificationHistory";
-                  }
-                  {
-                    id = "Volume";
-                  }
-                ]
-                (lib.optionals laptop [
-                  {
-                    id = "Battery";
-                    alwaysShowPercentage = true;
-                    hideIfNotDetected = false;
-                  }
-                  {
-                    id = "Network";
-                  }
-                  {
-                    id = "Bluetooth"; # only for laptops?
-                  }
-                  {
-                    id = "Brightness";
-                  }
-                ])
-                [
-                  {
-                    id = "plugin:privacy-indicator";
-                  }
-                  {
-                    id = "Spacer";
-                    width = 10;
-                  }
-                  {
-                    id = "Clock";
-                  }
-                  {
-                    id = "Spacer";
-                    width = 10;
-                  }
-                  {
-                    id = "ControlCenter";
-                    useDistroLogo = true;
-                  }
-                  {
-                    id = "SessionMenu";
-                  }
-                ]
-              ];
-            };
-          };
-          # controlCenter# tweak shortcuts etc
-          shortcuts = {
-            # left =
-            # right =
-          };
-          nightLight.autoSchedule = false;
-          sessionMenu = {
-            enableCountdown = false;
-            powerOptions = [
+          shell = {
+            font_family = config.fontProfiles.regular.name;
+            avatar_path = "${inputs.self.outPath}/assets/avatar_256.png";
+            # Month before day, e.g. "Monday, October 26".
+            date_format = "%A, %B %-d";
+            session.actions = [
               {
                 action = "lock";
-                keybind = "l";
-                enabled = true;
+                shortcut = "l";
               }
               {
                 action = "suspend";
-                keybind = "s";
-                enabled = true;
+                shortcut = "s";
               }
               {
                 action = "reboot";
-                keybind = "r";
-                enabled = true;
+                shortcut = "r";
               }
               {
                 action = "logout";
-                keybind = "o";
-                enabled = true;
+                shortcut = "o";
               }
               {
                 action = "shutdown";
-                keybind = "d";
-                enabled = true;
-
+                shortcut = "d";
               }
               {
-                action = "rebootToUefi";
-                keybind = "b";
-                enabled = true;
+                action = "reboot_uefi";
+                shortcut = "b";
               }
             ];
+          };
+          theme = {
+            source = "builtin";
+            builtin = "Catppuccin";
+          };
+          # hyprpaper owns the wallpaper.
+          wallpaper.enabled = false;
+          location.address = "Zurich, Switzerland";
+          weather.enabled = true;
+          control_center.calendar.show_week_numbers = true;
+
+          bar.default = {
+            # TODO: not sure what's good for a laptop yet.
+            font_scale = if laptop then 1 else 1.2;
+            start = [
+              "cpu"
+              "cpu-temp"
+              "ram"
+              "active_window"
+              "media"
+            ];
+            center = [ "workspaces" ];
+            end = builtins.concatLists [
+              [
+                "tray"
+                "notifications"
+                "volume"
+              ]
+              (lib.optionals laptop [
+                "battery"
+                "network"
+                "bluetooth"
+                "brightness"
+              ])
+              [
+                "privacy"
+                "gap"
+                "clock"
+                "gap"
+                "control-center"
+                "session"
+              ]
+            ];
+          };
+
+          widget = {
+            cpu = {
+              type = "sysmon";
+              stat = "cpu_usage";
+            };
+            cpu-temp = {
+              type = "sysmon";
+              stat = "cpu_temp";
+            };
+            ram = {
+              type = "sysmon";
+              stat = "ram_used";
+            };
+            active_window.max_length = 600;
+            media.max_length = 400;
+            workspaces.pill_scale = 0.8;
+            gap = {
+              type = "spacer";
+              length = 10;
+            };
+            control-center.custom_image = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
           };
         };
       };
@@ -454,12 +405,6 @@ in
       };
       # Optional, hint Electron apps to use Wayland:
       sessionVariables.NIXOS_OZONE_WL = "1";
-
-      # Recommended noctalia deps
-      packages = [
-        pkgs.brightnessctl
-        pkgs.cliphist
-      ];
     };
     # TODO: might not make sense outside of laptops.
     services.network-manager-applet.enable = laptop;
