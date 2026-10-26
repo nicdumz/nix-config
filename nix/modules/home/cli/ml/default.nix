@@ -53,7 +53,45 @@ in
       composer.shape = "band";
       theme.dark = "dark-catppuccin";
       symbolPreset = "nerd";
-      statusLine.preset = "nerd";
+      # The nerd preset minus session, session_name, token_in/out,
+      # cache_read/write and time, with a thin powerline separator. Segment
+      # lists are only honoured with the custom preset, so nerd's segment
+      # options are restated.
+      statusLine = {
+        preset = "custom";
+        separator = "powerline-thin";
+        leftSegments = [
+          "pi"
+          "vim"
+          "hostname"
+          "model"
+          "mode"
+          "path"
+          "git"
+          "pr"
+          "subagents"
+        ];
+        rightSegments = [
+          "token_rate"
+          "cost"
+          "context_pct"
+          "context_total"
+          "time_spent"
+        ];
+        segmentOptions = {
+          model.showThinkingLevel = true;
+          path = {
+            abbreviate = true;
+            maxLength = 60;
+          };
+          git = {
+            showBranch = true;
+            showStaged = true;
+            showUnstaged = true;
+            showUntracked = true;
+          };
+        };
+      };
       # omp reruns its setup wizard while setupVersion is below its
       # CURRENT_SETUP_VERSION (2); the value it saves on completion is
       # overwritten by these settings on every switch. Bump if omp raises it.
