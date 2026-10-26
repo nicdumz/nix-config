@@ -293,6 +293,10 @@ in
           bar.default = {
             # TODO: not sure what's good for a laptop yet.
             font_scale = if laptop then 1 else 1.2;
+            # Full-width bar (default inset is 100px per end), plus extra reserved
+            # space below it so windows sit 10px further away.
+            margin_ends = 0;
+            margin_opposite_edge = 10;
             start = [
               "cpu"
               "cpu-temp"
