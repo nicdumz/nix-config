@@ -52,6 +52,8 @@ in
       python.interpreter = "${pkgs.python3}/bin/python3";
       composer.shape = "band";
       theme.dark = "dark-catppuccin";
+      symbolPreset = "nerd";
+      statusLine.preset = "nerd";
       # omp reruns its setup wizard while setupVersion is below its
       # CURRENT_SETUP_VERSION (2); the value it saves on completion is
       # overwritten by these settings on every switch. Bump if omp raises it.
