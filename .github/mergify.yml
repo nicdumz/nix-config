@@ -36,4 +36,7 @@ merge_protections:
     if:
       - base = main
     success_conditions:
-      - "title ~= ^(fix|feat|docs|style|refactor|perf|test|build|ci|chore|revert)(?:\\(.+\\))?:"
+      # Checked per commit rather than on the PR title, since PRs are
+      # rebase-merged, not squashed. List conditions match if *any* commit
+      # matches, so negate "a commit whose message is not conventional".
+      - "-commits[*].commit_message ~= ^(?!(fix|feat|docs|style|refactor|perf|test|build|ci|chore|revert)(?:\\(.+\\))?:)"
