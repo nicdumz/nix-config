@@ -102,11 +102,35 @@ in
     enable = isGraphical;
     # Official prebuilt binary (herdr.cachix.org), not nixpkgs' from-source build.
     package = inputs.herdr.packages.${system}.default;
-    plugins = lib.mkIf isGraphical [ herdrPlugins.herdr-reviewr ];
+    plugins = lib.mkIf isGraphical [
+      herdrPlugins.herdr-reviewr
+      (herdrPlugins.callPackage ./herdr-worktree-setup.nix { })
+    ];
+    # tdi.worktree-setup: steps run in each new worktree (cwd), on herdr's
+    # worktree.created event. `path` is the MAIN checkout.
+    pluginSettings."tdi.worktree-setup".project = [
+      {
+        path = "~/code/nix-config";
+        steps = [ "${lib.getExe config.programs.direnv.package} allow" ];
+      }
+    ];
     settings = {
       # Carried over from the previously hand-written config.toml, which this
       # now replaces.
       onboarding = false;
+      # herdr's default rows plus worktree-setup's `setup: running|done|failed`
+      # metadata token.
+      ui.sidebar.spaces.rows = [
+        [
+          "state_icon"
+          "workspace"
+        ]
+        [
+          "branch"
+          "git_status"
+          "$setup"
+        ]
+      ];
       # Displaces herdr's default reload_config binding (user bindings win
       # over defaults); the module reloads the config on change anyway.
       keys.command = [
