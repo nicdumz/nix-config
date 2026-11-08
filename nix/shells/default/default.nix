@@ -42,7 +42,7 @@ mkShell {
     pkgs.age-plugin-fido2-hmac
     pkgs.zensical
   ]
-  ++ pkgs.lib.optionals stdenv.isLinux [
+  ++ pkgs.lib.optionals stdenv.hostPlatform.isLinux [
     pkgs.wrangler # for cloudflare deploys, linux only (darwin not supported)
   ];
   buildInputs = check.enabledPackages ++ [ myPython ];

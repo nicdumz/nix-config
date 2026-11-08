@@ -20,7 +20,7 @@ in
   config = lib.mkIf (cfg.enable && config.${namespace}.device.isGraphical) {
     programs.google-chrome.enable = true;
 
-    xdg = lib.mkIf pkgs.stdenv.isLinux {
+    xdg = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
       mimeApps = {
         enable = true;
         defaultApplications = {

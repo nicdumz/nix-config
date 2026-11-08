@@ -20,7 +20,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.enable && pkgs.stdenv.isDarwin) {
+  config = lib.mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isDarwin) {
     services.macos-remap-keys = {
       enable = true;
       keyboard.NonUSBackslash = "GraveAccent";
