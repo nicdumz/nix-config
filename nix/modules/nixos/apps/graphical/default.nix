@@ -6,10 +6,8 @@
   namespace,
   ...
 }:
-{
-  imports = [ inputs.catppuccin.nixosModules.catppuccin ];
-
-  config = lib.mkIf config.nicdumz.device.isGraphical {
+let
+  graphicalConfig = lib.mkIf config.nicdumz.device.isGraphical {
     catppuccin.enable = true;
 
     # TODO: modularize between hyprland and Gnome
@@ -74,4 +72,15 @@
       ];
     };
   };
+in
+{
+  imports = [ inputs.catppuccin.nixosModules.catppuccin ];
+
+  # catppuccin/nix warns on every eval unless `autoEnable` has been explicitly
+  # set *somewhere*, regardless of which branch of `graphicalConfig`'s `mkIf`
+  # is taken -- so this must stay unconditional, not nested inside it.
+  config = lib.mkMerge [
+    { catppuccin.autoEnable = config.catppuccin.enable; }
+    graphicalConfig
+  ];
 }

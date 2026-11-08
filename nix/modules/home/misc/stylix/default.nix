@@ -6,12 +6,10 @@
   pkgs,
   ...
 }:
-{
-  imports = [ inputs.catppuccin.homeModules.catppuccin ];
-
-  catppuccin = lib.mkIf config.${namespace}.device.isGraphical {
+let
+  graphicalCatppuccin = lib.mkIf config.${namespace}.device.isGraphical {
     enable = true;
-    cursors.enable = pkgs.stdenv.isLinux;
+    cursors.enable = pkgs.stdenv.hostPlatform.isLinux;
     waybar.enable = false;
     # image = config.${namespace}.wallpaper.path;
     # polarity = "dark";
@@ -43,4 +41,15 @@
     #   };
     # };
   };
+in
+{
+  imports = [ inputs.catppuccin.homeModules.catppuccin ];
+
+  # catppuccin/nix warns on every eval unless `autoEnable` has been explicitly
+  # set *somewhere*, regardless of which branch of `graphicalCatppuccin`'s
+  # `mkIf` is taken -- so this must stay unconditional, not nested inside it.
+  catppuccin = lib.mkMerge [
+    { autoEnable = config.catppuccin.enable; }
+    graphicalCatppuccin
+  ];
 }
