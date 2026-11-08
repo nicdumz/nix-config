@@ -30,6 +30,17 @@ let
   ];
 
   flakeNixConfig = (import (inputs.self.outPath + "/flake.nix")).nixConfig;
+
+  # Single source of truth for nix-ci.nix's `cachix` list, derived from the
+  # lists above so there is exactly one place to edit when a cache is
+  # added/removed/rotated.
+  expectedNixCiCachix = lib.zipListsWith (substituter: publicKey: {
+    name = lib.removeSuffix ".cachix.org" (lib.removePrefix "https://" substituter);
+    public-key = publicKey;
+    push = false;
+  }) substituters trustedPublicKeys;
+
+  nixCiConfig = import (inputs.self.outPath + "/nix-ci.nix");
 in
 {
   assertions = [
@@ -45,6 +56,13 @@ in
       message = ''
         flake.nix's nixConfig.extra-trusted-public-keys has drifted from
         nix/modules/nixos/cli/nix/default.nix. Update flake.nix to match.
+      '';
+    }
+    {
+      assertion = nixCiConfig.cachix == expectedNixCiCachix;
+      message = ''
+        nix-ci.nix's cachix list has drifted from
+        nix/modules/nixos/cli/nix/default.nix. Update nix-ci.nix to match.
       '';
     }
   ];
