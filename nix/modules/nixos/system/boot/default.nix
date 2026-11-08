@@ -52,6 +52,10 @@
             # Also installing in the fallback path so we survive motherboard
             # and NVRAM resets.
             efiInstallAsRemovable = true;
+            # Secure boot is not used: don't pin the config hash into the EFI
+            # binary. A stale/non-updated binary with an enrolled hash panics
+            # with "checksum mismatch for config file" on every config change.
+            enrollConfig = false;
             resolution = res;
             style = {
               interface.brandingColor = "89b4fa"; # blue from below

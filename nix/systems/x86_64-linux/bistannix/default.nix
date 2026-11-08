@@ -30,8 +30,6 @@
     # TODO: move to laptop?
     work.enable = true;
   };
-  # NOTE: if setting up new system you first need to enroll keys etc.
-  boot.loader.limine.secureBoot.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   networking.networkmanager.enable = false;
