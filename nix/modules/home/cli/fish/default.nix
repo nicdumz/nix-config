@@ -55,7 +55,7 @@
     };
   };
   # TODO: upstream?
-  home.file.".bazelrc" = lib.mkIf pkgs.stdenv.isLinux {
+  home.file.".bazelrc" = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
     text = ''
       # Otherwise bazel hardcodes /bin/bash
       build:local-linux --shell_executable=/run/current-system/sw/bin/bash

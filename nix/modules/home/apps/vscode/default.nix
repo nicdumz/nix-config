@@ -14,7 +14,7 @@ let
   # On Linux the VSIX ELF binary needs patching to find libstdc++ and musl.
   # On Darwin the VSIX bundles Mach-O darwin binaries that need no patching.
   jj-view =
-    if pkgs.stdenv.isLinux then
+    if pkgs.stdenv.hostPlatform.isLinux then
       exts.jj-view.jj-view.override {
         nativeBuildInputs = [ pkgs.autoPatchelfHook ];
         buildInputs = [
