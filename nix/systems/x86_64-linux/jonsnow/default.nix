@@ -217,9 +217,6 @@ in
     };
   };
 
-  # TODO: backup cron
-  # 0 4 * * * rclone --drive-shared-with-me copy /media/bigslowdata/paperless/media/documents/originals/ drive-remote:jonsnow-backups/paperless-backups
-
   fileSystems.bigdata = {
     mountPoint = "/media/bigslowdata";
     fsType = "ext4";
