@@ -9,6 +9,24 @@
 let
   lan = "lan0";
   wan = "wan0";
+  # IoT VLAN (802.1Q tag 20) on the same physical port as lan0.
+  iot = "iot0";
+  iotAddress = "192.168.20.1";
+  networkmap = config.${namespace}.networkmap;
+
+  # Static DHCP leases for the networkmap entries living in the given subnet.
+  staticLeasesIn =
+    subnetPrefix:
+    lib.attrsets.mapAttrsToList
+      (_n: v: {
+        MACAddress = v.mac;
+        Address = v.ip;
+      })
+      (
+        lib.attrsets.filterAttrs (
+          n: v: n != config.networking.hostName && lib.hasPrefix subnetPrefix v.ip
+        ) networkmap
+      );
 
   ethLink =
     name:
@@ -52,8 +70,11 @@ in
     prober7.enable = true;
     firewall = {
       interface = lan;
-      # DHCP server.
-      udp = [ 67 ];
+      # DHCP server, mDNS (avahi reflector).
+      udp = [
+        67
+        5353
+      ];
     };
     homeassistant.enable = true;
     traefik.enable = true;
@@ -96,11 +117,53 @@ in
     nftables.enable = true;
     useNetworkd = true;
 
-    firewall.filterForward = true;
-    firewall.extraForwardRules = ''
-      iifname "${lan}" oifname "${wan}" accept
-      iifname "${lan}" oifname "${lan}" accept
-    '';
+    # Masquerade IPv4 towards the internet only: traffic between lan0 and iot0 keeps its real
+    # source address. Also accepts forwarding from both internal interfaces to wan0.
+    nat = {
+      enable = true;
+      externalInterface = wan;
+      internalInterfaces = [
+        lan
+        iot
+      ];
+    };
+
+    firewall = {
+      filterForward = true;
+      # IoT -> trusted LAN is not listed: IoT devices only get replies to connections opened
+      # from the trusted side (established/related), e.g. casting from a phone.
+      extraForwardRules = ''
+        iifname "${lan}" oifname "${lan}" accept
+        iifname "${lan}" oifname "${iot}" accept
+      '';
+
+      # IoT devices may only use jonsnow for DHCP, DNS (blocky) and mDNS reflection...
+      interfaces.${iot} = {
+        allowedTCPPorts = [ 53 ];
+        allowedUDPPorts = [
+          53
+          67
+          5353
+        ];
+      };
+      # ...and the TV for Plex.
+      extraInputRules = ''
+        iifname "${iot}" ether saddr ${networkmap.samsung-tv.mac} tcp dport 32400 accept comment "Samsung TV -> Plex"
+      '';
+    };
+  };
+
+  # Reflect mDNS between the trusted LAN and the IoT VLAN so phones/laptops discover
+  # Cast/AirPlay/Sonos/Hue devices living on the IoT VLAN.
+  services.avahi = {
+    enable = true;
+    reflector = true;
+    allowInterfaces = [
+      lan
+      iot
+    ];
+    # Opened per interface above instead of globally (wan0).
+    openFirewall = false;
   };
 
   systemd.network = {
@@ -125,6 +188,14 @@ in
     links = {
       "10-wan" = ethLink wan "00:1b:21:c3:4a:f6";
       "15-lan" = ethLink lan "00:1b:21:c3:4a:f4";
+    };
+
+    netdevs."20-iot" = {
+      netdevConfig = {
+        Kind = "vlan";
+        Name = iot;
+      };
+      vlanConfig.Id = 20;
     };
 
     networks = {
@@ -163,6 +234,8 @@ in
 
       "15-lan" = {
         matchConfig.Name = lan;
+        # Tagged VLANs carried on the same port.
+        vlan = [ iot ];
         address = [
           "${config.${namespace}.myipv4}/24"
         ];
@@ -178,7 +251,6 @@ in
         networkConfig = {
           # v4 stuff
           DHCPServer = true; # v4
-          IPMasquerade = "ipv4";
           IPv4Forwarding = true;
           IPv6Forwarding = true;
 
@@ -186,9 +258,6 @@ in
           IPv6AcceptRA = false;
           IPv6SendRA = true;
           DHCPPrefixDelegation = true;
-
-          # Allow mDNS to work on the LAN.
-          MulticastDNS = true;
 
           IPv4ProxyARP = true;
         };
@@ -202,15 +271,7 @@ in
           DNS = "_server_address";
           # TODO: can i teach v4 server to only bind on the local address instead of 0.0.0.0?
         };
-        dhcpServerStaticLeases =
-          let
-            toLease = _n: v: {
-              MACAddress = v.mac;
-              Address = v.ip;
-            };
-            filterOutSelf = lib.attrsets.filterAttrs (n: _v: n != config.networking.hostName);
-          in
-          lib.attrsets.mapAttrsToList toLease (filterOutSelf config.${namespace}.networkmap);
+        dhcpServerStaticLeases = staticLeasesIn "192.168.1.";
 
         # v6
         dhcpPrefixDelegationConfig = {
@@ -221,6 +282,36 @@ in
           DNS = config.${namespace}.myipv6;
         };
         linkConfig.RequiredForOnline = "routable";
+      };
+
+      "20-iot" = {
+        matchConfig.Name = iot;
+        address = [ "${iotAddress}/24" ];
+        networkConfig = {
+          DHCPServer = true; # v4
+          IPv4Forwarding = true;
+          IPv6Forwarding = true;
+
+          IPv6AcceptRA = false;
+          IPv6SendRA = true;
+          DHCPPrefixDelegation = true;
+        };
+        dhcpServerConfig = {
+          PoolOffset = 50;
+          PoolSize = 100;
+          EmitDNS = true;
+          EmitRouter = true;
+          # blocky listens on the lan0 addresses, reachable from here via jonsnow's input chain.
+          DNS = config.${namespace}.myipv4;
+        };
+        dhcpServerStaticLeases = staticLeasesIn "192.168.20.";
+        dhcpPrefixDelegationConfig.SubnetId = 2;
+        ipv6SendRAConfig = {
+          EmitDNS = true;
+          DNS = config.${namespace}.myipv6;
+        };
+        # Not needed for boot; may have no clients.
+        linkConfig.RequiredForOnline = "no";
       };
     };
   };
