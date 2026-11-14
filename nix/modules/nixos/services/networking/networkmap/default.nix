@@ -29,6 +29,11 @@
       type = lib.types.str;
       default = config.${namespace}.networkmap.${config.networking.hostName}.ip;
     };
+    myipv6 = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Stable IPv6 address (ULA) of this host on the LAN, if any.";
+    };
   };
 
   config.${namespace}.networkmap = {
