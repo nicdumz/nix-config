@@ -83,9 +83,9 @@ in
             dns = [
               "${config.${namespace}.myipv4}:53"
               "127.0.0.1:53"
-              # TODO: consider binding to an ULA instead of all ipv6
               "[::1]:53"
-            ];
+            ]
+            ++ lib.optional (config.${namespace}.myipv6 != null) "[${config.${namespace}.myipv6}]:53";
             http = "127.0.0.1:4000";
           };
           ede.enable = true;

@@ -47,6 +47,7 @@ in
   ${namespace} = {
     device.type = "server";
     persistence.enable = true;
+    myipv6 = "fd83:c8db:133a::1";
     blocky.enable = true;
     prober7.enable = true;
     firewall = {
@@ -163,9 +164,16 @@ in
       "15-lan" = {
         matchConfig.Name = lan;
         address = [
-          # TODO: learn about ULA and see if this makes sense.
-          # "fd83:c8db:133a::1/64" # generated ULA
           "${config.${namespace}.myipv4}/24"
+        ];
+        addresses = [
+          {
+            # Stable ULA (from generated prefix fd83:c8db:133a::/48) for services, notably DNS:
+            # unlike the delegated global prefix it never changes.
+            Address = "${config.${namespace}.myipv6}/64";
+            # Usable immediately so blocky can bind it at boot.
+            DuplicateAddressDetection = "none";
+          }
         ];
         networkConfig = {
           # v4 stuff
@@ -210,7 +218,7 @@ in
         };
         ipv6SendRAConfig = {
           EmitDNS = true;
-          DNS = "_link_local";
+          DNS = config.${namespace}.myipv6;
         };
         linkConfig.RequiredForOnline = "routable";
       };
