@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.${namespace}.qbittorrent;
+  stateDir = lib.removeSuffix "/" config.services.qbittorrent.profileDir;
 in
 {
   options.${namespace}.qbittorrent = {
@@ -26,6 +27,9 @@ in
         LegalNotice.Accepted = true;
         BitTorrent.Session = {
           DefaultSavePath = "/media/bigslowdata/downloads";
+          # SMR pool disks handle torrent random writes badly: stage incomplete files on the NVMe.
+          TempPathEnabled = true;
+          TempPath = "${stateDir}/incomplete";
           QueueingSystemEnabled = true;
           IgnoreSlowTorrentsForQueueing = true;
           SlowTorrentsDownloadRate = 40; # kbps
@@ -48,8 +52,9 @@ in
         };
       };
     };
-    # Pinned: dynamic gids are not stable across userborn runs with
-    # mutableUsers = false, and this group owns persisted state.
+    # Pinned: dynamic uids/gids are not stable across userborn runs with
+    # mutableUsers = false, and this user/group own persisted state.
+    users.users.qbittorrent.uid = 987;
     users.groups.media.gid = 995;
 
     # TODO: maybe could be in the firewall module.
@@ -60,6 +65,12 @@ in
 
     ${namespace} = {
       motd.systemdServices = [ "qbittorrent" ];
+      persistence.directories = [
+        {
+          directory = stateDir;
+          inherit (config.services.qbittorrent) user group;
+        }
+      ];
       traefik.webservices.qbittorrent.port = config.services.qbittorrent.webuiPort;
     };
   };
