@@ -316,13 +316,45 @@ in
     };
   };
 
-  fileSystems.bigdata = {
-    mountPoint = "/media/bigslowdata";
-    fsType = "ext4";
-    device = "/dev/mapper/bigslowdata_vg-bigslowdata_lv";
-    options = [
-      "defaults"
-      "noatime"
-    ];
+  environment.systemPackages = [ pkgs.mergerfs ];
+
+  # nofail: this host is the router, a missing disk must not drop boot into emergency mode.
+  fileSystems = {
+    "/mnt/disk1" = {
+      device = "/dev/disk/by-uuid/4c446b4d-6112-4dc3-a784-d5c9d87df952";
+      fsType = "ext4";
+      options = [
+        "defaults"
+        "noatime"
+        "nofail"
+      ];
+    };
+    "/mnt/disk2" = {
+      device = "/dev/disk/by-uuid/68fb394c-e3c7-4b2b-8ae0-4e3289a01f8a";
+      fsType = "ext4";
+      options = [
+        "defaults"
+        "noatime"
+        "nofail"
+      ];
+    };
+    # mergerfs mounts happily with only the branches that exist, which would serve half the
+    # library. Requiring both disks makes the pool fail instead.
+    "/media/bigslowdata" = {
+      device = "/mnt/disk1:/mnt/disk2";
+      fsType = "mergerfs";
+      options = [
+        "defaults"
+        "nofail"
+        "allow_other"
+        "category.create=mfs"
+        "moveonenospc=true"
+        "dropcacheonclose=true"
+        "minfreespace=50G"
+        "fsname=bigslowdata"
+        "x-systemd.requires-mounts-for=/mnt/disk1"
+        "x-systemd.requires-mounts-for=/mnt/disk2"
+      ];
+    };
   };
 }

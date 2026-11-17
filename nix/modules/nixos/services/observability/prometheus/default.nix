@@ -193,6 +193,10 @@ in
           enable = true;
           configFile = yamlFormat.generate "blackbox.yml" blackBoxSettings;
         };
+        smartctl = {
+          enable = true;
+          listenAddress = "127.0.0.1";
+        };
       };
 
       globalConfig = {
@@ -227,6 +231,17 @@ in
             {
               targets = [
                 "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
+              ];
+            }
+          ];
+        }
+        {
+          job_name = "smartctl";
+          scrape_interval = "2m";
+          static_configs = [
+            {
+              targets = [
+                "127.0.0.1:${toString config.services.prometheus.exporters.smartctl.port}"
               ];
             }
           ];

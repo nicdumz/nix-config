@@ -59,6 +59,20 @@ let
   LABELS = {{ $labels }}";
         };
       }
+      {
+        alert = "HostDiskFailing";
+        expr = ''smartctl_device_smart_status == 0 or increase(smartctl_device_attribute{attribute_name="Reallocated_Sector_Ct",attribute_value_type="raw"}[1d]) > 0 or smartctl_device_attribute{attribute_name="Current_Pending_Sector",attribute_value_type="raw"} > 0'';
+        for = "5m";
+        labels = {
+          severity = "warning";
+        };
+        annotations = {
+          summary = "Disk failing (instance {{ $labels.instance }}, device {{ $labels.device }})";
+          description = "SMART reports failure, growing reallocated sectors, or pending sectors
+  VALUE = {{ $value }}
+  LABELS = {{ $labels }}";
+        };
+      }
     ];
     probing = [
       {
