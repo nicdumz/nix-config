@@ -21,6 +21,8 @@ in
       group = "media";
       settings.server.port = 8990;
     };
+    # Not started against the empty mountpoint on the root tmpfs when the pool is down.
+    systemd.services.radarr.unitConfig.RequiresMountsFor = [ "/media/bigslowdata" ];
     # Pinned: dynamic gids are not stable across userborn runs with
     # mutableUsers = false, and this group owns persisted state.
     users.groups.media.gid = 895;

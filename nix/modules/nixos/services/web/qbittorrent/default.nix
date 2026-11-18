@@ -8,6 +8,7 @@
 let
   cfg = config.${namespace}.qbittorrent;
   stateDir = lib.removeSuffix "/" config.services.qbittorrent.profileDir;
+  downloadDir = "/media/bigslowdata/downloads";
 in
 {
   options.${namespace}.qbittorrent = {
@@ -26,7 +27,7 @@ in
       serverConfig = {
         LegalNotice.Accepted = true;
         BitTorrent.Session = {
-          DefaultSavePath = "/media/bigslowdata/downloads";
+          DefaultSavePath = downloadDir;
           # SMR pool disks handle torrent random writes badly: stage incomplete files on the NVMe.
           TempPathEnabled = true;
           TempPath = "${stateDir}/incomplete";
@@ -52,6 +53,8 @@ in
         };
       };
     };
+    # Not started against the empty mountpoint on the root tmpfs when the pool is down.
+    systemd.services.qbittorrent.unitConfig.RequiresMountsFor = [ downloadDir ];
     # Pinned: dynamic uids/gids are not stable across userborn runs with
     # mutableUsers = false, and this user/group own persisted state.
     users.users.qbittorrent.uid = 900;
