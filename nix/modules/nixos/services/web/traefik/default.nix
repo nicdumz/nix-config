@@ -149,8 +149,8 @@ in
   config = lib.mkIf cfg.enable {
     # Pinned: dynamic uids/gids are not stable across userborn runs with
     # mutableUsers = false, and this user/group own persisted state.
-    users.users.traefik.uid = 983;
-    users.groups.traefik.gid = 985;
+    users.users.traefik.uid = 883;
+    users.groups.traefik.gid = 885;
 
     ${namespace} = {
       firewall.tcp = [ 443 ];

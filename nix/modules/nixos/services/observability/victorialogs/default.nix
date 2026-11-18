@@ -34,9 +34,9 @@ in
       description = "Services needs a user but doesn't explicitly create it.";
       group = "victorialogs";
       isSystemUser = true;
-      uid = 982;
+      uid = 882;
     };
-    users.groups.victorialogs.gid = 984;
+    users.groups.victorialogs.gid = 884;
 
     systemd.services.victorialogs = {
       serviceConfig.DynamicUser = lib.mkForce false;

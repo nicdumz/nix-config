@@ -23,7 +23,7 @@ in
     };
     # Pinned: dynamic gids are not stable across userborn runs with
     # mutableUsers = false, and this group owns persisted state.
-    users.groups.media.gid = 995;
+    users.groups.media.gid = 895;
 
     ${namespace} = {
       motd.systemdServices = [ "sonarr" ];

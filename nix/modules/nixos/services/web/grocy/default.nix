@@ -37,7 +37,7 @@ in
       };
       # Pinned: dynamic uids are not stable across userborn runs with
       # mutableUsers = false, and this user owns persisted state.
-      users.users.grocy.uid = 997;
+      users.users.grocy.uid = 897;
 
       environment.etc."grocy/config.php".text = lib.mkAfter ''
         // Disable most features -- don't need them.
