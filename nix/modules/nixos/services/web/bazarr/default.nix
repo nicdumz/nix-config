@@ -21,6 +21,8 @@ in
       group = "media";
       listenPort = 6768;
     };
+    # Not started against the empty mountpoint on the root tmpfs when the pool is down.
+    systemd.services.bazarr.unitConfig.RequiresMountsFor = [ "/media/bigslowdata" ];
     # Pinned: dynamic uids/gids are not stable across userborn runs with
     # mutableUsers = false, and this user/group own persisted state.
     users.users.bazarr.uid = 899;

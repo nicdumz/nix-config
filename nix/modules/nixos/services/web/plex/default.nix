@@ -22,6 +22,8 @@ in
       enable = true;
       group = "media";
     };
+    # Not started against the empty mountpoint on the root tmpfs when the pool is down.
+    systemd.services.plex.unitConfig.RequiresMountsFor = [ "/media/bigslowdata" ];
     # Pinned: dynamic gids are not stable across userborn runs with
     # mutableUsers = false, and this group owns persisted state.
     users.groups.media.gid = 895;

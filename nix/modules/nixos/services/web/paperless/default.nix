@@ -46,11 +46,25 @@ in
       # Triggered by paperless-exporter on success instead of a timer.
       timerConfig = null;
     };
-    systemd.services.restic-backups-paperless.environment = {
-      GOOGLE_PROJECT_ID = "jonsnow-backups";
-      GOOGLE_APPLICATION_CREDENTIALS = config.sops.secrets.restic-gcs-credentials.path;
-    };
-    systemd.services.paperless-exporter.unitConfig.OnSuccess = [ "restic-backups-paperless.service" ];
+    systemd.services =
+      let
+        # The NixOS module only does this for paperless-scheduler. Not started against the empty
+        # mountpoint on the root tmpfs when the pool is down: the exporter would --delete its export.
+        requiresMedia.unitConfig.RequiresMountsFor = [ config.services.paperless.mediaDir ];
+      in
+      {
+        restic-backups-paperless.environment = {
+          GOOGLE_PROJECT_ID = "jonsnow-backups";
+          GOOGLE_APPLICATION_CREDENTIALS = config.sops.secrets.restic-gcs-credentials.path;
+        };
+        paperless-exporter.unitConfig = {
+          OnSuccess = [ "restic-backups-paperless.service" ];
+          inherit (requiresMedia.unitConfig) RequiresMountsFor;
+        };
+        paperless-web = requiresMedia;
+        paperless-consumer = requiresMedia;
+        paperless-task-queue = requiresMedia;
+      };
 
     sops.secrets =
       let
