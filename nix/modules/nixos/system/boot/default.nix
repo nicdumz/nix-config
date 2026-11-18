@@ -75,7 +75,9 @@
               in
               ''
                 resolution: ${res}
-                remember_last_entry: yes
+                # Headless servers must boot the newest generation: remembering the last booted entry
+                # means a freshly deployed generation is never booted unless picked in the menu.
+                remember_last_entry: ${if config.${namespace}.device.type == "server" then "no" else "yes"}
 
                 # below is the catppuccin mocha theme, with:
                 #  - a transparent background
