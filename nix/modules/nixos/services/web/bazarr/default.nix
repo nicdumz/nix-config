@@ -23,8 +23,8 @@ in
     };
     # Pinned: dynamic uids/gids are not stable across userborn runs with
     # mutableUsers = false, and this user/group own persisted state.
-    users.users.bazarr.uid = 999;
-    users.groups.media.gid = 995;
+    users.users.bazarr.uid = 899;
+    users.groups.media.gid = 895;
 
     ${namespace} = {
       motd.systemdServices = [ "bazarr" ];

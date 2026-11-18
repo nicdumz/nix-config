@@ -54,6 +54,9 @@ in
             every boot, so ownership of persisted data silently drifts to
             whatever service happens to land on the same number next time.
             Pin users.users.${name}.uid (or users.groups.${name}.gid).
+            Pin it in 801-900: userborn hands out dynamic ids from 999
+            downwards without reserving pinned ones, so 901-999 is left to
+            dynamic users and a pin there collides sooner or later.
           '';
         };
         dirAssertions =

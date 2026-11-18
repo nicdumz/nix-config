@@ -24,9 +24,9 @@ in
     };
     # Pinned: dynamic uids/gids are not stable across userborn runs with
     # mutableUsers = false, and this user/group own persisted state.
-    users.groups.media.gid = 995;
+    users.groups.media.gid = 895;
     users.users.jellyfin = {
-      uid = 980;
+      uid = 880;
       # For hardware rendering
       extraGroups = [
         "render"

@@ -29,9 +29,9 @@ in
       description = "Services needs a user but doesn't explicitly create it.";
       group = "mealie";
       isSystemUser = true;
-      uid = 994;
+      uid = 894;
     };
-    users.groups.mealie.gid = 996;
+    users.groups.mealie.gid = 896;
     systemd.services.mealie = {
       unitConfig.RequiresMountsFor = [ dataDir ];
       serviceConfig.DynamicUser = lib.mkForce false;

@@ -25,9 +25,9 @@ in
       description = "Services needs a user but doesn't explicitly create it.";
       group = "jellyseerr";
       isSystemUser = true;
-      uid = 996;
+      uid = 896;
     };
-    users.groups.jellyseerr.gid = 998;
+    users.groups.jellyseerr.gid = 898;
 
     systemd.services.seerr = {
       serviceConfig.DynamicUser = lib.mkForce false;

@@ -20,12 +20,12 @@ in
 
     # Pinned: dynamic uids/gids are not stable across userborn runs with
     # mutableUsers = false, and this user/group own persisted state.
-    users.groups.media.gid = 995;
+    users.groups.media.gid = 895;
     users.users.prowlarr = {
       description = "Services needs a user but doesn't explicitly create it.";
       group = "media";
       isSystemUser = true;
-      uid = 988;
+      uid = 888;
     };
 
     systemd.services.prowlarr = {

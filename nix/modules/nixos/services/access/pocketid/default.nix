@@ -34,8 +34,8 @@ in
     };
     # Pinned: dynamic uids/gids are not stable across userborn runs with
     # mutableUsers = false, and this user/group own persisted state.
-    users.users.pocket-id.uid = 989;
-    users.groups.pocket-id.gid = 991;
+    users.users.pocket-id.uid = 889;
+    users.groups.pocket-id.gid = 891;
 
     sops.secrets.pocket-id-secret = {
       sopsFile = inputs.self.outPath + "/secrets/${config.networking.hostName}.yaml";
