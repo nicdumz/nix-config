@@ -54,7 +54,9 @@ in
     };
     # Pinned: dynamic uids/gids are not stable across userborn runs with
     # mutableUsers = false, and this user/group own persisted state.
-    users.users.qbittorrent.uid = 987;
+    # Below the range userborn allocates dynamic uids from (999 downwards, pinned uids are not
+    # reserved): sshd took 987, and an unpinned qbittorrent took pangolin's 991.
+    users.users.qbittorrent.uid = 900;
     users.groups.media.gid = 995;
 
     # TODO: maybe could be in the firewall module.
