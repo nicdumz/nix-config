@@ -53,13 +53,21 @@
   # defaultUserShell. But actual configuration happens in home-manager below.
   programs.fish.enable = true;
 
-  # If the user is created I always want a home-configuration for it.
   assertions =
     let
+      # If the user is created I always want a home-configuration for it.
       createAssert = n: v: {
         assertion = !v.create || (builtins.hasAttr n config.home-manager.users);
         message = "${config.networking.hostName}: user '${n}' will be created but has no home configuration";
       };
+      # userborn hands out dynamic ids from 999 downwards without reserving pinned ones: a pin
+      # in 901-999 eventually collides with a dynamic user and that user/group is never created.
+      pinAssert = kind: n: id: {
+        assertion = id == null || id <= 900 || id >= 1000;
+        message = "${config.networking.hostName}: ${kind} '${n}' pins id ${toString id} in the dynamic band 901-999, pin it in 801-900";
+      };
     in
-    lib.attrsets.mapAttrsToList createAssert config.snowfallorg.users;
+    lib.attrsets.mapAttrsToList createAssert config.snowfallorg.users
+    ++ lib.attrsets.mapAttrsToList (n: u: pinAssert "user" n u.uid) config.users.users
+    ++ lib.attrsets.mapAttrsToList (n: g: pinAssert "group" n g.gid) config.users.groups;
 }
