@@ -146,8 +146,10 @@ in
           5353
         ];
       };
-      # ...and the TV for Plex.
+      # ...and the TV for Plex, only via jonsnow's IoT address: Plex labels this VLAN's clients
+      # as WAN when they connect through the LAN address.
       extraInputRules = ''
+        iifname "${iot}" ether saddr ${networkmap.samsung-tv.mac} tcp dport 32400 ip daddr != ${iotAddress} reject with tcp reset comment "Samsung TV -> Plex via LAN address"
         iifname "${iot}" ether saddr ${networkmap.samsung-tv.mac} tcp dport 32400 accept comment "Samsung TV -> Plex"
       '';
     };
