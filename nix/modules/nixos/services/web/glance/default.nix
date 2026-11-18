@@ -24,7 +24,6 @@ let
           # unauthenticated health-check endpoint.
           check = "https://plex.home.nicdumz.fr/identity";
         }
-        "jellyfin"
         "seerr"
         {
           name = "sonarr";
